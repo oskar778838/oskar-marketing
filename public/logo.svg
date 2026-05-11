@@ -1,11 +1,39 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" aria-hidden="true">
-  <!-- Editorial O monogram. Ring + serif terminal cap. -->
-  <circle cx="32" cy="32" r="22" stroke="#C9A84C" stroke-width="1.25" fill="none" />
-  <circle cx="32" cy="32" r="22" stroke="#E8C96A" stroke-width="0.4" fill="none" opacity="0.5" />
-  <!-- inner counter -->
-  <ellipse cx="32" cy="32" rx="11" ry="14" stroke="#C9A84C" stroke-width="0.7" fill="none" opacity="0.65" />
-  <!-- terminal serif accent -->
-  <line x1="48" y1="20" x2="54" y2="14" stroke="#C9A84C" stroke-width="1" stroke-linecap="round" />
-  <!-- center mark -->
-  <circle cx="32" cy="32" r="1.2" fill="#C9A84C" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none" aria-hidden="true">
+  <!-- Editorial OM monogram in gold, transparent bg.
+       Adapted from oskarmarketing original (logo-original.png) to match
+       refined editorial palette. Cormorant-inspired serif letterforms. -->
+  <defs>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E8C96A"/>
+      <stop offset="100%" stop-color="#C9A84C"/>
+    </linearGradient>
+  </defs>
+
+  <!-- O letter (left): elliptical with serif terminals -->
+  <g transform="translate(48, 100)">
+    <ellipse cx="0" cy="0" rx="26" ry="34" stroke="url(#goldGrad)" stroke-width="3" fill="none"/>
+    <ellipse cx="0" cy="0" rx="14" ry="22" stroke="url(#goldGrad)" stroke-width="0.8" fill="none" opacity="0.4"/>
+    <!-- top serif -->
+    <line x1="-8" y1="-34" x2="8" y2="-34" stroke="url(#goldGrad)" stroke-width="1.2"/>
+    <!-- bottom serif -->
+    <line x1="-8" y1="34" x2="8" y2="34" stroke="url(#goldGrad)" stroke-width="1.2"/>
+  </g>
+
+  <!-- M letter (right): geometric with serif feet -->
+  <g transform="translate(120, 100)" stroke="url(#goldGrad)" stroke-width="3" fill="none" stroke-linecap="square">
+    <!-- left vertical -->
+    <line x1="-22" y1="-32" x2="-22" y2="32"/>
+    <!-- left diagonal -->
+    <line x1="-22" y1="-32" x2="0" y2="14"/>
+    <!-- right diagonal -->
+    <line x1="22" y1="-32" x2="0" y2="14"/>
+    <!-- right vertical -->
+    <line x1="22" y1="-32" x2="22" y2="32"/>
+    <!-- serif feet -->
+    <line x1="-30" y1="32" x2="-14" y2="32" stroke-width="1.2"/>
+    <line x1="14" y1="32" x2="30" y2="32" stroke-width="1.2"/>
+  </g>
+
+  <!-- Subtle center connector dot -->
+  <circle cx="100" cy="100" r="1.5" fill="url(#goldGrad)" opacity="0.5"/>
 </svg>

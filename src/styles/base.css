@@ -111,7 +111,10 @@ a {
   inset: 0;
   z-index: var(--z-bg);
   opacity: 0;
-  transition: opacity var(--d-cinematic) var(--ease-default);
+  /* Faster fade-in — was 1.2s, but combined with the 2.2s load timeline
+     the hero felt "flat black" for too long. 600ms still hides any
+     first-frame flicker but doesn't make the user wait. */
+  transition: opacity 600ms var(--ease-default);
   pointer-events: none;
 }
 
@@ -145,7 +148,7 @@ a {
   inset: 0;
   z-index: var(--z-grain);
   pointer-events: none;
-  opacity: 0.5;
+  opacity: 0.32;
   mix-blend-mode: overlay;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.07'/%3E%3C/svg%3E");
 }
@@ -155,10 +158,11 @@ a {
   inset: 0;
   z-index: var(--z-grain);
   pointer-events: none;
+  /* Softer vignette so the WebGL gold mesh stays readable at the edges. */
   background: radial-gradient(
     ellipse at center,
-    transparent 50%,
-    rgba(5, 5, 5, 0.55) 100%
+    transparent 55%,
+    rgba(5, 5, 5, 0.32) 100%
   );
 }
 
@@ -209,6 +213,74 @@ section {
     transition-property: opacity, color, background-color, border-color !important;
     transition-duration: 200ms !important;
   }
+}
+
+/* ── Scroll-progress bar (top, 1px gold, fills L→R) ──────── */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  z-index: var(--z-nav);
+  pointer-events: none;
+  background: var(--hairline-low);
+}
+
+.scroll-progress__bar {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--gold-deep), var(--gold-warm));
+  transform-origin: left center;
+  /* Width is set via JS — width animation on a 1px bar is fine because
+     no surrounding layout depends on it (fixed-position, h1px). */
+  transition: width 80ms linear;
+}
+
+/* ── Side rail (fixed left, breaks the "isolated islands" feel) ── */
+.side-rail {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(201, 168, 76, 0.12) 12%,
+    rgba(201, 168, 76, 0.12) 88%,
+    transparent 100%
+  );
+  z-index: var(--z-nav);
+  pointer-events: none;
+}
+
+@media (max-width: 768px) {
+  .side-rail {
+    display: none;
+  }
+}
+
+/* ── SplitType word integrity ─────────────────────────────── */
+/* Each word is an inline-block container for its chars. This prevents the
+   browser from breaking lines between two char inline-blocks within the same
+   word (was producing "Tag    f / ür"-style mid-word splits in the manifest). */
+.word {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+/* The chars themselves should still be inline-block so transforms work, but
+   they no longer cross word boundaries. */
+.char {
+  display: inline-block;
+}
+
+/* Prevent any accidental mid-word hyphenation across the whole site. */
+h1, h2, h3, .t-display, .t-display-italic, .end__quote, .proof__head-line, .academy__h, .hero__name {
+  hyphens: none;
+  word-break: normal;
+  overflow-wrap: normal;
 }
 
 /* ── Selection ────────────────────────────────────────────── */

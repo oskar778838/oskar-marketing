@@ -14,14 +14,17 @@ const PREFERS_REDUCED_MOTION = window.matchMedia(
 const EASE_DEFAULT = "power3.out";
 const EASE_EMPHASIS = "expo.out";
 
+// Split into words AND chars: chars animate, words guarantee no mid-word breaks.
+// Without the word wrapper, individual char inline-blocks let the browser break
+// between any two letters — producing "Tag    f / ür" splits.
 function splitToChars(selector: string): SplitType[] {
   const els = document.querySelectorAll<HTMLElement>(selector);
   const splits: SplitType[] = [];
   els.forEach((el) => {
-    const split = new SplitType(el, { types: "chars", tagName: "span" });
-    if (split.chars) {
-      split.chars.forEach((c) => c.classList.add("char"));
-    }
+    const split = new SplitType(el, {
+      types: "words,chars",
+      tagName: "span",
+    });
     splits.push(split);
   });
   return splits;

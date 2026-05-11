@@ -66,6 +66,14 @@
     <div class="bg-grain" aria-hidden="true"></div>
     <div class="bg-vignette" aria-hidden="true"></div>
 
+    <!-- Scroll progress bar -->
+    <div id="scroll-progress" class="scroll-progress" aria-hidden="true">
+      <div class="scroll-progress__bar"></div>
+    </div>
+
+    <!-- Side connector rail (fixed left) -->
+    <div class="side-rail" aria-hidden="true"></div>
+
     <!-- Custom cursor -->
     <div id="cursor" class="cursor" aria-hidden="true">
       <div class="cursor__dot"></div>
@@ -95,9 +103,10 @@
           </div>
 
           <div class="hero__avatar" data-reveal="avatar" aria-hidden="true">
-            <div class="hero__avatar-ring"></div>
+            <div class="hero__avatar-ring hero__avatar-ring--outer"></div>
+            <div class="hero__avatar-ring hero__avatar-ring--inner"></div>
             <div class="hero__avatar-glow"></div>
-            <div class="hero__avatar-dot"></div>
+            <img src="./logo.svg" alt="" class="hero__avatar-logo" width="120" height="120" />
           </div>
 
           <h1 id="hero-name" class="hero__name t-display" data-reveal="name">

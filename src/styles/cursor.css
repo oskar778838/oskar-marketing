@@ -22,12 +22,15 @@ html.has-custom-cursor .cursor {
   opacity: 1;
 }
 
+/* Pearl-rare dot reads strongly under mix-blend-difference: it inverts to
+   a deep teal over gold accents and a near-black over pearl text — always
+   visible regardless of what's underneath. */
 .cursor__dot {
   position: absolute;
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  background: var(--gold);
+  background: var(--pearl-rare);
   transform: translate(-50%, -50%);
   transition: transform var(--d-fast) var(--ease-default);
 }
@@ -36,7 +39,7 @@ html.has-custom-cursor .cursor {
   position: absolute;
   width: 32px;
   height: 32px;
-  border: 1px solid rgba(201, 168, 76, 0.35);
+  border: 1px solid rgba(245, 230, 184, 0.6);
   border-radius: 50%;
   transform: translate(-50%, -50%) scale(1);
   transition:

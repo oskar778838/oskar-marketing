@@ -9,6 +9,7 @@ import { initCursor } from "./lib/cursor";
 import { initMagnetic } from "./lib/magnetic";
 import { initSmoothScroll } from "./lib/smoothScroll";
 import { runChoreography } from "./lib/choreography";
+import { initScrollProgress } from "./lib/scrollProgress";
 
 // Init order matters: cursor + smooth scroll first (cheap), then choreography
 // (which uses ScrollTrigger and needs the DOM measured), then async WebGL.
@@ -17,6 +18,7 @@ function boot(): void {
   initCursor();
   initSmoothScroll();
   initMagnetic();
+  initScrollProgress();
   runChoreography();
 
   // WebGL hero: lazy import, never blocks first paint.
@@ -26,8 +28,9 @@ function boot(): void {
     requestAnimationFrame(() => {
       import("./hero/background")
         .then(({ initHeroBackground }) => initHeroBackground(canvas))
-        .catch(() => {
-          // CSS fallback already visible — silent fail is fine.
+        .catch((err) => {
+          // CSS fallback already visible — but log so we can debug if it fails.
+          console.warn("[hero/background] WebGL init failed:", err);
         });
     });
   }
