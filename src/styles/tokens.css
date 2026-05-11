@@ -1,0 +1,83 @@
+:root {
+  /* ── Color: 4-step obsidian + gold + warm pearl ───────────── */
+  --obsidian-0: #050505;
+  --obsidian-1: #0a0908;
+  --obsidian-2: #111110;
+  --obsidian-3: #18161a;
+
+  --gold: #c9a84c;
+  --gold-warm: #e8c96a;
+  --gold-deep: #8b6914;
+
+  --pearl: #ede9e3;       /* "white" — warm */
+  --pearl-rare: #f5e6b8;  /* hover-only secondary */
+
+  --muted: rgba(237, 233, 227, 0.55);
+  --muted-low: rgba(237, 233, 227, 0.35);
+  --hairline: rgba(201, 168, 76, 0.18);
+  --hairline-low: rgba(237, 233, 227, 0.08);
+
+  /* ── Typography ──────────────────────────────────────────── */
+  --font-display: "Cormorant Garamond", "Times New Roman", Georgia, serif;
+  --font-body: "DM Sans", "Inter", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+
+  /* fluid type scale: clamp(min, vw-fluid, max) */
+  --t-mono-xs: clamp(10px, 0.66vw, 11px);
+  --t-mono-sm: clamp(11px, 0.75vw, 12px);
+  --t-body-sm: clamp(13px, 0.95vw, 15px);
+  --t-body: clamp(15px, 1.05vw, 17px);
+  --t-body-lg: clamp(17px, 1.25vw, 20px);
+  --t-display-3xl: clamp(28px, 4vw, 56px);
+  --t-display-4xl: clamp(40px, 6vw, 88px);
+  --t-display-5xl: clamp(56px, 9vw, 132px);
+  --t-display-6xl: clamp(72px, 13vw, 200px);
+  --t-display-mega: clamp(96px, 17vw, 280px);
+
+  /* ── Spacing (8-pt scale + editorial extras) ─────────────── */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 24px;
+  --s-6: 32px;
+  --s-7: 48px;
+  --s-8: 64px;
+  --s-9: 96px;
+  --s-10: 128px;
+  --s-11: 192px;
+  --s-12: 256px;
+
+  /* ── Layout ──────────────────────────────────────────────── */
+  --max-w: 1440px;
+  --gutter: clamp(20px, 4vw, 64px);
+
+  /* ── Easings (custom cubic-bezier — never linear) ────────── */
+  --ease-default: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-emphasis: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-snap: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out: cubic-bezier(0.33, 1, 0.68, 1);
+
+  /* ── Durations ───────────────────────────────────────────── */
+  --d-fast: 200ms;
+  --d-base: 400ms;
+  --d-slow: 700ms;
+  --d-cinematic: 1200ms;
+
+  /* ── Z-index scale ───────────────────────────────────────── */
+  --z-bg: 0;
+  --z-grain: 1;
+  --z-content: 10;
+  --z-nav: 80;
+  --z-cursor: 100;
+  --z-loader: 200;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --d-fast: 1ms;
+    --d-base: 1ms;
+    --d-slow: 1ms;
+    --d-cinematic: 1ms;
+  }
+}

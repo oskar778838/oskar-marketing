@@ -1,0 +1,57 @@
+/* Custom cursor — gold dot + thin trailing ring. Desktop only. */
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: var(--z-cursor);
+  pointer-events: none;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  mix-blend-mode: difference;
+  transition: opacity var(--d-base) var(--ease-default);
+}
+
+@media (hover: none), (pointer: coarse) {
+  .cursor {
+    display: none !important;
+  }
+}
+
+html.has-custom-cursor .cursor {
+  opacity: 1;
+}
+
+.cursor__dot {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+  transform: translate(-50%, -50%);
+  transition: transform var(--d-fast) var(--ease-default);
+}
+
+.cursor__ring {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgba(201, 168, 76, 0.35);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  transition:
+    transform var(--d-base) var(--ease-emphasis),
+    border-color var(--d-base) var(--ease-default),
+    width var(--d-base) var(--ease-emphasis),
+    height var(--d-base) var(--ease-emphasis);
+}
+
+html.cursor-hover .cursor__dot {
+  transform: translate(-50%, -50%) scale(0);
+}
+
+html.cursor-hover .cursor__ring {
+  width: 56px;
+  height: 56px;
+  border-color: var(--gold);
+}
