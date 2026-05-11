@@ -22,7 +22,7 @@
   <!-- editorial label -->
   <g font-family="JetBrains Mono, monospace" font-size="14" fill="#C9A84C" letter-spacing="3">
     <line x1="80" y1="100" x2="120" y2="100" stroke="#C9A84C" stroke-width="1"/>
-    <text x="135" y="105">00 — INDEX</text>
+    <text x="135" y="105">00 / INDEX</text>
   </g>
 
   <!-- avatar ring -->

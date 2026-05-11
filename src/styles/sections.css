@@ -31,19 +31,23 @@
   font-weight: 300;
 }
 
+/* Strike line: animate transform (GPU) instead of width (layout) per impeccable
+   shared-design law: "Don't animate CSS layout properties." */
 .proof__strike::after {
   content: "";
   position: absolute;
   top: 50%;
   left: 0;
-  width: 0%;
+  width: 100%;
   height: 1px;
   background: var(--gold);
-  transition: width 1.2s var(--ease-emphasis);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 1.2s var(--ease-emphasis);
 }
 
 .proof.is-in-view .proof__strike::after {
-  width: 100%;
+  transform: scaleX(1);
 }
 
 .proof__counter {
