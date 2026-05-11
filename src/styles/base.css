@@ -9,6 +9,7 @@
 
 html {
   -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -194,6 +195,8 @@ section {
 }
 
 /* ── Reduced motion ───────────────────────────────────────── */
+/* Emil: reduced motion ≠ zero motion. Keep gentle fades that aid comprehension;
+   kill transforms, scales, and continuous motion that cause vestibular issues. */
 @media (prefers-reduced-motion: reduce) {
   .bg-mesh-fallback {
     animation: none;
@@ -201,9 +204,10 @@ section {
   *,
   *::before,
   *::after {
-    transition-duration: 1ms !important;
     animation-duration: 1ms !important;
     animation-iteration-count: 1 !important;
+    transition-property: opacity, color, background-color, border-color !important;
+    transition-duration: 200ms !important;
   }
 }
 

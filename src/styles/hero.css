@@ -213,9 +213,10 @@
   overflow: hidden;
   isolation: isolate;
   transition:
-    color var(--d-base) var(--ease-default),
-    background var(--d-base) var(--ease-default),
-    border-color var(--d-base) var(--ease-default);
+    color 200ms var(--ease-default),
+    background 200ms var(--ease-default),
+    border-color 200ms var(--ease-default),
+    transform 140ms var(--ease-default);
   will-change: transform;
 }
 
@@ -225,7 +226,7 @@
   inset: 0;
   background: var(--gold);
   transform: translateY(101%);
-  transition: transform var(--d-base) var(--ease-emphasis);
+  transition: transform 320ms var(--ease-emphasis);
   z-index: -1;
 }
 
@@ -238,9 +239,16 @@
   transform: translateY(0);
 }
 
+/* Press feedback — instant + subtle. Compounds with magnetic-hover transform
+   via parent translate3d (magnetic writes that), so :active scale stays clean. */
+.cta:active {
+  transform: scale(0.97);
+}
+
 .cta__arrow {
   display: inline-flex;
-  transition: transform var(--d-base) var(--ease-emphasis);
+  transform-origin: left center;
+  transition: transform 220ms var(--ease-default);
 }
 
 .cta:hover .cta__arrow {
@@ -250,7 +258,7 @@
 .cta__shimmer {
   position: absolute;
   top: 0;
-  left: -120%;
+  left: 0;
   width: 60%;
   height: 100%;
   background: linear-gradient(
@@ -259,16 +267,17 @@
     rgba(245, 230, 184, 0.18),
     transparent
   );
-  transform: skewX(-18deg);
+  transform: translateX(-200%) skewX(-18deg);
   animation: shimmer 4.2s var(--ease-default) infinite;
   pointer-events: none;
   z-index: 0;
+  will-change: transform;
 }
 
 @keyframes shimmer {
-  0%   { left: -120%; }
-  60%  { left: 140%; }
-  100% { left: 140%; }
+  0%   { transform: translateX(-200%) skewX(-18deg); }
+  60%  { transform: translateX(380%) skewX(-18deg); }
+  100% { transform: translateX(380%) skewX(-18deg); }
 }
 
 .cta--mega {

@@ -258,10 +258,11 @@
   background: var(--obsidian-1);
   overflow: hidden;
   transition:
-    transform var(--d-base) var(--ease-emphasis),
-    border-color var(--d-base) var(--ease-default),
-    background var(--d-base) var(--ease-default);
+    transform 280ms var(--ease-default),
+    border-color 200ms var(--ease-default),
+    background 200ms var(--ease-default);
   isolation: isolate;
+  will-change: transform;
 }
 
 .social-card::before {
@@ -275,7 +276,7 @@
     transparent 70%
   );
   opacity: 0;
-  transition: opacity var(--d-slow) var(--ease-default);
+  transition: opacity 420ms var(--ease-default);
   pointer-events: none;
   z-index: -1;
 }
@@ -284,6 +285,13 @@
   transform: translateY(-6px);
   border-color: var(--gold);
   background: var(--obsidian-2);
+}
+
+/* Press feedback — slightly less drop than hover so the card feels like it dips
+   into the press, not flies off. Subtle scale signals "I heard you click". */
+.social-card:active {
+  transform: translateY(-2px) scale(0.995);
+  transition-duration: 100ms;
 }
 
 .social-card:hover::before {

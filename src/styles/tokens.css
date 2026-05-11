@@ -52,15 +52,20 @@
   --max-w: 1440px;
   --gutter: clamp(20px, 4vw, 64px);
 
-  /* ── Easings (custom cubic-bezier — never linear) ────────── */
-  --ease-default: cubic-bezier(0.65, 0, 0.35, 1);
+  /* ── Easings (custom cubic-bezier — never linear or stock ease) ────────── */
+  /* Strong ease-out: starts moving immediately = feels responsive (Emil). */
+  --ease-default: cubic-bezier(0.23, 1, 0.32, 1);
+  /* Cinematic emphasis: slow-then-snap, for hero CTA reveal moments. */
   --ease-emphasis: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-snap: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-out: cubic-bezier(0.33, 1, 0.68, 1);
+  /* Symmetric in-out: only for on-screen movement, never enter/exit. */
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
 
   /* ── Durations ───────────────────────────────────────────── */
-  --d-fast: 200ms;
-  --d-base: 400ms;
+  /* Press/feedback: 100-160ms. Tooltips: 125-200ms. Hover/dropdown: 150-260ms. */
+  --d-fast: 180ms;
+  --d-base: 260ms;
   --d-slow: 700ms;
   --d-cinematic: 1200ms;
 

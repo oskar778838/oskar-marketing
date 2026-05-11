@@ -40,10 +40,10 @@ html.has-custom-cursor .cursor {
   border-radius: 50%;
   transform: translate(-50%, -50%) scale(1);
   transition:
-    transform var(--d-base) var(--ease-emphasis),
-    border-color var(--d-base) var(--ease-default),
-    width var(--d-base) var(--ease-emphasis),
-    height var(--d-base) var(--ease-emphasis);
+    transform 280ms var(--ease-default),
+    border-color 200ms var(--ease-default),
+    width 280ms var(--ease-default),
+    height 280ms var(--ease-default);
 }
 
 html.cursor-hover .cursor__dot {
