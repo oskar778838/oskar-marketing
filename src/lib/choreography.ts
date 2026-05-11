@@ -199,6 +199,48 @@ export function runChoreography(): void {
     duration: 0.7,
   });
 
+  // ── Section 03 — Termin (Booking) ──────────────────────────
+  splitToChars(".termin__h [data-split]");
+
+  gsap.from(".termin__h .char", {
+    scrollTrigger: {
+      trigger: ".termin__h",
+      start: "top 80%",
+      toggleActions: "play none none none",
+    },
+    y: 60,
+    opacity: 0,
+    filter: "blur(6px)",
+    duration: 0.9,
+    ease: EASE_EMPHASIS,
+    stagger: 0.018,
+  });
+
+  gsap.from(".termin__sub", {
+    scrollTrigger: {
+      trigger: ".termin__sub",
+      start: "top 85%",
+      toggleActions: "play none none none",
+    },
+    opacity: 0,
+    y: 16,
+    duration: 0.7,
+    delay: 0.25,
+  });
+
+  gsap.from(".booking", {
+    scrollTrigger: {
+      trigger: ".booking",
+      start: "top 80%",
+      toggleActions: "play none none none",
+    },
+    opacity: 0,
+    y: 24,
+    duration: 0.9,
+    ease: EASE_EMPHASIS,
+    delay: 0.35,
+  });
+
   // ── Section 03 — Social ────────────────────────────────────
   gsap.from(".social__h", {
     scrollTrigger: {

@@ -4,12 +4,14 @@ import "./styles/cursor.css";
 import "./styles/nav.css";
 import "./styles/hero.css";
 import "./styles/sections.css";
+import "./styles/booking.css";
 
 import { initCursor } from "./lib/cursor";
 import { initMagnetic } from "./lib/magnetic";
 import { initSmoothScroll } from "./lib/smoothScroll";
 import { runChoreography } from "./lib/choreography";
 import { initScrollProgress } from "./lib/scrollProgress";
+import { initBooking } from "./lib/booking";
 
 // Init order matters: cursor + smooth scroll first (cheap), then choreography
 // (which uses ScrollTrigger and needs the DOM measured), then async WebGL.
@@ -19,6 +21,7 @@ function boot(): void {
   initSmoothScroll();
   initMagnetic();
   initScrollProgress();
+  initBooking();
   runChoreography();
 
   // WebGL hero: lazy import, never blocks first paint.
