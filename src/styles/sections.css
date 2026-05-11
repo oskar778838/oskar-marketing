@@ -156,13 +156,16 @@
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   column-gap: var(--gutter);
-  row-gap: var(--s-6);
-  text-align: center;
-  justify-items: center;
+  row-gap: var(--s-9);
 }
 
-.academy__inner > * {
+.academy__head {
   grid-column: 1 / span 12;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--s-5);
 }
 
 .academy__h {
@@ -171,40 +174,191 @@
   display: flex;
   flex-direction: column;
   gap: var(--s-2);
-  margin-block: var(--s-5) var(--s-4);
   max-width: 14ch;
 }
 
-.academy__meta {
-  display: inline-flex;
+.academy__lead {
+  color: var(--muted);
+  font-size: var(--t-mono-sm);
+  letter-spacing: 0.22em;
+}
+
+/* ── Track grid: two cards, equal weight ──────────────── */
+.academy__tracks {
+  grid-column: 1 / span 12;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: var(--gutter);
+  row-gap: var(--s-6);
+}
+
+.track {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-6);
+  padding: var(--s-7) var(--s-6) var(--s-6);
+  background: var(--obsidian-2);
+  border: 1px solid var(--hairline-low);
+  isolation: isolate;
+  transition:
+    transform 280ms var(--ease-default),
+    border-color 200ms var(--ease-default),
+    background 200ms var(--ease-default);
+  will-change: transform;
+}
+
+/* Subtle visual lift on the higher-intensity track. NOT marketing-pushy
+   ("Empfohlen" badges are banned in PRODUCT.md), just enough material
+   contrast that the eye reads "this is the more serious option". */
+.track--accent {
+  border-color: var(--hairline);
+  background: linear-gradient(
+    180deg,
+    var(--obsidian-3) 0%,
+    var(--obsidian-2) 100%
+  );
+}
+
+.track--accent::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at 50% 100%,
+    rgba(201, 168, 76, 0.10),
+    transparent 70%
+  );
+  pointer-events: none;
+  opacity: 0.6;
+  z-index: -1;
+}
+
+.track:hover {
+  transform: translateY(-4px);
+  border-color: var(--gold);
+}
+
+.track:active {
+  transform: translateY(-1px);
+  transition-duration: 100ms;
+}
+
+.track__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+
+.track__tag {
+  font-size: var(--t-mono-xs);
+}
+
+.track__name {
+  font-size: clamp(48px, 6vw, 88px);
+  font-weight: 300;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  color: var(--pearl);
+}
+
+.track--accent .track__name {
+  color: var(--gold-warm);
+}
+
+.track__pitch {
+  font-size: var(--t-body-sm);
+  color: var(--muted);
+  line-height: 1.55;
+  max-width: 36ch;
+  margin-top: var(--s-2);
+}
+
+.track__list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  padding-top: var(--s-5);
+  border-top: 1px solid var(--hairline-low);
+}
+
+.track__list li {
+  position: relative;
+  padding-left: var(--s-5);
+  font-size: var(--t-body-sm);
+  color: var(--pearl);
+  line-height: 1.5;
+}
+
+.track__list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.7em;
+  width: 8px;
+  height: 1px;
+  background: var(--gold);
+}
+
+.track__list li strong {
+  color: var(--gold-warm);
+  font-weight: 400;
+}
+
+.track__foot {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-5);
+  margin-top: auto;
+  padding-top: var(--s-6);
+  border-top: 1px solid var(--hairline-low);
+}
+
+.track__price-block {
+  display: flex;
   align-items: baseline;
   gap: var(--s-3);
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-bottom: var(--s-7);
-  color: var(--muted);
 }
 
-.academy__price {
+.track__price-prefix {
+  color: var(--muted-low);
+  font-size: var(--t-mono-xs);
+}
+
+.track__price {
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: clamp(20px, 2vw, 28px);
+  font-size: clamp(36px, 4vw, 56px);
   color: var(--gold-warm);
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
+  line-height: 1;
 }
 
-.academy__sep {
-  color: var(--hairline);
-  font-family: var(--font-display);
-  font-size: clamp(20px, 2vw, 28px);
+.cta--track {
+  width: 100%;
+  justify-content: space-between;
+  padding: var(--s-5) var(--s-6);
 }
 
 .academy__trust {
-  margin-top: var(--s-7);
-  max-width: 56ch;
+  grid-column: 2 / span 10;
+  margin-top: var(--s-2);
+  max-width: 64ch;
+  margin-inline: auto;
+  text-align: center;
   font-size: var(--t-body-sm);
   color: var(--muted-low);
   line-height: 1.6;
+}
+
+@media (max-width: 900px) {
+  .academy__tracks {
+    grid-template-columns: 1fr;
+  }
+  .academy__trust {
+    grid-column: 1 / span 12;
+  }
 }
 
 @media (max-width: 768px) {
@@ -213,6 +367,12 @@
   }
   .academy__h {
     font-size: var(--t-display-4xl);
+  }
+  .track {
+    padding: var(--s-6) var(--s-5);
+  }
+  .track__name {
+    font-size: clamp(40px, 12vw, 64px);
   }
 }
 

@@ -160,21 +160,41 @@ export function runChoreography(): void {
     stagger: 0.018,
   });
 
-  gsap.from(
-    [".academy__meta", ".academy .cta--mega", ".academy__trust"],
-    {
-      scrollTrigger: {
-        trigger: ".academy__inner",
-        start: "top 70%",
-        toggleActions: "play none none none",
-      },
-      opacity: 0,
-      y: 24,
-      duration: 0.9,
-      ease: EASE_EMPHASIS,
-      stagger: 0.18,
-    }
-  );
+  gsap.from(".academy__lead", {
+    scrollTrigger: {
+      trigger: ".academy__head",
+      start: "top 70%",
+      toggleActions: "play none none none",
+    },
+    opacity: 0,
+    y: 16,
+    duration: 0.7,
+    delay: 0.3,
+  });
+
+  gsap.from(".academy__tracks .track", {
+    scrollTrigger: {
+      trigger: ".academy__tracks",
+      start: "top 75%",
+      toggleActions: "play none none none",
+    },
+    opacity: 0,
+    y: 40,
+    duration: 0.95,
+    ease: EASE_EMPHASIS,
+    stagger: 0.14,
+  });
+
+  gsap.from(".academy__trust", {
+    scrollTrigger: {
+      trigger: ".academy__trust",
+      start: "top 90%",
+      toggleActions: "play none none none",
+    },
+    opacity: 0,
+    y: 12,
+    duration: 0.7,
+  });
 
   // ── Section 03 — Social ────────────────────────────────────
   gsap.from(".social__h", {
