@@ -441,3 +441,221 @@
     font-size: clamp(44px, 13vw, 60px);
   }
 }
+
+/* ────────────────────────────────────────────────────────────
+   EDITORIAL HERO — Phase 2 redesign
+   Replaces the grid-layout hero with absolute-positioned editorial blocks.
+   When .hero has the .hero--editorial modifier, the grid rules above are
+   neutralized and the new asymmetric composition takes over.
+   ──────────────────────────────────────────────────────────── */
+
+.hero--editorial {
+  display: block;
+  padding: 0;
+}
+
+.hero--editorial .hero__noise {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.03;
+  mix-blend-mode: overlay;
+  z-index: 1;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/></svg>");
+}
+
+/* Top corners ─ meta labels + brand-logo cluster */
+.hero--editorial .hero__meta {
+  position: absolute;
+  top: clamp(20px, 8vh, 64px);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  grid-column: unset; /* override original grid placement */
+  margin: 0;
+  opacity: 0;
+}
+
+.hero--editorial .hero__meta--tl {
+  left: clamp(20px, 10vw, 96px);
+}
+
+.hero--editorial .hero__meta--tr {
+  right: clamp(20px, 10vw, 96px);
+}
+
+.hero--editorial .hero__meta-label {
+  font-family: var(--font-mono);
+  font-size: clamp(10px, 0.75vw, 11px);
+  letter-spacing: 0.3em;
+  color: var(--gold-warm);
+  text-transform: uppercase;
+}
+
+/* Avatar — smaller inline next to the meta-label */
+.hero--editorial .hero__meta--tl .hero__avatar {
+  position: relative;
+  grid-column: unset;
+  grid-row: unset;
+  width: clamp(40px, 4vw, 56px);
+  height: clamp(40px, 4vw, 56px);
+  align-self: auto;
+  opacity: 1;
+  transform: none;
+}
+
+.hero--editorial .hero__meta--tl .hero__avatar-logo {
+  width: 60%;
+  height: 60%;
+}
+
+/* Center-mass: independent absolutely-positioned word-blocks */
+.hero--editorial .hero__name {
+  display: block;
+  grid-column: unset;
+  grid-row: unset;
+  margin: 0;
+}
+
+.hero--editorial .hero__word {
+  position: absolute;
+  z-index: 5;
+  display: block;
+  font-weight: 300;
+  line-height: 0.86;
+  /* Hide overflow during char-reveal so chars enter from below */
+  padding-bottom: 0.12em;
+}
+
+.hero--editorial .hero__word--oskar {
+  top: 24vh;
+  left: clamp(20px, 8vw, 96px);
+  font-size: clamp(96px, 18vw, 280px);
+  letter-spacing: -0.02em;
+  color: var(--pearl);
+}
+
+.hero--editorial .hero__word--marketing {
+  top: 48vh;
+  right: clamp(20px, 6vw, 96px);
+  font-size: clamp(72px, 14vw, 220px);
+  letter-spacing: 0.01em;
+  color: var(--gold-warm);
+  /* Negative top-margin so it visually crosses Oskar's baseline */
+}
+
+.hero--editorial .hero__word [data-split],
+.hero--editorial .hero__word.char-host {
+  display: inline-block;
+}
+
+.hero--editorial .hero__word .char {
+  display: inline-block;
+  transform: translateY(110%);
+  opacity: 0;
+  filter: blur(8px);
+  will-change: transform, opacity, filter;
+}
+
+/* Bottom-left: 4-line mono tagline */
+.hero--editorial .hero__tagline {
+  position: absolute;
+  bottom: clamp(64px, 10vh, 120px);
+  left: clamp(20px, 10vw, 96px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(4px, 0.6vh, 8px);
+  z-index: 8;
+  opacity: 0;
+  transform: translateY(8px);
+  margin-top: 0;
+  grid-column: unset;
+  grid-row: unset;
+}
+
+.hero--editorial .hero__tagline-line {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: clamp(10px, 0.75vw, 11px);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold-warm);
+}
+
+/* Bottom-right: CTA */
+.hero--editorial .hero__cta-wrap {
+  position: absolute;
+  bottom: clamp(64px, 10vh, 120px);
+  right: clamp(20px, 10vw, 96px);
+  z-index: 8;
+  margin-top: 0;
+  grid-column: unset;
+  grid-row: unset;
+  opacity: 0;
+}
+
+/* Bottom-center: scroll indicator */
+.hero--editorial .hero__scroll {
+  position: absolute;
+  bottom: clamp(24px, 4vh, 48px);
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
+  flex-direction: column-reverse;
+  z-index: 8;
+}
+
+.hero--editorial .hero__scroll .t-mono-gold {
+  letter-spacing: 0.3em;
+  font-size: 10px;
+}
+
+/* ── Mobile editorial stack ── */
+@media (max-width: 768px) {
+  .hero--editorial .hero__meta--tl {
+    left: 50%;
+    transform: translateX(-50%);
+    flex-direction: column;
+    top: clamp(16px, 4vh, 32px);
+    gap: 6px;
+  }
+
+  .hero--editorial .hero__meta--tr {
+    display: none; /* edition label hidden on small screens */
+  }
+
+  .hero--editorial .hero__word--oskar {
+    top: 28vh;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: clamp(64px, 22vw, 110px);
+    text-align: center;
+    width: 90vw;
+  }
+
+  .hero--editorial .hero__word--marketing {
+    top: 42vh;
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: clamp(48px, 17vw, 88px);
+    text-align: center;
+    width: 90vw;
+  }
+
+  .hero--editorial .hero__tagline {
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 26vh;
+    text-align: center;
+    align-items: center;
+  }
+
+  .hero--editorial .hero__cta-wrap {
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 14vh;
+  }
+}
