@@ -89,6 +89,57 @@ export function initCrystal(canvas: HTMLCanvasElement): () => void {
   const crystal = new THREE.Mesh(geometry, material);
   scene.add(crystal);
 
+  // ── Floating element cluster ──────────────────────────────
+  // Smaller secondary geometries that orbit the main crystal. Skipped on
+  // low-end hardware to keep the frame budget for the centerpiece.
+  interface ClusterMember {
+    mesh: THREE.Mesh;
+    radius: number;
+    speed: number;
+    phase: number;
+    yAmp: number;
+    rotX: number;
+    rotY: number;
+  }
+  const cluster: ClusterMember[] = [];
+  if (!IS_LOW_END) {
+    const memberCount = 5;
+    const blueprints: Array<() => THREE.BufferGeometry> = [
+      () => new THREE.IcosahedronGeometry(0.22, 0),
+      () => new THREE.OctahedronGeometry(0.18, 0),
+      () => new THREE.DodecahedronGeometry(0.20, 0),
+      () => new THREE.TorusGeometry(0.16, 0.045, 12, 32),
+      () => new THREE.TetrahedronGeometry(0.20, 0),
+    ];
+
+    // Cheaper material variant — still gold + metal, slightly higher
+    // roughness so they read as "satellites" not duplicates of the lead.
+    const memberMaterial = new THREE.MeshPhysicalMaterial({
+      color: 0xc9a84c,
+      metalness: 1.0,
+      roughness: 0.28,
+      clearcoat: 0.4,
+      clearcoatRoughness: 0.2,
+      envMapIntensity: 1.4,
+    });
+
+    for (let i = 0; i < memberCount; i++) {
+      const blueprint = blueprints[i % blueprints.length];
+      const geo = blueprint();
+      const mesh = new THREE.Mesh(geo, memberMaterial);
+      scene.add(mesh);
+      cluster.push({
+        mesh,
+        radius: 1.55 + (i % 3) * 0.18,
+        speed: 0.18 + i * 0.04,
+        phase: (i * Math.PI * 2) / memberCount,
+        yAmp: 0.45 + (i % 2) * 0.18,
+        rotX: 0.32 + i * 0.07,
+        rotY: 0.22 + i * 0.05,
+      });
+    }
+  }
+
   // Key + rim lights add directional highlights on top of the env reflections.
   const keyLight = new THREE.DirectionalLight(0xfff5d6, 1.2);
   keyLight.position.set(2, 2.5, 3);
@@ -142,11 +193,15 @@ export function initCrystal(canvas: HTMLCanvasElement): () => void {
   const startTime = performance.now();
   let raf = 0;
 
+  let lastTime = performance.now();
   function animate(): void {
     raf = requestAnimationFrame(animate);
     if (document.hidden) return;
 
-    const t = (performance.now() - startTime) / 1000;
+    const now = performance.now();
+    const t = (now - startTime) / 1000;
+    const dt = Math.min(0.05, (now - lastTime) / 1000);
+    lastTime = now;
 
     // Slow Y-rotation (~35s per full revolution at 60fps).
     crystal.rotation.y += 0.003;
@@ -164,6 +219,16 @@ export function initCrystal(canvas: HTMLCanvasElement): () => void {
     const scale = 1.0 - scrollT * 0.15;
     crystal.scale.setScalar(scale);
 
+    // Cluster: each member orbits on its own incommensurable trajectory
+    // and self-rotates on multiple axes. Frame-rate-independent (uses dt).
+    for (const m of cluster) {
+      m.mesh.position.x = Math.cos(t * m.speed + m.phase) * m.radius;
+      m.mesh.position.y = Math.sin(t * m.speed * 0.7 + m.phase) * m.yAmp;
+      m.mesh.position.z = Math.sin(t * m.speed * 1.1 + m.phase) * 0.42;
+      m.mesh.rotation.x += dt * m.rotX;
+      m.mesh.rotation.y += dt * m.rotY;
+    }
+
     renderer.render(scene, camera);
   }
 
@@ -179,6 +244,9 @@ export function initCrystal(canvas: HTMLCanvasElement): () => void {
     cancelAnimationFrame(raf);
     geometry.dispose();
     material.dispose();
+    for (const m of cluster) {
+      m.mesh.geometry.dispose();
+    }
     pmrem.dispose();
     renderer.dispose();
   };
