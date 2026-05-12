@@ -65,6 +65,45 @@ export function initHeroPin(
     },
   });
 
+  // Scroll-driven typography: hero name + tagline + CTA scrub against the
+  // same pin range so the whole hero feels coupled to the scroll instead
+  // of just the spiral. Built as a separate GSAP timeline rather than
+  // shoehorned into onUpdate so the easing math stays declarative.
+  //
+  // Stages match the spiral's 4-stage scrubbed animation:
+  //   0.50 → 0.85: name letter-spacing + scale subtly grow
+  //   0.75 → 1.00: name + tagline + CTA parallax up + fade out
+  const typographyTL = gsap.timeline({
+    scrollTrigger: {
+      trigger,
+      start: "top top",
+      end,
+      scrub,
+    },
+    defaults: { ease: "power2.inOut" },
+  });
+  typographyTL
+    .to(
+      ".hero__name",
+      { letterSpacing: "0.005em", scale: 1.04, duration: 0.35 },
+      0.5
+    )
+    .to(
+      ".hero__name",
+      { y: -120, opacity: 0, scale: 1.06, duration: 0.25 },
+      0.75
+    )
+    .to(
+      ".hero__tagline",
+      { y: -60, opacity: 0, duration: 0.18 },
+      0.78
+    )
+    .to(
+      ".hero__cta-wrap",
+      { y: -80, opacity: 0, duration: 0.18 },
+      0.8
+    );
+
   return st;
 }
 
