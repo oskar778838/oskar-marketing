@@ -1,9 +1,12 @@
-// Editorial Hero — char-by-char reveal + entry animations for the meta blocks.
-// Phase 2: reveal. Phase 3 will add ScrollTrigger pin choreography on top.
+// Editorial Hero — char-by-char reveal + scrubbed scroll-pin choreography.
+// Phase 2: reveal. Phase 3: ScrollTrigger pin (Lenis-bridged in smoothScroll.ts).
 
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import SplitType from "split-type";
 import type Lenis from "lenis";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const PREFERS_REDUCED_MOTION = window.matchMedia(
   "(prefers-reduced-motion: reduce)"
@@ -92,14 +95,76 @@ export function initEditorialHero(_lenis: Lenis | null): EditorialHeroHandle | n
     );
   }
 
+  // ── Phase 3: scroll-pin + scrubbed choreography ─────────
+  // Hero stays fixed for 150% scroll-distance while the choreography plays
+  // through 4 progress-phases. After that, normal flow continues to Status Quo.
+  setupHeroPin(hero, oskar, marketing);
+
   return {
     refresh: () => {
       oskarSplit?.revert();
       marketingSplit?.revert();
       if (oskar) oskarSplit = new SplitType(oskar, { types: "chars" });
       if (marketing) marketingSplit = new SplitType(marketing, { types: "chars" });
+      ScrollTrigger.refresh();
     },
   };
+}
+
+function setupHeroPin(
+  hero: HTMLElement,
+  oskar: HTMLElement | null,
+  marketing: HTMLElement | null,
+): void {
+  const tagline = hero.querySelector<HTMLElement>(".hero__tagline");
+  const cta = hero.querySelector<HTMLElement>(".hero__cta-wrap");
+  const scroll = hero.querySelector<HTMLElement>(".hero__scroll");
+
+  ScrollTrigger.create({
+    trigger: hero,
+    start: "top top",
+    end: "+=150%",
+    pin: hero,
+    pinSpacing: true,
+    scrub: 1.2,
+    invalidateOnRefresh: true,
+    onUpdate: (self) => {
+      const p = self.progress;
+
+      // Phase A (0.00–0.30): Tighten/loosen letter-spacing
+      // Phase B (0.30–0.60): Parallax — Oskar drifts left, Marketing drifts right
+      // Phase C (0.60–0.85): Shrink + fade
+      // Phase D (0.85–1.00): Tagline + CTA exit up
+      const segA = clamp01((p - 0.00) / 0.30);
+      const segB = clamp01((p - 0.30) / 0.30);
+      const segC = clamp01((p - 0.60) / 0.25);
+      const segD = clamp01((p - 0.85) / 0.15);
+
+      if (oskar) {
+        gsap.set(oskar, {
+          letterSpacing: (-0.02 + segA * 0.04) + "em",
+          x: -segB * 100,
+          scale: 1 - segC * 0.2,
+          opacity: 1 - segC * 0.7,
+        });
+      }
+      if (marketing) {
+        gsap.set(marketing, {
+          letterSpacing: (0.01 + segA * 0.05) + "em",
+          x: segB * 100,
+          scale: 1 - segC * 0.2,
+          opacity: 1 - segC * 0.7,
+        });
+      }
+      if (tagline) gsap.set(tagline, { y: -segD * 80, opacity: 1 - segD });
+      if (cta) gsap.set(cta, { y: -segD * 80, opacity: 1 - segD });
+      if (scroll) gsap.set(scroll, { opacity: 1 - clamp01(p * 4) });
+    },
+  });
+}
+
+function clamp01(n: number): number {
+  return Math.max(0, Math.min(1, n));
 }
 
 function settleStaticReveal(hero: HTMLElement): void {
