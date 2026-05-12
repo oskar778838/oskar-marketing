@@ -1,4 +1,5 @@
 import { defineConfig } from "vite";
+import { resolve } from "node:path";
 
 // `base` is set at deploy time via env var so the same build works for
 // custom domains and GitHub Pages subpaths.
@@ -14,6 +15,12 @@ export default defineConfig({
     minify: "esbuild",
     sourcemap: false,
     rollupOptions: {
+      // Multi-page setup. Bio at /, Pro at /pro/.
+      // Pro is a hidden funnel — noindex + robots.txt Disallow.
+      input: {
+        main: resolve(__dirname, "index.html"),
+        pro: resolve(__dirname, "pro/index.html"),
+      },
       output: {
         manualChunks: {
           three: ["three"],

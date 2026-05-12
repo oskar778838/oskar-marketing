@@ -1,4 +1,8 @@
 User-agent: *
 Allow: /
+Disallow: /pro/
+Disallow: /pro
+
+# Pro funnel is direct-link-only — not for organic discovery.
 
 Sitemap: https://oskarmarketing.de/sitemap.xml
