@@ -326,13 +326,44 @@ h1, h2, h3, .t-display, .t-display-italic, .end__quote, .proof__head-line, .acad
 
 /* ── Selection ────────────────────────────────────────────── */
 ::selection {
-  background: var(--gold);
+  background: rgba(201, 168, 76, 0.4);
+  color: var(--obsidian-0);
+}
+
+::-moz-selection {
+  background: rgba(201, 168, 76, 0.4);
   color: var(--obsidian-0);
 }
 
 /* ── Focus states ─────────────────────────────────────────── */
 :focus-visible {
-  outline: 1px solid var(--gold);
+  outline: 2px dashed var(--gold);
   outline-offset: 4px;
   border-radius: 1px;
+}
+
+/* ── Custom Scrollbar ──────────────────────────────────────── */
+/* Subtle 6px gold strip — only visible on hover-capable devices, never
+   takes space on mobile (overlay style on iOS native). */
+@media (hover: hover) and (pointer: fine) {
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(201, 168, 76, 0.32);
+    border-radius: 3px;
+    transition: background 200ms;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(201, 168, 76, 0.55);
+  }
+  /* Firefox */
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(201, 168, 76, 0.32) transparent;
+  }
 }
