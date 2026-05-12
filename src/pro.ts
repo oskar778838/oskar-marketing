@@ -16,6 +16,7 @@ import { initSmoothScroll } from "./lib/smoothScroll";
 import { runChoreography } from "./lib/choreography";
 import { initScrollProgress } from "./lib/scrollProgress";
 import { initBooking } from "./lib/booking";
+import { initEasterEgg } from "./lib/easter-egg";
 
 function boot(): void {
   initCursor();
@@ -23,6 +24,7 @@ function boot(): void {
   initMagnetic();
   initScrollProgress();
   initBooking();
+  initEasterEgg();
   runChoreography();
 
   const auroraCanvas = document.getElementById(

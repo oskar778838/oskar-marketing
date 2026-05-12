@@ -13,6 +13,7 @@ import { runChoreography } from "./lib/choreography";
 import { initScrollProgress } from "./lib/scrollProgress";
 import { initBooking } from "./lib/booking";
 import { initCounters } from "./lib/counters";
+import { initEasterEgg, updateDayCounter } from "./lib/easter-egg";
 
 // Init order matters: cursor + smooth scroll first (cheap), then choreography
 // (which uses ScrollTrigger and needs the DOM measured), then async WebGL.
@@ -24,7 +25,10 @@ function boot(): void {
   initScrollProgress();
   initBooking();
   initCounters();
+  initEasterEgg();
+  updateDayCounter();
   runChoreography();
+  registerServiceWorker();
 
   // WebGL hero: lazy import, never blocks first paint.
   const auroraCanvas = document.getElementById(
@@ -60,4 +64,18 @@ if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", boot, { once: true });
 } else {
   boot();
+}
+
+function registerServiceWorker(): void {
+  if (!("serviceWorker" in navigator)) return;
+  if (location.protocol === "file:") return;
+  // Resolve sw.js relative to the document so it works under any base path
+  // (root-domain deploy and GitHub Pages user-subpath both supported).
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register(new URL("sw.js", document.baseURI).toString(), {
+        scope: new URL("./", document.baseURI).pathname,
+      })
+      .catch((err) => console.warn("[sw] register failed:", err));
+  });
 }

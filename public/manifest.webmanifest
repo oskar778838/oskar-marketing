@@ -1,0 +1,26 @@
+{
+  "name": "Oskar Marketing",
+  "short_name": "OM",
+  "description": "Affiliate Marketing System mit echten Zahlen. Build in Public.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#050505",
+  "theme_color": "#C9A84C",
+  "lang": "de",
+  "icons": [
+    {
+      "src": "./favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "./logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

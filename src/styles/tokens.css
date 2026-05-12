@@ -1,3 +1,12 @@
+/* Konami easter egg — gold tones invert to cyan for 5s. */
+html.easter-egg-active {
+  --gold: #22d3ee !important;
+  --gold-warm: #67e8f9 !important;
+  --gold-deep: #0e7490 !important;
+  --pearl-rare: #cffafe !important;
+  --hairline: rgba(34, 211, 238, 0.32) !important;
+}
+
 :root {
   /* ── Color: 4-step obsidian + gold + warm pearl ───────────── */
   --obsidian-0: #050505;
