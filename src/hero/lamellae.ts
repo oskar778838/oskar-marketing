@@ -12,6 +12,14 @@
 import * as THREE from "three";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 
+// `postprocessing` is dynamically imported only when this device's QUALITY
+// tier needs it (desktop). Mobile bundles never pay the ~15 KB cost.
+type Composer = {
+  render: () => void;
+  setSize: (w: number, h: number) => void;
+  dispose: () => void;
+};
+
 const PREFERS_REDUCED_MOTION = window.matchMedia(
   "(prefers-reduced-motion: reduce)"
 ).matches;
@@ -25,14 +33,34 @@ const IS_IOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
 
 // Tier-based quality settings. Premium desktop gets the full 200-lamellae
 // spiral with 64-segment rings; mobile drops to 100 with 32 segments.
+// Postprocessing (bloom + chromatic aberration + vignette) ships only on
+// desktop where the GPU budget supports it without dropping frames.
 const QUALITY = (() => {
   if (IS_IOS) {
-    return { lamellae: 80, segments: 32, dpr: 1.5, antialias: false };
+    return {
+      lamellae: 80,
+      segments: 32,
+      dpr: 1.5,
+      antialias: false,
+      postprocessing: false,
+    };
   }
   if (IS_LOW_END || IS_TOUCH) {
-    return { lamellae: 100, segments: 36, dpr: 1.5, antialias: true };
+    return {
+      lamellae: 100,
+      segments: 36,
+      dpr: 1.5,
+      antialias: true,
+      postprocessing: false,
+    };
   }
-  return { lamellae: 200, segments: 64, dpr: 2, antialias: true };
+  return {
+    lamellae: 200,
+    segments: 64,
+    dpr: 2,
+    antialias: true,
+    postprocessing: true,
+  };
 })();
 
 export interface LamellaeHandle {
@@ -137,6 +165,51 @@ export function initLamellae(canvas: HTMLCanvasElement): LamellaeHandle {
   const ambient = new THREE.AmbientLight(0xc9a84c, 0.15);
   scene.add(ambient);
 
+  // ── Postprocessing (desktop only, dynamic import) ────────
+  // Bloom picks up gold highlights on the lamellae edges; chromatic
+  // aberration adds a premium-cinema feel; vignette focuses attention
+  // on center. Lazy-loaded so mobile bundles never pay the ~15 KB cost.
+  // Boxed in a ref so TS narrowing doesn't lose the closure write.
+  const composerRef: { current: Composer | null } = { current: null };
+  if (QUALITY.postprocessing) {
+    void import("postprocessing")
+      .then((pp) => {
+        try {
+          const c = new pp.EffectComposer(renderer);
+          c.addPass(new pp.RenderPass(scene, camera));
+          c.addPass(
+            new pp.EffectPass(
+              camera,
+              new pp.BloomEffect({
+                intensity: 0.55,
+                luminanceThreshold: 0.45,
+                luminanceSmoothing: 0.4,
+                mipmapBlur: true,
+                radius: 0.7,
+              }),
+              new pp.ChromaticAberrationEffect({
+                offset: new THREE.Vector2(0.0008, 0.0006),
+                radialModulation: false,
+                modulationOffset: 0,
+              }),
+              new pp.VignetteEffect({
+                blendFunction: pp.BlendFunction.NORMAL,
+                offset: 0.42,
+                darkness: 0.35,
+              })
+            )
+          );
+          // Match the renderer's current size before activating composer.
+          const rect = canvas.getBoundingClientRect();
+          c.setSize(Math.max(1, rect.width), Math.max(1, rect.height));
+          composerRef.current = c as Composer;
+        } catch (err) {
+          console.warn("[lamellae] postprocessing setup failed:", err);
+        }
+      })
+      .catch((err) => console.warn("[lamellae] postprocessing import failed:", err));
+  }
+
   // ── Interaction state ─────────────────────────────────────
   const mouseTarget = new THREE.Vector2(0, 0);
   const mouseCurrent = new THREE.Vector2(0, 0);
@@ -187,6 +260,7 @@ export function initLamellae(canvas: HTMLCanvasElement): LamellaeHandle {
     const w = Math.max(1, rect.width);
     const h = Math.max(1, rect.height);
     renderer.setSize(w, h, false);
+    if (composerRef.current) composerRef.current.setSize(w, h);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
   }
@@ -260,11 +334,13 @@ export function initLamellae(canvas: HTMLCanvasElement): LamellaeHandle {
       lamellaeMaterial.opacity = 1;
     }
 
-    renderer.render(scene, camera);
+    if (composerRef.current) composerRef.current.render();
+    else renderer.render(scene, camera);
   }
 
   if (PREFERS_REDUCED_MOTION) {
-    renderer.render(scene, camera);
+    if (composerRef.current) composerRef.current.render();
+    else renderer.render(scene, camera);
   } else {
     raf = requestAnimationFrame(animate);
   }
@@ -284,6 +360,7 @@ export function initLamellae(canvas: HTMLCanvasElement): LamellaeHandle {
       for (const m of lamellae) m.geometry.dispose();
       lamellaeMaterial.dispose();
       pmrem.dispose();
+      if (composerRef.current) composerRef.current.dispose();
       renderer.dispose();
     },
   };
