@@ -5,13 +5,21 @@
 // on each `[data-step]` child.
 
 import {
-  BOOKING_API_URL,
+  WEB3FORMS_ACCESS_KEY,
+  WEB3FORMS_ENDPOINT,
+  WEB3FORMS_RECIPIENT,
+  WEB3FORMS_PLACEHOLDER_PREFIX,
   SLOT_HOURS_BERLIN,
   TZ_BERLIN,
   WORKDAYS_AHEAD,
   SUCCESS_RESET_MS,
   MAX_MESSAGE_CHARS,
 } from "../config";
+
+const RESERVATION_TTL_MS = 24 * 60 * 60 * 1000;
+const RESERVATION_KEY = "oskar-booked-slots";
+
+const isPlaceholderKey = WEB3FORMS_ACCESS_KEY.startsWith(WEB3FORMS_PLACEHOLDER_PREFIX);
 
 interface Slot {
   /** ISO Z timestamp, e.g. "2026-05-13T08:00:00.000Z" (10:00 Berlin) */
@@ -59,14 +67,19 @@ const DATE_SHORT_FORMAT = new Intl.DateTimeFormat("de-DE", {
 export function initBooking(): void {
   const root = document.getElementById("booking-app");
   if (!root) return;
+  void renderSlots(root)
+  if (isPlaceholderKey) markPlaceholderState(root)
+}
 
-  // If no backend configured, surface the notice immediately and bail.
-  if (!BOOKING_API_URL) {
-    setState(root, "notice");
-    return;
-  }
-
-  void renderSlots(root);
+function markPlaceholderState(root: HTMLElement): void {
+  // Add a subtle banner in the booking root that signals "noch nicht final
+  // scharf". Avoids hiding the whole UI; user can still see the slot grid.
+  const banner = document.createElement("div")
+  banner.className = "booking__placeholder-note t-mono"
+  banner.setAttribute("role", "status")
+  banner.style.cssText = "margin: 0 0 12px; padding: 10px 14px; border:1px solid rgba(201,168,76,.35); border-radius: 8px; background: rgba(201,168,76,.06); font-size: 12px; color: var(--gold-warm); letter-spacing: .08em;"
+  banner.textContent = "Booking-API noch nicht aktiviert. Submit funktioniert nicht — bitte direkt opheck@gmx.de schreiben."
+  root.prepend(banner)
 }
 
 // ── State helpers ──────────────────────────────────────────
@@ -286,19 +299,46 @@ function formatSlotForHumans(iso: string): string {
   }
 }
 
-// ── API calls ──────────────────────────────────────────────
+// ── Client-side slot reservation (LocalStorage) ─────────────
+//
+// Web3Forms is a fire-and-forget submission service — kein echtes Backend
+// das Slots blockieren kann. Pragmatischer Kompromiss: jeder Browser merkt
+// sich seine eigenen Submissions 24h lang lokal. Oskar koordiniert
+// Doppelbuchungen manuell aus seiner Inbox (sieht beide).
+//
+// Format: { [slotKey: string]: { reservedAt: number } }
 
 async function fetchBookedSlots(): Promise<Set<string>> {
-  if (!BOOKING_API_URL) return new Set();
   try {
-    const res = await fetch(`${BOOKING_API_URL}/booked-slots`, {
-      headers: { accept: "application/json" },
-    });
-    if (!res.ok) return new Set();
-    const data = (await res.json()) as { slots?: string[] };
-    return new Set(data.slots ?? []);
+    const raw = localStorage.getItem(RESERVATION_KEY);
+    if (!raw) return new Set();
+    const obj = JSON.parse(raw) as Record<string, { reservedAt: number }>;
+    const now = Date.now();
+    const live = new Set<string>();
+    let changed = false;
+    for (const [key, val] of Object.entries(obj)) {
+      if (now - val.reservedAt < RESERVATION_TTL_MS) {
+        live.add(key);
+      } else {
+        delete obj[key];
+        changed = true;
+      }
+    }
+    if (changed) localStorage.setItem(RESERVATION_KEY, JSON.stringify(obj));
+    return live;
   } catch {
     return new Set();
+  }
+}
+
+function markSlotReserved(slotKey: string): void {
+  try {
+    const raw = localStorage.getItem(RESERVATION_KEY);
+    const obj = (raw ? JSON.parse(raw) : {}) as Record<string, { reservedAt: number }>;
+    obj[slotKey] = { reservedAt: Date.now() };
+    localStorage.setItem(RESERVATION_KEY, JSON.stringify(obj));
+  } catch {
+    // ignore — best-effort
   }
 }
 
@@ -330,43 +370,70 @@ async function submitBooking(
   if (submit) submit.disabled = true;
   if (labelSpan) labelSpan.textContent = "Sende …";
 
+  const slotKey = String(data.get("slot_key") ?? "");
+  const email = String(data.get("email") ?? "").trim();
+  const phone = String(data.get("phone") ?? "").trim();
+  const message = String(data.get("message") ?? "").trim();
+
+  // Wenn der Access-Key noch Placeholder ist: nur lokal markieren + Fehler
+  // mit klarer Direkt-Mail-CTA. Kein Web-Request, damit Web3Forms keinen
+  // 'Invalid Key'-Error sieht und Oskar's Inbox spammt.
+  if (isPlaceholderKey) {
+    showError(
+      form,
+      "Booking ist morgen früh aktiv (Access-Key fehlt noch). Schreib mir direkt: opheck@gmx.de",
+    );
+    restoreSubmit(submit, labelSpan);
+    console.warn("[booking] WEB3FORMS_ACCESS_KEY is still placeholder");
+    return;
+  }
+
+  // Web3Forms erwartet flat JSON mit access_key + named fields. Subject + from
+  // werden in der Mail-Format für Oskar's Inbox-Filter ('[TERMIN]'-Prefix).
+  const slotHuman = formatSlotForHumans(slotKeyToIso(slotKey));
   const payload = {
-    slot_key: String(data.get("slot_key") ?? ""),
-    email: String(data.get("email") ?? "").trim(),
-    phone: String(data.get("phone") ?? "").trim(),
-    message: String(data.get("message") ?? "").trim(),
-    consent: true,
+    access_key: WEB3FORMS_ACCESS_KEY,
+    subject: `[TERMIN] ${slotHuman}`,
+    from_name: "Oskar Marketing Bio",
+    to: WEB3FORMS_RECIPIENT,
+    slot: slotKey,
+    slot_human: slotHuman,
+    email,
+    phone,
+    message,
+    botcheck: "", // honeypot — Web3Forms default
   };
 
   try {
-    if (!BOOKING_API_URL) throw new Error("backend offline");
-    const res = await fetch(BOOKING_API_URL, {
+    const res = await fetch(WEB3FORMS_ENDPOINT, {
       method: "POST",
-      headers: { "content-type": "application/json" },
+      headers: { "content-type": "application/json", accept: "application/json" },
       body: JSON.stringify(payload),
     });
-    if (res.status === 409) {
-      showError(
-        form,
-        "Dieser Slot wurde gerade vergeben. Bitte wähle einen anderen."
-      );
-      restoreSubmit(submit, labelSpan);
-      setState(root, "slots");
-      return;
+    const body = (await res.json().catch(() => ({}))) as BookingResponse & { success?: boolean; message?: string };
+    if (!res.ok || body.success === false) {
+      throw new Error(body.message || body.error || `HTTP ${res.status}`);
     }
-    const body = (await res.json().catch(() => ({}))) as BookingResponse;
-    if (!res.ok || body.ok === false) {
-      throw new Error(body.error || `HTTP ${res.status}`);
-    }
+    // Lokale Slot-Reservation 24h — verhindert dass derselbe Visitor den
+    // Slot in Folge nochmal anklickt; doppelte Buchungen zwischen
+    // verschiedenen Visitors löst Oskar manuell.
+    markSlotReserved(slotKey);
     showSuccess(root);
   } catch (err) {
     showError(
       form,
-      "Konnte den Termin gerade nicht senden. Schreib mir bitte direkt: opheck@gmx.de"
+      "Konnte den Termin gerade nicht senden. Schreib mir bitte direkt: opheck@gmx.de",
     );
     restoreSubmit(submit, labelSpan);
     console.warn("[booking] submit failed:", err);
   }
+}
+
+/** Slot-Key "2026-05-13T14:00" → grobes ISO mit Berlin-Zeitannahme.
+ *  Nur für die Mail-Subject-Formatierung — exakte Validierung ist nicht nötig
+ *  weil der Slot-Key 1:1 reicht (Oskar liest beide Felder). */
+function slotKeyToIso(slotKey: string): string {
+  return slotKey ? `${slotKey}:00` : "";
 }
 
 function showError(form: HTMLFormElement, message: string): void {
