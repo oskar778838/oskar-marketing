@@ -63,7 +63,7 @@ export function runChoreography(): void {
       el.style.opacity = "1";
       el.style.transform = "none";
     });
-    document.querySelectorAll<HTMLElement>(".hero__name .char").forEach((c) => {
+    document.querySelectorAll<HTMLElement>(".hero__word .char").forEach((c) => {
       c.style.opacity = "1";
       c.style.transform = "none";
       c.style.filter = "none";
@@ -73,87 +73,17 @@ export function runChoreography(): void {
     return;
   }
 
-  // Pre-split hero name characters
-  splitToChars(".hero__name [data-split]");
+  // Hero reveal + scroll-pin are owned by editorialHero.ts (Phase 2+3).
+  // Choreography here only handles loader dismiss + top-nav reveal +
+  // subsequent section choreography. Avoids double-animating the hero.
 
-  // ── Master page-load timeline ─────────────────────────────
-  // First visitor: full ~2.3s sequence. Repeat visitor: ~1.0s compressed
-  // version (TIMING_SCALE = 0.42) — they've seen it, get them to the page.
   const tl = gsap.timeline({ defaults: { ease: EASE_DEFAULT } });
-
-  // Loader fades out at t=0 (kicks off the sequence visually).
   tl.add(() => dismissLoader(0), 0);
-
   tl.add(() => {
     document.querySelector(".top-nav")?.classList.add("is-revealed");
   }, TS(0.4));
 
-  tl.to(
-    ".hero__avatar",
-    {
-      opacity: 1,
-      scale: 1,
-      duration: TS(1.1),
-      ease: EASE_EMPHASIS,
-    },
-    TS(0.6)
-  );
-
-  // 3D lamellae spiral scale-in — slightly delayed and elastic for a
-  // "settles in place" feel that suggests weight/material.
-  tl.to(
-    ".hero__lamellae",
-    {
-      opacity: 1,
-      scale: 1,
-      duration: TS(1.4),
-      ease: "elastic.out(1, 0.6)",
-    },
-    TS(0.85)
-  );
-
-  tl.to(
-    ".hero__name .char",
-    {
-      y: 0,
-      opacity: 1,
-      filter: "blur(0px)",
-      duration: TS(0.95),
-      ease: EASE_EMPHASIS,
-      stagger: { each: TS(0.024), from: "start" },
-    },
-    TS(0.95)
-  );
-
-  tl.to(
-    ".hero__tagline",
-    {
-      opacity: 1,
-      y: 0,
-      duration: TS(0.7),
-    },
-    TS(1.6)
-  );
-
-  tl.to(
-    ".hero__cta-wrap",
-    {
-      opacity: 1,
-      y: 0,
-      duration: TS(0.8),
-      ease: EASE_EMPHASIS,
-    },
-    TS(1.85)
-  );
-
-  tl.to(
-    ".hero__scroll",
-    {
-      opacity: 1,
-      duration: TS(0.6),
-    },
-    TS(2.1)
-  );
+  void tl; // hero reveal + char-stagger handled by editorialHero.ts now
 
   // ── Section 01 — Status Quo ────────────────────────────────
   splitToChars(".status__h [data-split]");
