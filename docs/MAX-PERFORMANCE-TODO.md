@@ -24,11 +24,11 @@ commit; truly new work is what follows.
 
 ## §2 3D Crystal — partially shipped
 - [✅] 2.1-2.7  Crystal core (commit `1b8f54a`) — programmatic three, RoomEnvironment, PBR gold, vertex displacement, mouse + scroll + float
-- [ ]  2.8  Optional: postprocessing Bloom + ChromaticAberration on desktop only
+- [⚠️] 2.8  **SKIPPED pragmatically.** Bloom + ChromaticAberration would add ~30 KB and GPU work per frame. The Crystal + cluster already read premium with iridescence + clearcoat + envMapIntensity 1.6. Re-enable later if a desktop-only nice-to-have, gated by `!isLowEnd`.
 
 ## §3 Floating element cluster
-- [ ]  3.1  Add 3-5 secondary meshes orbiting main crystal
-- [ ]  3.2  Performance guard (skip cluster on low-end)
+- [✅] 3.1  Added 5 satellites (icosa, octa, dodeca, torus, tetra) — commit `e4f629c`
+- [✅] 3.2  Performance guard: cluster skipped entirely when `IS_LOW_END` (HW concurrency < 6)
 
 ## §4 Aurora refinement — DONE
 - [✅]  4.x  All deltas shipped in commit `1d313e0`
@@ -46,11 +46,11 @@ commit; truly new work is what follows.
 ## §8 Scroll-driven effects — partially shipped
 - [✅]  8.5  Side-rail (vertical gold line) shipped earlier
 - [✅]  8.6  Top scroll-progress bar shipped earlier
-- [ ]  8.4  Section backdrop parallax tints — NEW
+- [⚠️]  8.4  **SKIPPED pragmatically.** Per-section parallax backdrops would add GPU work on every scroll event with marginal visual gain over what we already have (side-rail + scroll-progress + Aurora-scroll-fade + per-section GSAP reveals). Re-evaluate after the first user feedback round.
 - [✅]  8.1-8.3  Section reveals + headline char-stagger + body fades — already wired in choreography.ts
 
 ## §9 Page transitions
-- [ ]  9.x  View Transitions API for cross-page nav (only meaningful once /pro/ exists)
+- [⚠️]  9.x  **SKIPPED pragmatically.** §1.4 explicitly forbids any internal link from bio→pro (Pro is direct-link-only via TikTok bio click-through). With zero same-origin navigations between the two pages, View Transitions has nothing to bind to. The user-facing flow is always: external referrer → page load → Konami / external CTA. No transition surface exists. Document for re-enable when oskarmarketing.de adds more internal pages.
 
 ## §10 SEO + Meta + OG
 - [✅]  Title, OG tags, Twitter cards, JSON-LD Person — in initial build
@@ -85,7 +85,7 @@ commit; truly new work is what follows.
 - [✅]  14.5  Color contrast verified (gold on obsidian 6.8:1)
 
 ## §15 Deploy + Awwwards Checklist
-- [ ]  15.1  Final build (both entries)
+- [⏳] 15.1  Final build (both entries)
 - [ ]  15.2  Push (avoid --force unless necessary)
 - [ ]  15.3  Verify GH Action green
 - [ ]  15.4  WebFetch live verify
