@@ -319,13 +319,21 @@
   letter-spacing: 0.22em;
 }
 
-/* ── Track grid: two cards, equal weight ──────────────── */
+/* ── Track grid: two cards, equal weight (default for /pro/) ─── */
 .academy__tracks {
   grid-column: 1 / span 12;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   column-gap: var(--gutter);
   row-gap: var(--s-6);
+}
+
+/* Single-track variant (bio): one centered card, max-width caps the width
+   so the card doesn't spread to a billboard at large viewports. */
+.academy__tracks--single {
+  grid-template-columns: 1fr;
+  max-width: 640px;
+  margin-inline: auto;
 }
 
 .track {
