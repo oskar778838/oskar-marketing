@@ -35,25 +35,28 @@
   transform: scale(0.85);
 }
 
-/* ── 3D Crystal centerpiece ───────────────────────────────── */
-/* Desktop: floats over the right portion of the hero, behind text but in
-   front of the aurora canvas. Z-index 1: aurora is z:0, content >= z:10. */
-.hero__crystal {
-  grid-column: 8 / span 5;
+/* ── 3D Lamellae spiral centerpiece ──────────────────────── */
+/* Desktop: occupies the right half of the hero, large and dominant.
+   Z-index 1: above aurora (z:0), below text content (z:10+). The spiral
+   visually anchors the hero alongside the editorial typography on the left. */
+.hero__lamellae {
+  grid-column: 7 / span 6;
   grid-row: 2;
   position: relative;
   width: 100%;
-  height: clamp(280px, 36vw, 520px);
+  height: clamp(360px, 56vw, 720px);
   align-self: center;
   z-index: 1;
   opacity: 0;
   transform: scale(0.6);
-  pointer-events: none;
-  /* slight outward bleed so the gold edges aren't clipped by the gutter */
-  margin-right: clamp(-32px, -2vw, -8px);
+  /* Pointer-events on so touch-drag can target this canvas directly on mobile;
+     desktop mouse-track is still global (window-level listener). */
+  pointer-events: auto;
+  /* outward bleed — the spiral can extend slightly past the gutter for drama */
+  margin-right: clamp(-48px, -3vw, -16px);
 }
 
-.hero__crystal-canvas {
+.hero__lamellae-canvas {
   display: block;
   width: 100%;
   height: 100%;
@@ -368,13 +371,14 @@
     grid-row: unset;
   }
 
-  /* Mobile: crystal sits between avatar and name, full width, ~40vh tall. */
-  .hero__crystal {
+  /* Mobile: lamellae sits between avatar and name, full width, ~50vh tall.
+     Touch-drag rotates the spiral inside its bounds. */
+  .hero__lamellae {
     grid-column: unset;
     grid-row: unset;
     width: 100%;
-    height: 38vh;
-    max-height: 360px;
+    height: 50vh;
+    max-height: 480px;
     margin-bottom: var(--s-6);
     margin-right: 0;
     align-self: stretch;

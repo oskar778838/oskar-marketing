@@ -5,3 +5,7 @@ dist
 .vite
 .env
 .env.local
+
+# HDRI environment map (1.5MB) — used only for local quality testing.
+# Production uses programmatic RoomEnvironment for env reflections.
+public/hdri/

@@ -38,14 +38,14 @@ function boot(): void {
     });
   }
 
-  const crystalCanvas = document.getElementById(
-    "crystal"
+  const lamellaeCanvas = document.getElementById(
+    "lamellae"
   ) as HTMLCanvasElement | null;
-  if (crystalCanvas) {
+  if (lamellaeCanvas) {
     requestAnimationFrame(() => {
-      import("./hero/crystal")
-        .then(({ initCrystal }) => initCrystal(crystalCanvas))
-        .catch((err) => console.warn("[hero/crystal] init failed:", err));
+      import("./hero/lamellae")
+        .then(({ initLamellae }) => initLamellae(lamellaeCanvas))
+        .catch((err) => console.warn("[hero/lamellae] init failed:", err));
     });
   }
 }

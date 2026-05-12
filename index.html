@@ -134,10 +134,11 @@
             <img src="./logo.svg" alt="" class="hero__avatar-logo" width="120" height="120" />
           </div>
 
-          <!-- Programmatic 3D crystal centerpiece. Rendered to its own canvas
-               so it can be positioned independently and torn down on unmount. -->
-          <div class="hero__crystal" data-reveal="crystal" aria-hidden="true">
-            <canvas id="crystal" class="hero__crystal-canvas"></canvas>
+          <!-- High-poly lamellae spiral hero centerpiece. Rendered to its own
+               canvas; positioned within the hero grid so it sits visually
+               between the avatar and the name. -->
+          <div class="hero__lamellae" data-reveal="lamellae" aria-hidden="true">
+            <canvas id="lamellae" class="hero__lamellae-canvas"></canvas>
           </div>
 
           <h1 id="hero-name" class="hero__name t-display" data-reveal="name">

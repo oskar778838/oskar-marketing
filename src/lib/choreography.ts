@@ -99,10 +99,10 @@ export function runChoreography(): void {
     TS(0.6)
   );
 
-  // 3D crystal scale-in — slightly delayed and elastic for a "settles in
-  // place" feel that suggests weight/material.
+  // 3D lamellae spiral scale-in — slightly delayed and elastic for a
+  // "settles in place" feel that suggests weight/material.
   tl.to(
-    ".hero__crystal",
+    ".hero__lamellae",
     {
       opacity: 1,
       scale: 1,
