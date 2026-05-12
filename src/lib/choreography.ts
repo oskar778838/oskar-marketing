@@ -3,7 +3,6 @@
 
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import SplitType from "split-type";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -14,20 +13,41 @@ const PREFERS_REDUCED_MOTION = window.matchMedia(
 const EASE_DEFAULT = "power3.out";
 const EASE_EMPHASIS = "expo.out";
 
-// Split into words AND chars: chars animate, words guarantee no mid-word breaks.
-// Without the word wrapper, individual char inline-blocks let the browser break
-// between any two letters — producing "Tag    f / ür" splits.
-function splitToChars(selector: string): SplitType[] {
+// Manual word + char split. Replaces SplitType because v0.3.4 produced
+// inconsistent word-wrappers across browsers, leaving chars free to break
+// across lines mid-word ("Tag    f / ür"). Manual is deterministic:
+// each word becomes a `.word` span (display:inline-block, white-space:nowrap),
+// each char inside is a `.char` span (display:inline-block) for animation.
+// Spaces between words are preserved as text nodes so the line wraps
+// at word boundaries only.
+function splitToChars(selector: string): void {
   const els = document.querySelectorAll<HTMLElement>(selector);
-  const splits: SplitType[] = [];
   els.forEach((el) => {
-    const split = new SplitType(el, {
-      types: "words,chars",
-      tagName: "span",
-    });
-    splits.push(split);
+    const text = el.textContent ?? "";
+    if (!text.trim()) return;
+    // split keeping the whitespace runs as separate tokens
+    const tokens = text.split(/(\s+)/);
+    const html = tokens
+      .map((tok) => {
+        if (tok.length === 0) return "";
+        if (/^\s+$/.test(tok)) return tok; // preserve original whitespace
+        const chars = Array.from(tok)
+          .map((c) => `<span class="char">${escapeChar(c)}</span>`)
+          .join("");
+        return `<span class="word">${chars}</span>`;
+      })
+      .join("");
+    el.innerHTML = html;
   });
-  return splits;
+}
+
+function escapeChar(c: string): string {
+  if (c === "&") return "&amp;";
+  if (c === "<") return "&lt;";
+  if (c === ">") return "&gt;";
+  if (c === '"') return "&quot;";
+  if (c === "'") return "&#39;";
+  return c;
 }
 
 export function runChoreography(): void {

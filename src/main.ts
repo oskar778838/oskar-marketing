@@ -25,14 +25,13 @@ function boot(): void {
   runChoreography();
 
   // WebGL hero: lazy import, never blocks first paint.
-  const canvas = document.getElementById("bg-shader") as HTMLCanvasElement | null;
+  const canvas = document.getElementById("hero-bg") as HTMLCanvasElement | null;
   if (canvas) {
     // Defer to next frame so we don't compete with the page-load timeline.
     requestAnimationFrame(() => {
       import("./hero/background")
         .then(({ initHeroBackground }) => initHeroBackground(canvas))
         .catch((err) => {
-          // CSS fallback already visible — but log so we can debug if it fails.
           console.warn("[hero/background] WebGL init failed:", err);
         });
     });

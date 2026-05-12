@@ -106,41 +106,18 @@ a {
 }
 
 /* ── Background layers ────────────────────────────────────── */
-.bg-shader {
+/* Hardcoded shader canvas — fixed full-viewport, behind everything.
+   Visible immediately (no opacity transition) so the user sees the
+   gold mesh on first paint. */
+#hero-bg {
   position: fixed;
-  inset: 0;
-  z-index: var(--z-bg);
-  opacity: 0;
-  /* Faster fade-in — was 1.2s, but combined with the 2.2s load timeline
-     the hero felt "flat black" for too long. 600ms still hides any
-     first-frame flicker but doesn't make the user wait. */
-  transition: opacity 600ms var(--ease-default);
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  display: block;
   pointer-events: none;
-}
-
-.bg-shader.is-ready {
-  opacity: 1;
-}
-
-.bg-mesh-fallback {
-  position: fixed;
-  inset: -25%;
-  width: 150%;
-  height: 150%;
-  z-index: var(--z-bg);
-  background:
-    radial-gradient(ellipse 55% 45% at 22% 28%, rgba(201, 168, 76, 0.11) 0%, transparent 65%),
-    radial-gradient(ellipse 45% 55% at 78% 72%, rgba(139, 105, 20, 0.09) 0%, transparent 60%),
-    radial-gradient(ellipse 65% 35% at 50% 6%, rgba(232, 201, 106, 0.05) 0%, transparent 55%),
-    var(--obsidian-0);
-  pointer-events: none;
-  animation: mesh-drift 24s ease-in-out infinite alternate;
-}
-
-@keyframes mesh-drift {
-  0%   { transform: translate3d(0, 0, 0) scale(1); }
-  50%  { transform: translate3d(-2.5%, 3%, 0) scale(1.04); }
-  100% { transform: translate3d(2%, -2%, 0) scale(0.98); }
 }
 
 .bg-grain {
@@ -148,22 +125,9 @@ a {
   inset: 0;
   z-index: var(--z-grain);
   pointer-events: none;
-  opacity: 0.32;
+  opacity: 0.18;
   mix-blend-mode: overlay;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.07'/%3E%3C/svg%3E");
-}
-
-.bg-vignette {
-  position: fixed;
-  inset: 0;
-  z-index: var(--z-grain);
-  pointer-events: none;
-  /* Softer vignette so the WebGL gold mesh stays readable at the edges. */
-  background: radial-gradient(
-    ellipse at center,
-    transparent 55%,
-    rgba(5, 5, 5, 0.32) 100%
-  );
 }
 
 /* ── Layout root ──────────────────────────────────────────── */

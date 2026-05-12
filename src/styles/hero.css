@@ -314,38 +314,76 @@
   letter-spacing: 0.18em;
 }
 
-/* ── Mobile hero adjustments ──────────────────────────────── */
+/* ── Mobile hero — clean vertical stack ────────────────────── */
+/* Below 768px the grid layout collapses to a single-column flex stack:
+   logo-meta → avatar → name (line 1 → line 2) → tagline → cta.
+   Each item is a separate block with explicit margin so nothing overlaps.
+   Name capped at 72px so it fits 375px viewports without wrapping. */
 @media (max-width: 768px) {
+  .hero {
+    padding-block: var(--s-9) var(--s-7);
+  }
+
   .hero__inner {
+    display: flex;
+    flex-direction: column;
     align-items: flex-start;
+    gap: 0;
+  }
+
+  .hero__meta {
+    margin-bottom: var(--s-7);
   }
 
   .hero__avatar {
-    grid-column: 1 / span 4;
-    grid-row: 2;
-    margin-bottom: var(--s-5);
+    width: 96px;
+    height: 96px;
+    align-self: flex-start;
+    margin-bottom: var(--s-6);
+    grid-column: unset;
+    grid-row: unset;
   }
 
   .hero__name {
-    grid-column: 1 / span 12;
-    grid-row: 3;
-    font-size: var(--t-display-5xl);
+    width: 100%;
+    grid-column: unset;
+    grid-row: unset;
+    font-size: clamp(48px, 13.5vw, 72px);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    gap: 0;
+    /* Each line on its own row, no negative gap, no overflow into the
+       next sibling. The italic line aligns left like the first to keep
+       the stack clean. */
+  }
+
+  .hero__name-line {
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.08em;
   }
 
   .hero__name-line--italic {
-    align-self: flex-end;
+    align-self: flex-start;
     padding-right: 0;
-    /* characteristic mobile asymmetry: italic name extends past viewport */
-    margin-right: -12vw;
+    margin-right: 0;
+    /* keep the italic accent but don't overflow the viewport on mobile */
   }
 
-  .hero__tagline,
-  .hero__cta-wrap {
-    grid-column: 1 / span 12;
-  }
-
-  .hero__cta-wrap {
+  .hero__tagline {
+    width: 100%;
+    grid-column: unset;
+    grid-row: unset;
+    /* Mandatory clear gap between name and tagline so the italic descender
+       can never bleed onto the tagline regardless of font metrics. */
     margin-top: var(--s-6);
+  }
+
+  .hero__cta-wrap {
+    width: 100%;
+    grid-column: unset;
+    grid-row: unset;
+    margin-top: var(--s-5);
   }
 
   .cta {
@@ -354,5 +392,12 @@
 
   .hero__scroll {
     display: none;
+  }
+}
+
+/* Tighter at 414/iPhone-Pro-Max-and-below — give the name another step down */
+@media (max-width: 420px) {
+  .hero__name {
+    font-size: clamp(44px, 13vw, 60px);
   }
 }
