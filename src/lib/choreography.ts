@@ -3,6 +3,7 @@
 
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { dismissLoader, isFirstVisit } from "./loader";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -12,6 +13,11 @@ const PREFERS_REDUCED_MOTION = window.matchMedia(
 
 const EASE_DEFAULT = "power3.out";
 const EASE_EMPHASIS = "expo.out";
+
+// Repeat visitors get a compressed sequence — overall ratio 0.42 of the
+// first-visit timeline. They don't need to be re-onboarded every time.
+const TIMING_SCALE = isFirstVisit() ? 1.0 : 0.42;
+const TS = (s: number) => s * TIMING_SCALE;
 
 // Manual word + char split. Replaces SplitType because v0.3.4 produced
 // inconsistent word-wrappers across browsers, leaving chars free to break
@@ -63,28 +69,34 @@ export function runChoreography(): void {
       c.style.filter = "none";
     });
     document.querySelector(".top-nav")?.classList.add("is-revealed");
+    dismissLoader();
     return;
   }
 
   // Pre-split hero name characters
   splitToChars(".hero__name [data-split]");
 
-  // ── Page-load timeline ─────────────────────────────────────
+  // ── Master page-load timeline ─────────────────────────────
+  // First visitor: full ~2.3s sequence. Repeat visitor: ~1.0s compressed
+  // version (TIMING_SCALE = 0.42) — they've seen it, get them to the page.
   const tl = gsap.timeline({ defaults: { ease: EASE_DEFAULT } });
+
+  // Loader fades out at t=0 (kicks off the sequence visually).
+  tl.add(() => dismissLoader(0), 0);
 
   tl.add(() => {
     document.querySelector(".top-nav")?.classList.add("is-revealed");
-  }, 0.4);
+  }, TS(0.4));
 
   tl.to(
     ".hero__avatar",
     {
       opacity: 1,
       scale: 1,
-      duration: 1.1,
+      duration: TS(1.1),
       ease: EASE_EMPHASIS,
     },
-    0.6
+    TS(0.6)
   );
 
   // 3D crystal scale-in — slightly delayed and elastic for a "settles in
@@ -94,10 +106,10 @@ export function runChoreography(): void {
     {
       opacity: 1,
       scale: 1,
-      duration: 1.4,
+      duration: TS(1.4),
       ease: "elastic.out(1, 0.6)",
     },
-    0.85
+    TS(0.85)
   );
 
   tl.to(
@@ -106,11 +118,11 @@ export function runChoreography(): void {
       y: 0,
       opacity: 1,
       filter: "blur(0px)",
-      duration: 0.95,
+      duration: TS(0.95),
       ease: EASE_EMPHASIS,
-      stagger: { each: 0.024, from: "start" },
+      stagger: { each: TS(0.024), from: "start" },
     },
-    0.95
+    TS(0.95)
   );
 
   tl.to(
@@ -118,9 +130,9 @@ export function runChoreography(): void {
     {
       opacity: 1,
       y: 0,
-      duration: 0.7,
+      duration: TS(0.7),
     },
-    1.6
+    TS(1.6)
   );
 
   tl.to(
@@ -128,19 +140,19 @@ export function runChoreography(): void {
     {
       opacity: 1,
       y: 0,
-      duration: 0.8,
+      duration: TS(0.8),
       ease: EASE_EMPHASIS,
     },
-    1.85
+    TS(1.85)
   );
 
   tl.to(
     ".hero__scroll",
     {
       opacity: 1,
-      duration: 0.6,
+      duration: TS(0.6),
     },
-    2.1
+    TS(2.1)
   );
 
   // ── Section 01 — Status Quo ────────────────────────────────

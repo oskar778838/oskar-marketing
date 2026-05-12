@@ -105,6 +105,70 @@ a {
   color: var(--gold);
 }
 
+/* ── Loader overlay ────────────────────────────────────── */
+/* Black full-viewport overlay shown until boot() completes. The OM mark
+   pulses gently while assets load. JS removes the .is-active class to
+   trigger the fade-out, then sets [hidden] after the transition ends. */
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-loader);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-5);
+  background: var(--obsidian-0);
+  opacity: 1;
+  transition: opacity 600ms var(--ease-default);
+}
+
+.loader.is-leaving {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.loader[hidden] {
+  display: none;
+}
+
+.loader__mark {
+  display: inline-flex;
+  width: 64px;
+  height: 64px;
+  animation: loader-pulse 1.4s var(--ease-default) infinite;
+}
+
+.loader__label {
+  font-size: var(--t-mono-xs);
+  letter-spacing: 0.32em;
+  opacity: 0;
+  animation: loader-fade-in 600ms 200ms var(--ease-default) forwards;
+}
+
+@keyframes loader-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+}
+
+@keyframes loader-fade-in {
+  to { opacity: 0.8; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loader__mark,
+  .loader__label {
+    animation: none;
+    opacity: 0.8;
+  }
+}
+
 /* ── Background layers ────────────────────────────────────── */
 /* Hardcoded shader canvas — fixed full-viewport, behind everything.
    Visible immediately (no opacity transition) so the user sees the
