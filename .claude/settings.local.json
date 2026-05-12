@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(code --install-extension slevesque.shader)",
+      "Bash(code --install-extension slevesque.vscode-3dviewer)",
+      "Bash(code --install-extension usernamehw.errorlens)",
+      "Bash(code --install-extension christian-kohler.path-intellisense)",
+      "Bash(code --install-extension christian-kohler.npm-intellisense)"
+    ]
+  }
+}

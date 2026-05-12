@@ -17,14 +17,19 @@ import { runChoreography } from "./lib/choreography";
 import { initScrollProgress } from "./lib/scrollProgress";
 import { initBooking } from "./lib/booking";
 import { initEasterEgg } from "./lib/easter-egg";
+import { initEditorialHero } from "./lib/editorialHero";
+import type Lenis from "lenis";
+
+let lenisInstance: Lenis | null = null;
 
 function boot(): void {
   initCursor();
-  initSmoothScroll();
+  lenisInstance = initSmoothScroll();
   initMagnetic();
   initScrollProgress();
   initBooking();
   initEasterEgg();
+  initEditorialHero(lenisInstance);
   runChoreography();
 
   const auroraCanvas = document.getElementById(
@@ -35,17 +40,6 @@ function boot(): void {
       import("./hero/background")
         .then(({ initHeroBackground }) => initHeroBackground(auroraCanvas))
         .catch((err) => console.warn("[hero/background] init failed:", err));
-    });
-  }
-
-  const lamellaeCanvas = document.getElementById(
-    "lamellae"
-  ) as HTMLCanvasElement | null;
-  if (lamellaeCanvas) {
-    requestAnimationFrame(() => {
-      import("./hero/lamellae")
-        .then(({ initLamellae }) => initLamellae(lamellaeCanvas))
-        .catch((err) => console.warn("[hero/lamellae] init failed:", err));
     });
   }
 }
