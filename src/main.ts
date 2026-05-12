@@ -14,13 +14,17 @@ import { initScrollProgress } from "./lib/scrollProgress";
 import { initBooking } from "./lib/booking";
 import { initCounters } from "./lib/counters";
 import { initEasterEgg, updateDayCounter } from "./lib/easter-egg";
+import { initHeroPin, initHeroProgressOnly } from "./lib/heroPin";
+import type Lenis from "lenis";
 
 // Init order matters: cursor + smooth scroll first (cheap), then choreography
 // (which uses ScrollTrigger and needs the DOM measured), then async WebGL.
 
+let lenisInstance: Lenis | null = null;
+
 function boot(): void {
   initCursor();
-  initSmoothScroll();
+  lenisInstance = initSmoothScroll();
   initMagnetic();
   initScrollProgress();
   initBooking();
@@ -87,8 +91,19 @@ async function mountLamellae(canvas: HTMLCanvasElement): Promise<void> {
   try {
     const { initLamellae } = await import("./hero/lamellae");
     lamellaeHandle = initLamellae(canvas);
-    // Phase 2: ScrollTrigger pin will call lamellaeHandle.setProgress.
-    // For now, expose on window for debugging.
+
+    // Wire scroll-pin: hero stays fixed while user scrolls through 200%vh
+    // and the spiral transforms in place. Reduced-motion path skips the
+    // pin and drives progress directly from window.scrollY.
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+    if (prefersReducedMotion) {
+      initHeroProgressOnly(lamellaeHandle);
+    } else {
+      initHeroPin(lamellaeHandle, lenisInstance);
+    }
+
     (window as unknown as { __lamellae?: typeof lamellaeHandle }).__lamellae =
       lamellaeHandle;
   } catch (err) {
