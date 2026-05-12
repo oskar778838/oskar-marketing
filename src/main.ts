@@ -12,6 +12,7 @@ import { initSmoothScroll } from "./lib/smoothScroll";
 import { runChoreography } from "./lib/choreography";
 import { initScrollProgress } from "./lib/scrollProgress";
 import { initBooking } from "./lib/booking";
+import { initCounters } from "./lib/counters";
 
 // Init order matters: cursor + smooth scroll first (cheap), then choreography
 // (which uses ScrollTrigger and needs the DOM measured), then async WebGL.
@@ -22,6 +23,7 @@ function boot(): void {
   initMagnetic();
   initScrollProgress();
   initBooking();
+  initCounters();
   runChoreography();
 
   // WebGL hero: lazy import, never blocks first paint.

@@ -28,12 +28,13 @@ Started 2026-05-12. Source: AWWWARDS FINAL REFINEMENT brief from Oskar.
 
 ## Phase 3 — Status Quo Section (real numbers)
 
-- [ ]  3.1  Renumber sections: Status Quo = 01, Proof = 02, Academy = 03, Termin = 04, Channels = 05, Manifest = 06
-- [ ]  3.2  Section markup: header + 2x2 asymmetric grid of stat-cards
-- [ ]  3.3  4 cards with real numbers (7600 views/wk, 10 services, 60 posts, 100 target)
-- [ ]  3.4  Animated counters via GSAP ScrollTrigger (1.4s power3.out, stagger 150ms)
-- [ ]  3.5  Update Proof section item C copy (point to Status Quo above)
-- [ ]  3.6  Build + commit `feat: status quo section with real numbers + animated counters`
+- [✅] 3.1  Renumber sections: 01 Status Quo (new), 02 Proof, 03 Academy, 04 Termin, 05 Channels, 06 Manifest
+- [✅] 3.2  Section markup: header + 2x2 asymmetric grid (lg span 7, others span 5/6)
+- [✅] 3.3  4 cards with real numbers (7.600 views/wk · 10 services · 60 posts · 100 target Q3 2026)
+- [✅] 3.4  Animated counters via GSAP ScrollTrigger (1.4s power3.out, stagger 150ms, tabular-nums for stable width)
+- [✅] 3.5  Updated Proof item C to point to Status Quo above (no more "sobald da")
+- [✅] 3.6  Plus: hero tagline now reads "7.600 Views / Wo" instead of "Tag 14"
+- [✅] 3.7  Build + commit `feat: status quo section with real numbers + animated counters`
 
 ## Phase 4 — Page Load Choreography
 

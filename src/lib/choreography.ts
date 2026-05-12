@@ -143,7 +143,37 @@ export function runChoreography(): void {
     2.1
   );
 
-  // ── Section 01 — Proof ─────────────────────────────────────
+  // ── Section 01 — Status Quo ────────────────────────────────
+  splitToChars(".status__h [data-split]");
+
+  gsap.from(".status__h .char", {
+    scrollTrigger: {
+      trigger: ".status__h",
+      start: "top 80%",
+      toggleActions: "play none none none",
+    },
+    y: 60,
+    opacity: 0,
+    filter: "blur(6px)",
+    duration: 0.9,
+    ease: EASE_EMPHASIS,
+    stagger: 0.014,
+  });
+
+  gsap.from(".stat", {
+    scrollTrigger: {
+      trigger: ".status__grid",
+      start: "top 75%",
+      toggleActions: "play none none none",
+    },
+    opacity: 0,
+    y: 32,
+    duration: 0.85,
+    ease: EASE_EMPHASIS,
+    stagger: 0.12,
+  });
+
+  // ── Section 02 — Proof ─────────────────────────────────────
   splitToChars(".proof__head-line [data-split]");
   splitToChars(".academy__h [data-split]");
   splitToChars(".end__quote [data-split]");

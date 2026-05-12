@@ -1,5 +1,141 @@
 /* ══════════════════════════════════════════════════════════ */
-/* 01 — PROOF                                                  */
+/* 01 — STATUS QUO                                             */
+/* ══════════════════════════════════════════════════════════ */
+.status {
+  padding-block: var(--s-11) var(--s-10);
+}
+
+.status__inner {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: var(--gutter);
+  row-gap: var(--s-9);
+}
+
+.status__head {
+  grid-column: 1 / span 12;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-5);
+}
+
+.status__h {
+  font-size: var(--t-display-4xl);
+  line-height: 0.95;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  max-width: 16ch;
+  color: var(--muted);
+}
+
+.status__h .t-display-italic {
+  color: var(--gold-warm);
+  align-self: flex-start;
+  padding-left: clamp(20px, 5vw, 80px);
+}
+
+/* Asymmetric 2x2 — first card spans wider for the "headline" stat. */
+.status__grid {
+  grid-column: 1 / span 12;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: var(--gutter);
+  row-gap: var(--s-7);
+}
+
+.stat {
+  position: relative;
+  grid-column: span 6;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  padding: var(--s-7) 0 var(--s-6);
+  border-top: 1px solid var(--hairline-low);
+  transition: border-color 400ms var(--ease-default);
+}
+
+.stat:hover {
+  border-top-color: var(--gold);
+}
+
+.stat--lg {
+  grid-column: span 7;
+}
+
+.stat--lg + .stat {
+  grid-column: span 5;
+}
+
+.stat__label {
+  font-size: var(--t-mono-xs);
+}
+
+.stat__num {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(72px, 11vw, 180px);
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+  color: var(--pearl);
+  font-variant-numeric: tabular-nums;
+  /* small slot for the counter — stable height while it ticks up */
+  min-height: 1em;
+}
+
+.stat--lg .stat__num {
+  font-size: clamp(96px, 14vw, 240px);
+  color: var(--gold-warm);
+}
+
+.stat--target .stat__num {
+  color: var(--gold);
+}
+
+.stat--target .stat__num::before {
+  content: "→ ";
+  color: var(--muted-low);
+  font-style: italic;
+}
+
+.stat__note {
+  font-family: var(--font-body);
+  font-size: var(--t-body-sm);
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+@media (max-width: 900px) {
+  .stat,
+  .stat--lg,
+  .stat--lg + .stat {
+    grid-column: 1 / span 12;
+  }
+}
+
+@media (max-width: 768px) {
+  .status {
+    padding-block: var(--s-9) var(--s-8);
+  }
+  .status__h {
+    font-size: var(--t-display-3xl);
+  }
+  .status__h .t-display-italic {
+    padding-left: var(--s-5);
+  }
+  .stat {
+    padding: var(--s-5) 0 var(--s-4);
+  }
+  .stat__num {
+    font-size: clamp(64px, 18vw, 100px);
+  }
+  .stat--lg .stat__num {
+    font-size: clamp(80px, 22vw, 120px);
+  }
+}
+
+/* ══════════════════════════════════════════════════════════ */
+/* 02 — PROOF                                                  */
 /* ══════════════════════════════════════════════════════════ */
 .proof {
   padding-block: var(--s-11) var(--s-10);
