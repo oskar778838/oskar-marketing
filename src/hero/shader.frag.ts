@@ -4,6 +4,10 @@ precision highp float;
 uniform float uTime;
 uniform vec2 uMouse;
 uniform vec2 uResolution;
+uniform float uScrollT;        // 0..1 page-scroll progress
+uniform float uScrollPulse;    // 0..1 short pulse on scroll events
+uniform vec2 uHotspot1;        // 0..1 normalised, slowly drifts
+uniform vec2 uHotspot2;        // 0..1 normalised, slowly drifts
 
 vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
 vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
@@ -53,36 +57,59 @@ void main() {
   vec2 mouse = uMouse / uResolution.xy;
   vec2 mouseAspect = vec2(mouse.x * aspect, mouse.y);
   float mouseDist = length(stAspect - mouseAspect);
-  float mouseInfluence = smoothstep(0.6, 0.0, mouseDist) * 0.4;
+  float mouseInfluence = smoothstep(0.6, 0.0, mouseDist) * 0.32;
 
-  // Aurora flow - multiple layers
-  float t = uTime * 0.08;
+  // Time scaled by scroll-pulse: short bursts speed up the flow on scroll.
+  float t = uTime * (0.05 + uScrollPulse * 0.18);
 
-  vec2 flow1 = vec2(stAspect.x + t * 0.3, stAspect.y - t * 0.2);
-  float n1 = fbm(flow1 * 1.5);
+  // Layer 1 — slow primary drift, SW → NE (positive x, negative y in screen-space).
+  vec2 flow1 = vec2(stAspect.x + t * 0.6, stAspect.y - t * 0.45);
+  float n1 = fbm(flow1 * 1.3);
 
-  vec2 flow2 = vec2(stAspect.x - t * 0.2, stAspect.y + t * 0.15);
-  float n2 = fbm(flow2 * 3.0);
+  // Layer 2 — slower counter-flow for organic complexity.
+  vec2 flow2 = vec2(stAspect.x - t * 0.32, stAspect.y + t * 0.22);
+  float n2 = fbm(flow2 * 2.4);
 
-  float aurora = n1 * 0.6 + n2 * 0.4 + mouseInfluence;
-  aurora = smoothstep(-0.3, 0.8, aurora);
+  // Layer 3 — high-frequency pulse layer that breathes on uTime alone.
+  vec2 flow3 = stAspect * 4.0 + vec2(0.0, sin(uTime * 0.3) * 0.4);
+  float n3 = fbm(flow3) * 0.5 + 0.5;
+  float pulse = (sin(uTime * 0.45) * 0.5 + 0.5) * n3;
 
-  // Color stops - obsidian + 3 gold tones
+  float aurora = n1 * 0.55 + n2 * 0.30 + pulse * 0.15 + mouseInfluence;
+  aurora = smoothstep(-0.25, 0.85, aurora);
+
+  // Hot-spots: two slowly drifting points that double the local intensity.
+  vec2 h1 = vec2(uHotspot1.x * aspect, uHotspot1.y);
+  vec2 h2 = vec2(uHotspot2.x * aspect, uHotspot2.y);
+  float hot1 = smoothstep(0.55, 0.0, length(stAspect - h1));
+  float hot2 = smoothstep(0.50, 0.0, length(stAspect - h2));
+  float hotMask = hot1 * 0.55 + hot2 * 0.40;
+
+  // Color stops - obsidian + 3 gold tones.
   vec3 base = vec3(0.020, 0.020, 0.020);
-  vec3 goldDark = vec3(0.788, 0.659, 0.298);   // #C9A84C
+  vec3 goldDark  = vec3(0.788, 0.659, 0.298);  // #C9A84C
   vec3 goldLight = vec3(0.910, 0.788, 0.416);  // #E8C96A
-  vec3 goldPale = vec3(0.961, 0.902, 0.722);   // #F5E6B8
+  vec3 goldPale  = vec3(0.961, 0.902, 0.722);  // #F5E6B8
 
-  // CRITICAL: these multipliers control visibility. Keep them high enough.
+  // Reduced base multipliers — quieter aurora, text stays readable.
   vec3 color = base;
-  color = mix(color, goldDark, aurora * 0.55);
-  color = mix(color, goldLight, pow(aurora, 2.5) * 0.35);
-  color = mix(color, goldPale, pow(aurora, 6.0) * 0.18);
+  color = mix(color, goldDark,  aurora * 0.35);
+  color = mix(color, goldLight, pow(aurora, 2.5) * 0.22);
+  color = mix(color, goldPale,  pow(aurora, 6.0) * 0.12);
 
-  // Subtle vignette
+  // Hot-spot tint: amplifies the gold-light + gold-pale stops where masks hit.
+  color = mix(color, goldLight, hotMask * pow(aurora, 1.5) * 0.30);
+  color = mix(color, goldPale,  hotMask * pow(aurora, 4.0) * 0.18);
+
+  // Subtle vignette.
   vec2 vigUV = st - 0.5;
   float vignette = 1.0 - dot(vigUV, vigUV) * 0.8;
   color *= vignette;
+
+  // Below 50vh of page-scroll, fade aurora out so it doesn't compete with
+  // section content. uScrollT goes 0..1 over the document.
+  float scrollFade = 1.0 - smoothstep(0.05, 0.45, uScrollT) * 0.40;
+  color *= scrollFade;
 
   gl_FragColor = vec4(color, 1.0);
 }

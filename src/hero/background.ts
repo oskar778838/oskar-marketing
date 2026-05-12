@@ -32,6 +32,10 @@ export function initHeroBackground(canvas: HTMLCanvasElement) {
         window.innerHeight * pixelRatio
       ),
     },
+    uScrollT: { value: 0 },
+    uScrollPulse: { value: 0 },
+    uHotspot1: { value: new THREE.Vector2(0.3, 0.4) },
+    uHotspot2: { value: new THREE.Vector2(0.7, 0.65) },
   };
 
   const material = new THREE.ShaderMaterial({
@@ -101,6 +105,18 @@ export function initHeroBackground(canvas: HTMLCanvasElement) {
     uniforms.uResolution.value.set(w * pixelRatio, h * pixelRatio);
   });
 
+  // Scroll-reactive uniforms: uScrollT smoothly tracks normalized page scroll
+  // (0 at top, 1 at bottom). uScrollPulse is a short impulse whenever the user
+  // scrolls — speeds up the aurora flow briefly and decays back to 0.
+  let scrollPulse = 0;
+  let lastScrollY = window.scrollY;
+  function onScroll() {
+    const dy = Math.abs(window.scrollY - lastScrollY);
+    scrollPulse = Math.min(1, scrollPulse + dy * 0.005);
+    lastScrollY = window.scrollY;
+  }
+  window.addEventListener("scroll", onScroll, { passive: true });
+
   const startTime = performance.now();
 
   function animate() {
@@ -109,6 +125,25 @@ export function initHeroBackground(canvas: HTMLCanvasElement) {
 
     mouseCurrent.lerp(mouseTarget, 0.05);
     uniforms.uMouse.value.copy(mouseCurrent);
+
+    // Hot-spots drift on slow Lissajous trajectories — never repeating exactly.
+    uniforms.uHotspot1.value.set(
+      0.5 + Math.cos(t * 0.07) * 0.32 + Math.sin(t * 0.018) * 0.10,
+      0.5 + Math.sin(t * 0.05) * 0.28 + Math.cos(t * 0.022) * 0.08
+    );
+    uniforms.uHotspot2.value.set(
+      0.5 + Math.sin(t * 0.06) * 0.34 + Math.cos(t * 0.014) * 0.10,
+      0.5 + Math.cos(t * 0.045) * 0.30 + Math.sin(t * 0.025) * 0.08
+    );
+
+    // Page-scroll progress (0..1).
+    const docH =
+      document.documentElement.scrollHeight - window.innerHeight;
+    uniforms.uScrollT.value = docH > 0 ? window.scrollY / docH : 0;
+
+    // Decay scroll pulse exponentially — short bursts, not a sustained boost.
+    scrollPulse *= 0.92;
+    uniforms.uScrollPulse.value = scrollPulse;
 
     renderer.render(scene, camera);
 
