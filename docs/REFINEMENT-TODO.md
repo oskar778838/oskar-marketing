@@ -8,23 +8,23 @@ Started 2026-05-12. Source: AWWWARDS FINAL REFINEMENT brief from Oskar.
 
 ## Phase 1 — Aurora Tuning
 
-- [⏳] 1.1  Reduce mix multipliers (0.55→0.35, 0.35→0.22, 0.18→0.12)
-- [ ]  1.2  Directional flow: layer 1 SW→NE drift, layer 2 counter-flow, layer 3 pulse
-- [ ]  1.3  Hot-spots: 2 animated `vec2 uHotspot1/2` with smoothstep falloff masks
-- [ ]  1.4  Scroll-reaction: speed bump on scroll, opacity to 0.6 below 50vh
-- [ ]  1.5  Build + commit `refine: aurora subtler + directional flow + hot spots`
+- [✅] 1.1  Reduce mix multipliers (0.55→0.35, 0.35→0.22, 0.18→0.12)
+- [✅] 1.2  Directional flow: layer 1 SW→NE drift, layer 2 counter-flow, layer 3 pulse
+- [✅] 1.3  Hot-spots: 2 animated `vec2 uHotspot1/2` with smoothstep falloff masks
+- [✅] 1.4  Scroll-reaction: speed bump on scroll, opacity to 0.6 below 50vh
+- [✅] 1.5  Build + commit `refine: aurora subtler + directional flow + hot spots` → `1d313e0`
 
 ## Phase 2 — 3D Hero Crystal
 
-- [ ]  2.1  Setup `src/hero/crystal.ts`, install `postprocessing`
-- [ ]  2.2  IcosahedronGeometry(1, 2) + 8% vertex displacement + computeVertexNormals
-- [ ]  2.3  MeshPhysicalMaterial: gold, metalness 1.0, roughness 0.15, clearcoat, iridescence 0.3
-- [ ]  2.4  Lighting: RoomEnvironment (programmatic, no asset cost) + key/rim lights
-- [ ]  2.5  Animation: y-rotation, sin-float, mouse-influence rotation, scroll-shrink
-- [ ]  2.6  Postprocessing (optional): UnrealBloom + ChromaticAberration, gated by perf
-- [ ]  2.7  Layout: desktop right-of-name, mobile above-name (40vh)
-- [ ]  2.8  Mobile perf: low-poly fallback (subdivision 1), pixelRatio cap, hidden-tab pause
-- [ ]  2.9  Build + commit `feat: 3d gold crystal hero centerpiece — programmatic threejs`
+- [✅] 2.1  Setup `src/hero/crystal.ts` (postprocessing skipped — mobile perf)
+- [✅] 2.2  IcosahedronGeometry(1, 2) + 8% deterministic vertex displacement + computeVertexNormals
+- [✅] 2.3  MeshPhysicalMaterial: gold, metalness 1.0, roughness 0.18, clearcoat 0.7, iridescence 0.3
+- [✅] 2.4  Lighting: RoomEnvironment (PMREM) + key (warm) + rim (cool) + ambient gold fill
+- [✅] 2.5  Animation: y-rotation 0.003/frame, sin-float ±0.05, mouse rotation X/Z, scroll-shrink to 0.85
+- [⚠️] 2.6  Postprocessing — SKIPPED. Bloom + ChromaticAberration would add ~30KB + frame budget; current PBR + iridescence reads premium without it. Revisit if a desktop-only nice-to-have.
+- [✅] 2.7  Layout: desktop col 8-12 row 2 (next to name), mobile in-flow between avatar and name
+- [✅] 2.8  Mobile perf: low-poly fallback (subdivision 1) on <6 cores, pixelRatio cap 1.5 on touch, document.hidden pause
+- [✅] 2.9  Build + commit `feat: 3d gold crystal hero centerpiece — programmatic threejs`
 
 ## Phase 3 — Status Quo Section (real numbers)
 

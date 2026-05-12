@@ -25,14 +25,30 @@ function boot(): void {
   runChoreography();
 
   // WebGL hero: lazy import, never blocks first paint.
-  const canvas = document.getElementById("hero-bg") as HTMLCanvasElement | null;
-  if (canvas) {
-    // Defer to next frame so we don't compete with the page-load timeline.
+  const auroraCanvas = document.getElementById(
+    "hero-bg"
+  ) as HTMLCanvasElement | null;
+  if (auroraCanvas) {
     requestAnimationFrame(() => {
       import("./hero/background")
-        .then(({ initHeroBackground }) => initHeroBackground(canvas))
+        .then(({ initHeroBackground }) => initHeroBackground(auroraCanvas))
         .catch((err) => {
           console.warn("[hero/background] WebGL init failed:", err);
+        });
+    });
+  }
+
+  // 3D crystal centerpiece — separate chunk so its three.js footprint
+  // doesn't block first paint of the rest of the page.
+  const crystalCanvas = document.getElementById(
+    "crystal"
+  ) as HTMLCanvasElement | null;
+  if (crystalCanvas) {
+    requestAnimationFrame(() => {
+      import("./hero/crystal")
+        .then(({ initCrystal }) => initCrystal(crystalCanvas))
+        .catch((err) => {
+          console.warn("[hero/crystal] init failed:", err);
         });
     });
   }

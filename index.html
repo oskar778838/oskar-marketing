@@ -107,6 +107,12 @@
             <img src="./logo.svg" alt="" class="hero__avatar-logo" width="120" height="120" />
           </div>
 
+          <!-- Programmatic 3D crystal centerpiece. Rendered to its own canvas
+               so it can be positioned independently and torn down on unmount. -->
+          <div class="hero__crystal" data-reveal="crystal" aria-hidden="true">
+            <canvas id="crystal" class="hero__crystal-canvas"></canvas>
+          </div>
+
           <h1 id="hero-name" class="hero__name t-display" data-reveal="name">
             <span class="hero__name-line" data-split>Oskar</span>
             <span class="hero__name-line hero__name-line--italic t-display-italic" data-split>Marketing</span>

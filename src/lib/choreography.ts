@@ -87,6 +87,19 @@ export function runChoreography(): void {
     0.6
   );
 
+  // 3D crystal scale-in — slightly delayed and elastic for a "settles in
+  // place" feel that suggests weight/material.
+  tl.to(
+    ".hero__crystal",
+    {
+      opacity: 1,
+      scale: 1,
+      duration: 1.4,
+      ease: "elastic.out(1, 0.6)",
+    },
+    0.85
+  );
+
   tl.to(
     ".hero__name .char",
     {
