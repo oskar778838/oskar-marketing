@@ -360,22 +360,44 @@ h1, h2, h3, .t-display, .t-display-italic, .end__quote, .proof__head-line, .acad
    anchored to each section's first child. CSS-only — no JS required. */
 .section-vlabel {
   position: absolute;
-  left: var(--s-3);
-  top: var(--s-9);
-  transform: rotate(-90deg);
+  left: 16px;
+  top: 50%;
+  transform: rotate(-90deg) translateX(50%);
   transform-origin: left top;
   font-family: var(--font-mono);
   font-size: 10px;
   letter-spacing: 0.32em;
   text-transform: uppercase;
   color: var(--muted-low);
-  opacity: 0.55;
+  opacity: 0.45;
   white-space: nowrap;
   pointer-events: none;
+  z-index: 5;
 }
 
 @media (max-width: 1024px) {
   .section-vlabel {
+    display: none;
+  }
+}
+
+/* ── Edition meta — discreet bottom-right (Pattern 6) ────── */
+.edition-meta {
+  position: fixed;
+  bottom: var(--s-5);
+  right: var(--gutter);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--muted-low);
+  opacity: 0.4;
+  pointer-events: none;
+  z-index: var(--z-nav);
+}
+
+@media (max-width: 768px) {
+  .edition-meta {
     display: none;
   }
 }
