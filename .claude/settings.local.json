@@ -5,7 +5,9 @@
       "Bash(code --install-extension slevesque.vscode-3dviewer)",
       "Bash(code --install-extension usernamehw.errorlens)",
       "Bash(code --install-extension christian-kohler.path-intellisense)",
-      "Bash(code --install-extension christian-kohler.npm-intellisense)"
+      "Bash(code --install-extension christian-kohler.npm-intellisense)",
+      "Bash(git add *)",
+      "Bash(git commit -m 'checkpoint: pre-feedback-iteration baseline *)"
     ]
   }
 }
