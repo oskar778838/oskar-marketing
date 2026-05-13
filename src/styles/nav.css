@@ -84,6 +84,21 @@
   transform: rotate(180deg);
 }
 
+.top-nav__wordmark {
+  font-family: var(--font-mono);
+  font-size: clamp(10px, 0.75vw, 11px);
+  letter-spacing: 0.3em;
+  color: var(--gold-warm);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+  .top-nav__wordmark {
+    display: none;
+  }
+}
+
 .top-nav__chevron {
   display: inline-flex;
   align-items: center;
