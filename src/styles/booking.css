@@ -43,6 +43,16 @@
   max-width: 56ch;
 }
 
+.termin__hours {
+  display: inline-block;
+  padding: var(--s-2) var(--s-4);
+  margin-top: var(--s-3);
+  border: 1px solid var(--hairline);
+  font-size: var(--t-mono-xs);
+  letter-spacing: 0.18em;
+  color: var(--gold-warm);
+}
+
 .booking {
   grid-column: 1 / span 12;
   position: relative;
@@ -355,6 +365,65 @@
   font-size: var(--t-body-lg);
   max-width: 36ch;
   margin-inline: auto;
+}
+
+/* ── DM sub-action (Instagram + TikTok) ───────────────── */
+.termin__dm {
+  grid-column: 1 / span 12;
+  margin-top: var(--s-6);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-4);
+  padding-top: var(--s-6);
+  border-top: 1px dashed var(--hairline-low);
+}
+
+.termin__dm-lead {
+  font-size: var(--t-mono-xs);
+  letter-spacing: 0.22em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.termin__dm-actions {
+  display: flex;
+  gap: var(--s-3);
+  flex-wrap: wrap;
+}
+
+.dm-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
+  padding: var(--s-3) var(--s-5);
+  background: transparent;
+  border: 1px solid var(--hairline);
+  color: var(--gold-warm);
+  font-family: var(--font-mono);
+  font-size: var(--t-mono-sm);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition:
+    color var(--d-base) var(--ease-default),
+    border-color var(--d-base) var(--ease-default),
+    background var(--d-base) var(--ease-default),
+    transform var(--d-fast) var(--ease-default);
+}
+
+.dm-btn:hover {
+  color: var(--obsidian-0);
+  background: var(--gold);
+  border-color: var(--gold);
+}
+
+.dm-btn:active {
+  transform: scale(0.97);
+}
+
+.dm-btn__icon {
+  display: inline-flex;
 }
 
 /* ── Mobile: horizontal-scroll slot grid ─────────────── */

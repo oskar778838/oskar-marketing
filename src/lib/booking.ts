@@ -9,9 +9,10 @@ import {
   WEB3FORMS_ENDPOINT,
   WEB3FORMS_RECIPIENT,
   WEB3FORMS_PLACEHOLDER_PREFIX,
-  SLOT_HOURS_BERLIN,
+  SLOT_HOURS_WEEKDAY,
+  SLOT_HOURS_WEEKEND,
   TZ_BERLIN,
-  WORKDAYS_AHEAD,
+  DAYS_AHEAD,
   SUCCESS_RESET_MS,
   MAX_MESSAGE_CHARS,
 } from "../config";
@@ -99,20 +100,12 @@ function setState(
 function generateDays(): DayBlock[] {
   const days: DayBlock[] = [];
   const cursor = new Date();
-  let added = 0;
-
-  // Walk forward from today, picking only Mon-Fri, until we have N weekdays.
-  while (added < WORKDAYS_AHEAD) {
-    cursor.setDate(cursor.getDate() + (added === 0 ? 0 : 1));
-    const dayOfWeek = berlinDayOfWeek(cursor);
-    if (dayOfWeek >= 1 && dayOfWeek <= 5) {
-      days.push(buildDayBlock(cursor));
-      added++;
-      if (added < WORKDAYS_AHEAD) continue;
-    } else if (added === 0) {
-      // Today is weekend — don't count it but advance.
-      continue;
-    }
+  // Walk forward N calendar days (today + 6). Weekdays get the weekday slot
+  // set (14:00 + 19:00 — Oskar is a Schüler and finishes school ~13:00),
+  // weekends get the expanded set (10:00 + 14:00 + 19:00).
+  for (let i = 0; i < DAYS_AHEAD; i++) {
+    if (i > 0) cursor.setDate(cursor.getDate() + 1);
+    days.push(buildDayBlock(cursor));
   }
   return days;
 }
@@ -136,7 +129,9 @@ function berlinDayOfWeek(d: Date): number {
 }
 
 function buildDayBlock(date: Date): DayBlock {
-  const slots: Slot[] = SLOT_HOURS_BERLIN.map((h) => buildSlot(date, h));
+  const dow = berlinDayOfWeek(date);
+  const hours = dow === 6 || dow === 7 ? SLOT_HOURS_WEEKEND : SLOT_HOURS_WEEKDAY;
+  const slots: Slot[] = hours.map((h) => buildSlot(date, h));
   return {
     date: new Date(date),
     weekday: WEEKDAY_SHORT_FORMAT.format(date).replace(".", ""),

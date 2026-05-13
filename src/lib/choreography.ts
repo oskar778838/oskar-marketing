@@ -148,7 +148,8 @@ export function runChoreography(): void {
 
   // ── Section 02 — Proof ─────────────────────────────────────
   splitToChars(".proof__head-line [data-split]");
-  splitToChars(".academy__h [data-split]");
+  // Academy headline uses splitToWords (in setupSectionMotionVariants) so
+  // each word can enter from a different direction — see feedback iteration E.
   splitToWords(".end__quote [data-split]");
 
   ScrollTrigger.create({
@@ -185,20 +186,7 @@ export function runChoreography(): void {
   });
 
   // ── Section 02 — Academy ───────────────────────────────────
-  gsap.from(".academy__h .char", {
-    scrollTrigger: {
-      trigger: ".academy__h",
-      start: "top 80%",
-      toggleActions: "play none none none",
-    },
-    y: 80,
-    opacity: 0,
-    filter: "blur(8px)",
-    duration: REVEAL_DURATION,
-    ease: EASE_REVEAL,
-    stagger: CHAR_STAGGER,
-  });
-
+  // Headline word-reveal lives in setupSectionMotionVariants (feedback E).
   gsap.from(".academy__lead", {
     scrollTrigger: {
       trigger: ".academy__head",
@@ -344,5 +332,144 @@ export function runChoreography(): void {
     opacity: 0,
     y: 16,
     duration: 0.7,
+  });
+
+  // ── Feedback iteration E — section motion variants ────────────
+  // Reuses the hero's "letter-spread on scroll" feel across other sections.
+  setupSectionMotionVariants();
+}
+
+// ────────────────────────────────────────────────────────────────
+// Section motion variants (feedback iteration E)
+//
+// — Status Quo: stat numbers letter-spacing-spread driven by scrub
+// — Proof: italic "Was du findest" letter-spacing 0 → 0.08em as it scrolls in
+// — Academy headline: words enter from different directions, drift on scroll
+// — Channels (.social): cards rotate ±1.5° on scroll velocity
+// — Manifest: existing word-direction reveal gets an extra letter-spread tail
+// ────────────────────────────────────────────────────────────────
+function setupSectionMotionVariants(): void {
+  // — STATUS QUO: stat numbers letter-spread on scroll-progress
+  const statNums = gsap.utils.toArray<HTMLElement>(".stat__num");
+  statNums.forEach((el) => {
+    gsap.fromTo(
+      el,
+      { letterSpacing: "-0.03em" },
+      {
+        letterSpacing: "0.05em",
+        ease: "none",
+        scrollTrigger: {
+          trigger: el,
+          start: "top 90%",
+          end: "bottom 30%",
+          scrub: 2.0,
+        },
+      }
+    );
+  });
+
+  // — PROOF: italic counter line "Was du findest" — letter-spacing 0 → 0.08em
+  const proofCounter = document.querySelector<HTMLElement>(".proof__counter");
+  if (proofCounter) {
+    gsap.fromTo(
+      proofCounter,
+      { letterSpacing: "0em" },
+      {
+        letterSpacing: "0.08em",
+        ease: "none",
+        scrollTrigger: {
+          trigger: proofCounter,
+          start: "top 85%",
+          end: "bottom 40%",
+          scrub: 2.0,
+        },
+      }
+    );
+  }
+
+  // — ACADEMY: headline split-words, each word from a different direction +
+  //   subtle drift as the user scrolls past.
+  splitToWords(".academy__h [data-split]");
+  // Replace the old char-based academy reveal: words override chars.
+  // We don't kill the existing char tween (it just becomes a no-op since
+  // splitToWords destroyed the .char spans). Apply the directional reveal:
+  gsap.set(".academy__h .word", {
+    opacity: 0,
+    filter: "blur(8px)",
+    x: (_, el) => {
+      const dir = (el as HTMLElement).dataset.dir;
+      return dir === "left" ? -100 : dir === "right" ? 100 : 0;
+    },
+    y: (_, el) => {
+      const dir = (el as HTMLElement).dataset.dir;
+      return dir === "up" ? -100 : dir === "down" ? 100 : 0;
+    },
+  });
+  gsap.to(".academy__h .word", {
+    scrollTrigger: {
+      trigger: ".academy__h",
+      start: "top 80%",
+      toggleActions: "play none none none",
+    },
+    x: 0,
+    y: 0,
+    opacity: 1,
+    filter: "blur(0px)",
+    duration: REVEAL_DURATION,
+    ease: EASE_REVEAL,
+    stagger: 0.14,
+  });
+  // Drift after entry — scroll-linked subtle parallax on the same words.
+  gsap.utils.toArray<HTMLElement>(".academy__h .word").forEach((w, i) => {
+    const driftDir = i % 2 === 0 ? -1 : 1;
+    gsap.to(w, {
+      yPercent: driftDir * 6,
+      ease: "none",
+      scrollTrigger: {
+        trigger: ".academy__h",
+        start: "top 40%",
+        end: "bottom top",
+        scrub: 2.5,
+      },
+    });
+  });
+
+  // — CHANNELS: social cards rotate ±1.5° based on scroll velocity.
+  // ScrollTrigger gives us getVelocity(); we map it onto a small rotation.
+  const socialCards = gsap.utils.toArray<HTMLElement>(".social-card");
+  if (socialCards.length) {
+    const velocityRot = gsap.quickTo(socialCards, "rotateZ", {
+      duration: 0.6,
+      ease: "power2.out",
+    });
+    ScrollTrigger.create({
+      trigger: ".social",
+      start: "top bottom",
+      end: "bottom top",
+      onUpdate: (self) => {
+        const v = self.getVelocity();
+        // velocity is in px/s; clamp & scale into ±1.5°
+        const rot = gsap.utils.clamp(-1.5, 1.5, v / 1400);
+        velocityRot(rot);
+      },
+    });
+  }
+
+  // — MANIFEST: enhance existing word reveal with letter-spread tail.
+  gsap.utils.toArray<HTMLElement>(".end__quote .word").forEach((w) => {
+    gsap.fromTo(
+      w,
+      { letterSpacing: "0em" },
+      {
+        letterSpacing: "0.06em",
+        ease: "none",
+        scrollTrigger: {
+          trigger: w,
+          start: "top 75%",
+          end: "bottom 40%",
+          scrub: 2.5,
+        },
+      }
+    );
   });
 }

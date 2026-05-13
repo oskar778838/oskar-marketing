@@ -24,9 +24,20 @@ export const BOOKING_API_URL: string | null = null;
 // Slot generation rules (kept on the client so the UI is responsive even
 // when offline). The backend re-validates that a chosen slot matches one
 // of these candidates.
-export const SLOT_HOURS_BERLIN: readonly number[] = [10, 14, 18];
+//
+// Werktag-Slots: Oskar ist Schüler, Schule bis ~13:00 — daher Werktags nur
+// nachmittags/abends. Wochenende: zusätzlich Vormittag offen.
+export const SLOT_HOURS_WEEKDAY: readonly number[] = [14, 19];
+export const SLOT_HOURS_WEEKEND: readonly number[] = [10, 14, 19];
+/** Legacy export kept for any code still importing it. */
+export const SLOT_HOURS_BERLIN: readonly number[] = SLOT_HOURS_WEEKDAY;
 export const SLOT_DURATION_MIN = 30;
-export const WORKDAYS_AHEAD = 7; // Mon-Fri only, today + this many weekdays
+/** Days shown in the slot grid — counted as calendar days (Mon-Sun) ahead.
+ *  Previously this was Mon-Fri only; now includes weekends with different
+ *  hour-sets so users see a full week. */
+export const DAYS_AHEAD = 7;
+/** Legacy alias. */
+export const WORKDAYS_AHEAD = DAYS_AHEAD;
 export const TZ_BERLIN = "Europe/Berlin";
 
 // UX tunables
