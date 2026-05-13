@@ -16,6 +16,7 @@ import { initCounters } from "./lib/counters";
 import { initEasterEgg, updateDayCounter } from "./lib/easter-egg";
 import { initEditorialHero } from "./lib/editorialHero";
 import { initSectionIndicator } from "./lib/sectionIndicator";
+import { initNavMenu } from "./lib/navMenu";
 import type Lenis from "lenis";
 
 // Init order matters: cursor + smooth scroll first (cheap), then choreography
@@ -34,6 +35,7 @@ function boot(): void {
   updateDayCounter();
   initEditorialHero(lenisInstance);
   initSectionIndicator();
+  initNavMenu(lenisInstance);
   runChoreography();
   registerServiceWorker();
 

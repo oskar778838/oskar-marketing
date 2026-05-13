@@ -8,7 +8,8 @@
       "Bash(code --install-extension christian-kohler.npm-intellisense)",
       "Bash(git add *)",
       "Bash(git commit -m 'checkpoint: pre-feedback-iteration baseline *)",
-      "Bash(git commit -m 'feat: feedback iteration A+B — slower scroll, intensified hero motion *)"
+      "Bash(git commit -m 'feat: feedback iteration A+B — slower scroll, intensified hero motion *)",
+      "Bash(git commit -m 'feat: feedback iteration C+D — remove redundant wordmark, dropdown nav *)"
     ]
   }
 }

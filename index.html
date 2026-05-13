@@ -119,14 +119,51 @@
     <!-- Skip link -->
     <a class="skip-link" href="#hero">Zum Inhalt springen</a>
 
-    <!-- Top nav (logo + index marker) -->
+    <!-- Top nav — OV logo + chevron-trigger for dropdown. The redundant
+         "OSKAR · MKTG" wordmark was removed (feedback iteration C) since
+         it duplicates the hero's giant display typography. -->
     <header class="top-nav" data-reveal="nav">
-      <a href="#hero" class="top-nav__brand" aria-label="Oskar Marketing — Start">
-        <img src="./logo.svg" alt="" width="36" height="36" />
-        <span class="t-mono-gold">OSKAR · MKTG</span>
-      </a>
+      <div class="top-nav__cluster">
+        <button
+          type="button"
+          class="top-nav__trigger"
+          id="nav-trigger"
+          aria-label="Navigation öffnen"
+          aria-expanded="false"
+          aria-controls="nav-dropdown"
+          data-cursor-hover
+        >
+          <span class="top-nav__brand-mark" aria-hidden="true">
+            <img src="./logo.svg" alt="" width="36" height="36" />
+          </span>
+          <span class="top-nav__chevron" aria-hidden="true">
+            <svg viewBox="0 0 14 8" width="14" height="8" fill="none">
+              <path d="M1 1l6 6 6-6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </button>
+      </div>
       <span class="top-nav__index t-mono">EDITION 01 / 2026</span>
     </header>
+
+    <!-- Dropdown nav menu — opens via #nav-trigger. Initial state hidden via
+         [hidden]; navMenu.ts toggles aria-expanded + animates with GSAP. -->
+    <nav
+      id="nav-dropdown"
+      class="nav-dropdown"
+      aria-label="Hauptnavigation"
+      hidden
+    >
+      <ul class="nav-dropdown__list" role="list">
+        <li><a class="nav-dropdown__item" href="#hero" data-nav-target="hero" data-cursor-hover><span class="nav-dropdown__num t-mono-gold">00</span><span class="nav-dropdown__label t-display-italic">Index</span></a></li>
+        <li><a class="nav-dropdown__item" href="#status" data-nav-target="status" data-cursor-hover><span class="nav-dropdown__num t-mono-gold">01</span><span class="nav-dropdown__label t-display-italic">Status Quo</span></a></li>
+        <li><a class="nav-dropdown__item" href="#proof" data-nav-target="proof" data-cursor-hover><span class="nav-dropdown__num t-mono-gold">02</span><span class="nav-dropdown__label t-display-italic">Proof</span></a></li>
+        <li><a class="nav-dropdown__item" href="#academy" data-nav-target="academy" data-cursor-hover><span class="nav-dropdown__num t-mono-gold">03</span><span class="nav-dropdown__label t-display-italic">Academy</span></a></li>
+        <li><a class="nav-dropdown__item" href="#termin" data-nav-target="termin" data-cursor-hover><span class="nav-dropdown__num t-mono-gold">04</span><span class="nav-dropdown__label t-display-italic">Termin</span></a></li>
+        <li><a class="nav-dropdown__item" href="#social" data-nav-target="social" data-cursor-hover><span class="nav-dropdown__num t-mono-gold">05</span><span class="nav-dropdown__label t-display-italic">Channels</span></a></li>
+        <li><a class="nav-dropdown__item" href="#end" data-nav-target="end" data-cursor-hover><span class="nav-dropdown__num t-mono-gold">06</span><span class="nav-dropdown__label t-display-italic">Manifest</span></a></li>
+      </ul>
+    </nav>
 
     <main>
       <!-- ════════════════════════════════════════════════════ -->
@@ -136,7 +173,9 @@
         <!-- Subtle noise overlay above Aurora, below typography -->
         <div class="hero__noise" aria-hidden="true"></div>
 
-        <!-- Top-left: brand-meta -->
+        <!-- Top-left: OV dual-ring brand mark only (text removed in
+             feedback iteration C — redundant with the giant Oskar/Marketing
+             typography below). -->
         <div class="hero__meta hero__meta--tl" data-reveal="meta-tl">
           <div class="hero__avatar" aria-hidden="true">
             <div class="hero__avatar-ring hero__avatar-ring--outer"></div>
@@ -144,7 +183,6 @@
             <div class="hero__avatar-glow"></div>
             <img src="./logo.svg" alt="" class="hero__avatar-logo" width="120" height="120" />
           </div>
-          <span class="hero__meta-label t-mono-gold">OV · OSKAR · MKTG</span>
         </div>
 
         <!-- Top-right: edition -->
