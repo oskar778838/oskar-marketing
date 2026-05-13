@@ -56,6 +56,31 @@ function escapeChar(c: string): string {
   return c;
 }
 
+// Words-only splitter — wraps each token in <span class="word"> with a
+// data-dir attribute for per-word direction reveals (manifest pattern).
+function splitToWords(selector: string): void {
+  const els = document.querySelectorAll<HTMLElement>(selector);
+  const dirs = ["left", "right", "up", "down"] as const;
+  let cursor = 0;
+  els.forEach((el) => {
+    const text = el.textContent ?? "";
+    if (!text.trim()) return;
+    const tokens = text.split(/(\s+)/);
+    const html = tokens
+      .map((tok) => {
+        if (tok.length === 0) return "";
+        if (/^\s+$/.test(tok)) return tok;
+        const dir = dirs[cursor++ % dirs.length];
+        return `<span class="word" data-dir="${dir}">${tok
+          .split("")
+          .map((c) => escapeChar(c))
+          .join("")}</span>`;
+      })
+      .join("");
+    el.innerHTML = html;
+  });
+}
+
 export function runChoreography(): void {
   if (PREFERS_REDUCED_MOTION) {
     // Reveal everything statically, no motion.
@@ -118,7 +143,7 @@ export function runChoreography(): void {
   // ── Section 02 — Proof ─────────────────────────────────────
   splitToChars(".proof__head-line [data-split]");
   splitToChars(".academy__h [data-split]");
-  splitToChars(".end__quote [data-split]");
+  splitToWords(".end__quote [data-split]");
 
   ScrollTrigger.create({
     trigger: ".proof",
@@ -273,19 +298,35 @@ export function runChoreography(): void {
     stagger: 0.1,
   });
 
-  // ── Section 04 — End ───────────────────────────────────────
-  gsap.from(".end__quote .char", {
+  // ── Section 04 — End / Manifest ────────────────────────────
+  // Per-word direction reveal: each word enters from a different side
+  // (left, right, up, down — cycled). data-dir set during splitToWords.
+  gsap.set(".end__quote .word", {
+    opacity: 0,
+    filter: "blur(8px)",
+    x: (_, el) => {
+      const dir = (el as HTMLElement).dataset.dir;
+      return dir === "left" ? -80 : dir === "right" ? 80 : 0;
+    },
+    y: (_, el) => {
+      const dir = (el as HTMLElement).dataset.dir;
+      return dir === "up" ? -80 : dir === "down" ? 80 : 0;
+    },
+  });
+
+  gsap.to(".end__quote .word", {
     scrollTrigger: {
       trigger: ".end__quote",
       start: "top 75%",
       toggleActions: "play none none none",
     },
-    y: 60,
-    opacity: 0,
-    filter: "blur(8px)",
+    x: 0,
+    y: 0,
+    opacity: 1,
+    filter: "blur(0px)",
     duration: 1.1,
     ease: EASE_EMPHASIS,
-    stagger: 0.02,
+    stagger: 0.18,
   });
 
   gsap.from(".end__foot", {
