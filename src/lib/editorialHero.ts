@@ -123,46 +123,60 @@ function setupHeroPin(
   ScrollTrigger.create({
     trigger: hero,
     start: "top top",
-    end: "+=150%",
+    end: "+=180%",
     pin: hero,
     pinSpacing: true,
-    scrub: 1.2,
+    // scrub 2.5 = ~2.5s lag between scroll-input and rendered position.
+    // Reads as a smooth "drift" rather than 1:1 tracking — premium feel.
+    scrub: 2.5,
     invalidateOnRefresh: true,
-    // anticipatePin pre-warms the pin one frame before it hits — kills the
-    // 1-frame jump on iOS Safari that used to happen when the user reached
-    // the trigger from a fast scroll.
     anticipatePin: 1,
     onUpdate: (self) => {
       const p = self.progress;
 
-      // Phase A (0.00–0.30): Tighten/loosen letter-spacing
-      // Phase B (0.30–0.60): Parallax — Oskar drifts left, Marketing drifts right
-      // Phase C (0.60–0.85): Shrink + fade
-      // Phase D (0.85–1.00): Tagline + CTA exit up
-      const segA = clamp01((p - 0.00) / 0.30);
-      const segB = clamp01((p - 0.30) / 0.30);
-      const segC = clamp01((p - 0.60) / 0.25);
+      // Letter-spread runs through the whole pin, accelerating: -0.02em → +0.15em
+      // ────────────────────────────────────────────────────────────────────
+      // Phase B (0.40–0.70): Words split — Oskar -80px left, Marketing +80px right
+      // Phase C (0.70–0.85): y:-40px, opacity 1 → 0.4
+      // Phase D (0.85–1.00): full exit, opacity → 0
+      const spread = p;                                         // 0..1
+      const segB = clamp01((p - 0.40) / 0.30);
+      const segC = clamp01((p - 0.70) / 0.15);
       const segD = clamp01((p - 0.85) / 0.15);
+
+      // letter-spacing: oskar -0.02em → +0.15em ; marketing +0.01em → +0.15em
+      const oskarLS = -0.02 + spread * 0.17;
+      const marketingLS = 0.01 + spread * 0.14;
+
+      // y/opacity: 80% → -40px + 0.4 opacity, 100% → off-screen + 0 opacity
+      const yMid = -segC * 40;
+      const yLate = -segD * 280;                                // full viewport exit
+      const oMid = 1 - segC * 0.6;                              // 1 → 0.4
+      const oLate = 1 - segD * 1.0;                             // 0.4 → 0
 
       if (oskar) {
         gsap.set(oskar, {
-          letterSpacing: (-0.02 + segA * 0.04) + "em",
-          x: -segB * 100,
-          scale: 1 - segC * 0.2,
-          opacity: 1 - segC * 0.7,
+          letterSpacing: oskarLS + "em",
+          x: -segB * 80,
+          y: yMid + yLate,
+          opacity: oMid * oLate,
         });
       }
       if (marketing) {
         gsap.set(marketing, {
-          letterSpacing: (0.01 + segA * 0.05) + "em",
-          x: segB * 100,
-          scale: 1 - segC * 0.2,
-          opacity: 1 - segC * 0.7,
+          letterSpacing: marketingLS + "em",
+          x: segB * 80,
+          y: yMid + yLate,
+          opacity: oMid * oLate,
         });
       }
       if (tagline) gsap.set(tagline, { y: -segD * 80, opacity: 1 - segD });
       if (cta) gsap.set(cta, { y: -segD * 80, opacity: 1 - segD });
       if (scroll) gsap.set(scroll, { opacity: 1 - clamp01(p * 4) });
+
+      // Expose hero scroll progress so the aurora background can intensify
+      // (0.6 → 1.0 mid-hero → fade back). background.ts reads window.__heroP.
+      (window as unknown as { __heroP?: number }).__heroP = p;
     },
   });
 }

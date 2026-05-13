@@ -13,6 +13,12 @@ const PREFERS_REDUCED_MOTION = window.matchMedia(
 
 const EASE_DEFAULT = "power3.out";
 const EASE_EMPHASIS = "expo.out";
+// Premium-feel section reveals (feedback iteration): longer ausklang, more
+// drift between elements. power4.out is the cinematic "slow tail" curve.
+const EASE_REVEAL = "power4.out";
+const REVEAL_DURATION = 1.8;       // was 0.85–1.0
+const REVEAL_STAGGER = 0.08;       // was 0.012–0.14
+const CHAR_STAGGER = 0.022;        // was 0.014–0.018
 
 // Repeat visitors get a compressed sequence — overall ratio 0.42 of the
 // first-visit timeline. They don't need to be re-onboarded every time.
@@ -122,9 +128,9 @@ export function runChoreography(): void {
     y: 60,
     opacity: 0,
     filter: "blur(6px)",
-    duration: 0.9,
-    ease: EASE_EMPHASIS,
-    stagger: 0.014,
+    duration: REVEAL_DURATION,
+    ease: EASE_REVEAL,
+    stagger: CHAR_STAGGER,
   });
 
   gsap.from(".stat", {
@@ -134,10 +140,10 @@ export function runChoreography(): void {
       toggleActions: "play none none none",
     },
     opacity: 0,
-    y: 32,
-    duration: 0.85,
-    ease: EASE_EMPHASIS,
-    stagger: 0.12,
+    y: 48,
+    duration: REVEAL_DURATION,
+    ease: EASE_REVEAL,
+    stagger: REVEAL_STAGGER,
   });
 
   // ── Section 02 — Proof ─────────────────────────────────────
@@ -160,9 +166,9 @@ export function runChoreography(): void {
     y: 60,
     opacity: 0,
     filter: "blur(6px)",
-    duration: 0.9,
-    ease: EASE_EMPHASIS,
-    stagger: 0.014,
+    duration: REVEAL_DURATION,
+    ease: EASE_REVEAL,
+    stagger: CHAR_STAGGER,
   });
 
   gsap.to(".proof__item", {
@@ -173,9 +179,9 @@ export function runChoreography(): void {
     },
     opacity: 1,
     y: (i) => (i === 1 ? 0 : 0),
-    duration: 1,
-    ease: EASE_EMPHASIS,
-    stagger: 0.12,
+    duration: REVEAL_DURATION,
+    ease: EASE_REVEAL,
+    stagger: REVEAL_STAGGER,
   });
 
   // ── Section 02 — Academy ───────────────────────────────────
@@ -188,9 +194,9 @@ export function runChoreography(): void {
     y: 80,
     opacity: 0,
     filter: "blur(8px)",
-    duration: 1,
-    ease: EASE_EMPHASIS,
-    stagger: 0.018,
+    duration: REVEAL_DURATION,
+    ease: EASE_REVEAL,
+    stagger: CHAR_STAGGER,
   });
 
   gsap.from(".academy__lead", {
@@ -212,10 +218,10 @@ export function runChoreography(): void {
       toggleActions: "play none none none",
     },
     opacity: 0,
-    y: 40,
-    duration: 0.95,
-    ease: EASE_EMPHASIS,
-    stagger: 0.14,
+    y: 56,
+    duration: REVEAL_DURATION,
+    ease: EASE_REVEAL,
+    stagger: REVEAL_STAGGER,
   });
 
   gsap.from(".academy__trust", {
@@ -241,9 +247,9 @@ export function runChoreography(): void {
     y: 60,
     opacity: 0,
     filter: "blur(6px)",
-    duration: 0.9,
-    ease: EASE_EMPHASIS,
-    stagger: 0.018,
+    duration: REVEAL_DURATION,
+    ease: EASE_REVEAL,
+    stagger: CHAR_STAGGER,
   });
 
   gsap.from(".termin__sub", {
@@ -291,11 +297,11 @@ export function runChoreography(): void {
       toggleActions: "play none none none",
     },
     opacity: 0,
-    y: 50,
+    y: 60,
     rotateZ: (i) => (i % 2 === 0 ? -1.5 : 1.5),
-    duration: 0.95,
-    ease: EASE_EMPHASIS,
-    stagger: 0.1,
+    duration: REVEAL_DURATION,
+    ease: EASE_REVEAL,
+    stagger: REVEAL_STAGGER,
   });
 
   // ── Section 04 — End / Manifest ────────────────────────────
@@ -324,9 +330,9 @@ export function runChoreography(): void {
     y: 0,
     opacity: 1,
     filter: "blur(0px)",
-    duration: 1.1,
-    ease: EASE_EMPHASIS,
-    stagger: 0.18,
+    duration: REVEAL_DURATION,
+    ease: EASE_REVEAL,
+    stagger: REVEAL_STAGGER * 2.2,
   });
 
   gsap.from(".end__foot", {

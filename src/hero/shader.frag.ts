@@ -119,10 +119,12 @@ void main() {
   float scrollFade = 1.0 - smoothstep(0.05, 0.45, uScrollT) * 0.40;
   color *= scrollFade;
 
-  // Per-section intensity multiplier — JS dials this 0.3..0.7..1.0 based
-  // on which section the user is currently viewing. Lets content sections
-  // "breathe" without aurora competing for attention.
-  color *= mix(0.4, 1.0, uSectionMix);
+  // Per-section intensity multiplier. Base range 0.3..1.0 (per-section).
+  // Hero pin pushes this beyond 1.0 (up to ~1.55) for an intensified mid-pin
+  // burst — clamped here so it stays cinematic, not blown-out.
+  float mixScale = mix(0.4, 1.0, clamp(uSectionMix, 0.0, 1.0));
+  float boost = max(0.0, uSectionMix - 1.0);              // 0..0.55
+  color *= mixScale + boost * 0.75;
 
   gl_FragColor = vec4(color, 1.0);
 }

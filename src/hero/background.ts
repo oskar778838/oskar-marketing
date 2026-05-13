@@ -186,8 +186,10 @@ export function initHeroBackground(canvas: HTMLCanvasElement) {
     mouseCurrent.lerp(mouseTarget, 0.05);
     uniforms.uMouse.value.copy(mouseCurrent);
 
-    // Trailing mouse — much slower lerp creates the "glow lag" effect.
-    mouseLag.lerp(mouseTarget, 0.012);
+    // Trailing mouse — slower lerp creates the "glow lag" effect.
+    // Feedback iteration: trail decay extended from 1.5s to 2.5s (0.012 → 0.007),
+    // so the ghost-glow lingers longer behind the cursor.
+    mouseLag.lerp(mouseTarget, 0.007);
     uniforms.uMouseLag.value.copy(mouseLag);
 
     // Hot-spots drift on slow Lissajous trajectories — never repeating exactly.
@@ -211,7 +213,17 @@ export function initHeroBackground(canvas: HTMLCanvasElement) {
 
     // Smoothed section-mix — lerps toward target whenever a new section
     // becomes most-visible. ~1.5s settle time at 60fps.
-    sectionMixCurrent += (sectionMixTarget - sectionMixCurrent) * 0.04;
+    // Feedback iteration: during hero scroll-pin, boost from base 1.0 up to
+    // 1.55 around 40-60% pin-progress (peak intensity mid-letterspread),
+    // then fade back as user exits the hero. heroP comes from editorialHero.
+    const heroP = (window as unknown as { __heroP?: number }).__heroP ?? -1;
+    let mixTarget = sectionMixTarget;
+    if (heroP >= 0 && heroP <= 1) {
+      // bell curve peaking at 0.5
+      const bell = 1 - Math.abs(heroP - 0.5) * 2;          // 0..1..0
+      mixTarget = mixTarget + bell * 0.55;
+    }
+    sectionMixCurrent += (mixTarget - sectionMixCurrent) * 0.04;
     uniforms.uSectionMix.value = sectionMixCurrent;
 
     renderer.render(scene, camera);

@@ -15,18 +15,18 @@ export function initSmoothScroll(): Lenis | null {
   if (PREFERS_REDUCED_MOTION) return null;
 
   const lenis = new Lenis({
-    duration: 1.2,
+    // Premium feel: longer settle, lower lerp. 2.5s duration is the
+    // "gallery scroll" range — every wheel-tick glides for noticeably
+    // longer than the default 1.2, but lerp stays at 0.06 so user
+    // input still feels responsive (not laggy).
+    duration: 2.5,
     easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     smoothWheel: true,
-    // syncTouch:true — drives the rAF loop on every touch event so
-    // ScrollTrigger pins stay in sync with iOS momentum scrolling.
-    // Combined with smoothTouch:false (default after deprecation), this
-    // keeps the native iOS feel while letting GSAP scrub correctly.
     syncTouch: true,
     syncTouchLerp: 0.08,
     wheelMultiplier: 1,
     touchMultiplier: 1.5,
-    lerp: 0.08,
+    lerp: 0.06,
   });
 
   // ── ScrollTrigger-Bridge ──────────────────────────────────
@@ -71,7 +71,7 @@ export function initSmoothScroll(): Lenis | null {
       const target = document.querySelector(href);
       if (target) {
         e.preventDefault();
-        lenis.scrollTo(target as HTMLElement, { offset: 0, duration: 1.4 });
+        lenis.scrollTo(target as HTMLElement, { offset: 0, duration: 2.0 });
       }
     });
   });
