@@ -128,6 +128,10 @@ function setupHeroPin(
     pinSpacing: true,
     scrub: 1.2,
     invalidateOnRefresh: true,
+    // anticipatePin pre-warms the pin one frame before it hits — kills the
+    // 1-frame jump on iOS Safari that used to happen when the user reached
+    // the trigger from a fast scroll.
+    anticipatePin: 1,
     onUpdate: (self) => {
       const p = self.progress;
 

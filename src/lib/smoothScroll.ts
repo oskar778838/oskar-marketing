@@ -18,12 +18,14 @@ export function initSmoothScroll(): Lenis | null {
     duration: 1.2,
     easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     smoothWheel: true,
-    // syncTouch:false → kein "smoothing" auf Touch-Devices (iOS Safari). Native
-    // momentum scrolling auf iPhone bleibt erhalten, ScrollTrigger.update bekommt
-    // trotzdem das pull-from-scroll-Event und Pins funktionieren.
-    syncTouch: false,
+    // syncTouch:true — drives the rAF loop on every touch event so
+    // ScrollTrigger pins stay in sync with iOS momentum scrolling.
+    // Combined with smoothTouch:false (default after deprecation), this
+    // keeps the native iOS feel while letting GSAP scrub correctly.
+    syncTouch: true,
+    syncTouchLerp: 0.08,
     wheelMultiplier: 1,
-    touchMultiplier: 1.4,
+    touchMultiplier: 1.5,
     lerp: 0.08,
   });
 
@@ -44,7 +46,10 @@ export function initSmoothScroll(): Lenis | null {
     getBoundingClientRect() {
       return { top: 0, left: 0, width: window.innerWidth, height: window.innerHeight };
     },
-    pinType: document.documentElement.style.transform ? "transform" : "fixed",
+    // pinType "transform" forces hardware-accelerated translate3d-based
+    // pinning instead of position:fixed. Critical for iOS Safari which
+    // glitches position:fixed during momentum scroll. Works on desktop too.
+    pinType: "transform",
   });
 
   gsap.ticker.add((time) => {
