@@ -378,6 +378,37 @@
   z-index: -1;
 }
 
+/* Border-gradient hover (feedback G — 21st.dev inspired).
+   A conic-gradient ring fades in above the static border on hover. */
+.track::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(
+    from 140deg,
+    rgba(201, 168, 76, 0),
+    rgba(232, 201, 106, 0.85) 30%,
+    rgba(245, 230, 184, 0.95) 50%,
+    rgba(232, 201, 106, 0.85) 70%,
+    rgba(201, 168, 76, 0) 100%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 380ms var(--ease-default);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.track:hover::after {
+  opacity: 1;
+}
+
 .track:hover {
   transform: translateY(-4px);
   border-color: var(--gold);
@@ -587,6 +618,35 @@
   transition: opacity 420ms var(--ease-default);
   pointer-events: none;
   z-index: -1;
+}
+
+/* Border-gradient hover ring — matches .track (feedback G).
+   ::after is reserved for the existing radial-glow, so we use ::before-on-hover
+   layered above. Implement as a separate pseudo via class. */
+.social-card .social-card__ring {
+  position: absolute;
+  inset: -1px;
+  padding: 1px;
+  background: conic-gradient(
+    from 140deg,
+    rgba(201, 168, 76, 0),
+    rgba(232, 201, 106, 0.85) 30%,
+    rgba(245, 230, 184, 0.95) 50%,
+    rgba(232, 201, 106, 0.85) 70%,
+    rgba(201, 168, 76, 0) 100%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 380ms var(--ease-default);
+}
+
+.social-card:hover .social-card__ring {
+  opacity: 1;
 }
 
 .social-card:hover {

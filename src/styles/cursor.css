@@ -58,3 +58,35 @@ html.cursor-hover .cursor__ring {
   height: 56px;
   border-color: var(--gold);
 }
+
+/* Spotlight (feedback iteration G — 21st.dev-inspired):
+   subtle 400px radial gold tint following the cursor. The radial center is
+   driven by --spot-x / --spot-y, set in cursor.ts from the ring position. */
+html.has-spotlight body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  background: radial-gradient(
+    400px circle at var(--spot-x, 50%) var(--spot-y, 50%),
+    rgba(232, 201, 106, 0.10),
+    rgba(232, 201, 106, 0.04) 45%,
+    transparent 70%
+  );
+  mix-blend-mode: screen;
+  opacity: 0.85;
+  transition: opacity var(--d-base) var(--ease-default);
+}
+
+@media (hover: none), (pointer: coarse) {
+  html.has-spotlight body::after {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.has-spotlight body::after {
+    display: none;
+  }
+}

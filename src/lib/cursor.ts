@@ -39,6 +39,10 @@ export function initCursor(): void {
     { passive: true }
   );
 
+  // Spotlight: subtle radial gradient (~400px, 10% gold) follows cursor.
+  // Drives a body::after layer via CSS custom properties.
+  html.classList.add("has-spotlight");
+
   function tick(): void {
     dotX += (mouseX - dotX) * dotLerp;
     dotY += (mouseY - dotY) * dotLerp;
@@ -47,6 +51,11 @@ export function initCursor(): void {
 
     dot.style.transform = `translate3d(${dotX}px, ${dotY}px, 0)`;
     ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0)`;
+
+    // Spotlight uses the slower-lerping ring position so the glow trails
+    // slightly behind the dot — feels more atmospheric than 1:1 tracking.
+    document.body.style.setProperty("--spot-x", `${ringX}px`);
+    document.body.style.setProperty("--spot-y", `${ringY}px`);
 
     requestAnimationFrame(tick);
   }
