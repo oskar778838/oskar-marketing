@@ -18,6 +18,7 @@ import { initScrollProgress } from "./lib/scrollProgress";
 import { initBooking } from "./lib/booking";
 import { initEasterEgg } from "./lib/easter-egg";
 import { initEditorialHero } from "./lib/editorialHero";
+import { initSectionIndicator } from "./lib/sectionIndicator";
 import type Lenis from "lenis";
 
 let lenisInstance: Lenis | null = null;
@@ -30,6 +31,7 @@ function boot(): void {
   initBooking();
   initEasterEgg();
   initEditorialHero(lenisInstance);
+  initSectionIndicator();
   runChoreography();
 
   const auroraCanvas = document.getElementById(

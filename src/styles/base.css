@@ -311,6 +311,75 @@ h1, h2, h3, .t-display, .t-display-italic, .end__quote, .proof__head-line, .acad
   overflow-wrap: normal;
 }
 
+/* ── Section indicator (fixed right edge) ────────────────── */
+/* Editorial chapter marker — small mono-caps current-section label.
+   Updated by IntersectionObserver as the user scrolls. */
+.section-indicator {
+  position: fixed;
+  right: var(--gutter);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: var(--z-nav);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 600ms var(--ease-default);
+}
+
+.section-indicator.is-ready {
+  opacity: 0.7;
+}
+
+.section-indicator__num {
+  font-family: var(--font-mono);
+  font-size: var(--t-mono-xs);
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  font-weight: 400;
+}
+
+.section-indicator__label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--muted-low);
+}
+
+@media (max-width: 768px) {
+  .section-indicator {
+    display: none;
+  }
+}
+
+/* ── Vertical section label (left edge, 90° rotated) ─────── */
+/* Pattern 3 from the genre reference set. Tiny mono caps, opacity 0.4,
+   anchored to each section's first child. CSS-only — no JS required. */
+.section-vlabel {
+  position: absolute;
+  left: var(--s-3);
+  top: var(--s-9);
+  transform: rotate(-90deg);
+  transform-origin: left top;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--muted-low);
+  opacity: 0.55;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+@media (max-width: 1024px) {
+  .section-vlabel {
+    display: none;
+  }
+}
+
 /* ── Visually-hidden helper (a11y) ───────────────────────── */
 .sr-only {
   position: absolute;
