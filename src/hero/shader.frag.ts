@@ -3,9 +3,11 @@ precision highp float;
 
 uniform float uTime;
 uniform vec2 uMouse;
+uniform vec2 uMouseLag;        // 1.5s-lagged mouse — creates trail glow
 uniform vec2 uResolution;
 uniform float uScrollT;        // 0..1 page-scroll progress
 uniform float uScrollPulse;    // 0..1 short pulse on scroll events
+uniform float uSectionMix;     // 0..1 per-section visibility multiplier
 uniform vec2 uHotspot1;        // 0..1 normalised, slowly drifts
 uniform vec2 uHotspot2;        // 0..1 normalised, slowly drifts
 
@@ -59,6 +61,12 @@ void main() {
   float mouseDist = length(stAspect - mouseAspect);
   float mouseInfluence = smoothstep(0.6, 0.0, mouseDist) * 0.32;
 
+  // Trailing mouse — lagged ghost that creates a "where mouse was" glow.
+  // Decay handled JS-side by lerp rate; shader just samples the position.
+  vec2 mouseLag = uMouseLag / uResolution.xy;
+  vec2 mouseLagAspect = vec2(mouseLag.x * aspect, mouseLag.y);
+  float trailInfluence = smoothstep(0.55, 0.0, length(stAspect - mouseLagAspect)) * 0.16;
+
   // Time scaled by scroll-pulse: short bursts speed up the flow on scroll.
   float t = uTime * (0.05 + uScrollPulse * 0.18);
 
@@ -75,7 +83,7 @@ void main() {
   float n3 = fbm(flow3) * 0.5 + 0.5;
   float pulse = (sin(uTime * 0.45) * 0.5 + 0.5) * n3;
 
-  float aurora = n1 * 0.55 + n2 * 0.30 + pulse * 0.15 + mouseInfluence;
+  float aurora = n1 * 0.55 + n2 * 0.30 + pulse * 0.15 + mouseInfluence + trailInfluence;
   aurora = smoothstep(-0.25, 0.85, aurora);
 
   // Hot-spots: two slowly drifting points that double the local intensity.
@@ -110,6 +118,11 @@ void main() {
   // section content. uScrollT goes 0..1 over the document.
   float scrollFade = 1.0 - smoothstep(0.05, 0.45, uScrollT) * 0.40;
   color *= scrollFade;
+
+  // Per-section intensity multiplier — JS dials this 0.3..0.7..1.0 based
+  // on which section the user is currently viewing. Lets content sections
+  // "breathe" without aurora competing for attention.
+  color *= mix(0.4, 1.0, uSectionMix);
 
   gl_FragColor = vec4(color, 1.0);
 }

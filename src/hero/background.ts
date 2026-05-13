@@ -26,6 +26,9 @@ export function initHeroBackground(canvas: HTMLCanvasElement) {
     uMouse: {
       value: new THREE.Vector2(window.innerWidth / 2, window.innerHeight / 2),
     },
+    uMouseLag: {
+      value: new THREE.Vector2(window.innerWidth / 2, window.innerHeight / 2),
+    },
     uResolution: {
       value: new THREE.Vector2(
         window.innerWidth * pixelRatio,
@@ -34,6 +37,7 @@ export function initHeroBackground(canvas: HTMLCanvasElement) {
     },
     uScrollT: { value: 0 },
     uScrollPulse: { value: 0 },
+    uSectionMix: { value: 1.0 },
     uHotspot1: { value: new THREE.Vector2(0.3, 0.4) },
     uHotspot2: { value: new THREE.Vector2(0.7, 0.65) },
   };
@@ -70,6 +74,55 @@ export function initHeroBackground(canvas: HTMLCanvasElement) {
     window.innerWidth / 2,
     window.innerHeight / 2
   );
+  // Lag mouse: same target, but lerps at 0.012 instead of 0.05 — creates
+  // a 1-2 second trailing "ghost" position. Shader uses it for the
+  // secondary glow that reads as a fading trail.
+  const mouseLag = new THREE.Vector2(
+    window.innerWidth / 2,
+    window.innerHeight / 2
+  );
+
+  // Section-reactive intensity. Per-section mapping:
+  // hero/manifest: 1.0 (aurora is the focal element)
+  // proof/social/termin: 0.6 (visible but quieter)
+  // status-quo/academy: 0.35 (numbers + offer take primary attention)
+  let sectionMixTarget = 1.0;
+  if ("IntersectionObserver" in window) {
+    const SECTION_INTENSITY: Record<string, number> = {
+      hero: 1.0,
+      status: 0.4,
+      proof: 0.6,
+      academy: 0.35,
+      termin: 0.6,
+      social: 0.6,
+      end: 0.85,
+    };
+    const visible = new Map<string, number>();
+    const obs = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          const id = (entry.target as HTMLElement).id;
+          if (entry.isIntersecting) visible.set(id, entry.intersectionRatio);
+          else visible.delete(id);
+        }
+        // Highest-ratio visible section wins.
+        let best = "hero";
+        let bestR = -1;
+        for (const [id, r] of visible) {
+          if (r > bestR) {
+            bestR = r;
+            best = id;
+          }
+        }
+        sectionMixTarget = SECTION_INTENSITY[best] ?? 0.6;
+      },
+      { threshold: [0, 0.25, 0.5, 0.75] }
+    );
+    Object.keys(SECTION_INTENSITY).forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) obs.observe(el);
+    });
+  }
 
   if (!isTouchDevice()) {
     window.addEventListener(
@@ -119,12 +172,23 @@ export function initHeroBackground(canvas: HTMLCanvasElement) {
 
   const startTime = performance.now();
 
+  // Smoothed section mix (lerps toward sectionMixTarget) so the change
+  // between sections is gentle, not a hard cut.
+  let sectionMixCurrent = 1.0;
+
   function animate() {
+    if (!prefersReducedMotion) requestAnimationFrame(animate);
+    if (document.hidden) return; // pause GPU work on background tabs
+
     const t = (performance.now() - startTime) / 1000;
     uniforms.uTime.value = t;
 
     mouseCurrent.lerp(mouseTarget, 0.05);
     uniforms.uMouse.value.copy(mouseCurrent);
+
+    // Trailing mouse — much slower lerp creates the "glow lag" effect.
+    mouseLag.lerp(mouseTarget, 0.012);
+    uniforms.uMouseLag.value.copy(mouseLag);
 
     // Hot-spots drift on slow Lissajous trajectories — never repeating exactly.
     uniforms.uHotspot1.value.set(
@@ -145,11 +209,12 @@ export function initHeroBackground(canvas: HTMLCanvasElement) {
     scrollPulse *= 0.92;
     uniforms.uScrollPulse.value = scrollPulse;
 
-    renderer.render(scene, camera);
+    // Smoothed section-mix — lerps toward target whenever a new section
+    // becomes most-visible. ~1.5s settle time at 60fps.
+    sectionMixCurrent += (sectionMixTarget - sectionMixCurrent) * 0.04;
+    uniforms.uSectionMix.value = sectionMixCurrent;
 
-    if (!prefersReducedMotion) {
-      requestAnimationFrame(animate);
-    }
+    renderer.render(scene, camera);
   }
 
   animate();
