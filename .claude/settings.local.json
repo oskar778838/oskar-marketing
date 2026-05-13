@@ -15,7 +15,8 @@
       "Bash(git commit -m 'feat: feedback iteration G — spotlight, grid pattern, card border-gradient *)",
       "Bash(node *)",
       "Bash(git check-ignore *)",
-      "Bash(git commit -m 'feat: aggressive-fix A — single OSKAR MKTG wordmark in nav trigger *)"
+      "Bash(git commit -m 'feat: aggressive-fix A — single OSKAR MKTG wordmark in nav trigger *)",
+      "Bash(git commit -m 'feat: aggressive-fix B — remove hero pin, scrub-only ScrollTrigger *)"
     ]
   }
 }

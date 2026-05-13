@@ -1,5 +1,11 @@
-// Editorial Hero — char-by-char reveal + scrubbed scroll-pin choreography.
-// Phase 2: reveal. Phase 3: ScrollTrigger pin (Lenis-bridged in smoothScroll.ts).
+// Editorial Hero — char-by-char reveal + scroll-driven letter-spread/word-drift.
+// Phase 2: reveal. Phase 3: scrub-only ScrollTrigger (NO pin), Lenis-bridged.
+//
+// Update (aggressive-fix B): pin removed. The pin felt jarring and broke the
+// natural scroll cadence at the top of the page. We keep the letter-spread +
+// word-drift animation but drive it through normal page scroll: the hero is in
+// the viewport from `top top` until `bottom 20%` of the hero, and the scrub
+// runs over that range.
 
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -95,10 +101,11 @@ export function initEditorialHero(_lenis: Lenis | null): EditorialHeroHandle | n
     );
   }
 
-  // ── Phase 3: scroll-pin + scrubbed choreography ─────────
-  // Hero stays fixed for 150% scroll-distance while the choreography plays
-  // through 4 progress-phases. After that, normal flow continues to Status Quo.
-  setupHeroPin(hero, oskar, marketing);
+  // ── Phase 3: scroll-driven choreography (NO pin) ─────────
+  // Hero stays in normal document flow; the letter-spread + word-drift play
+  // through scrub as the user scrolls past it. No pinned frames, no layout
+  // hijack — premium scroll feel without locking the page.
+  setupHeroScroll(hero, oskar, marketing);
 
   return {
     refresh: () => {
@@ -111,7 +118,7 @@ export function initEditorialHero(_lenis: Lenis | null): EditorialHeroHandle | n
   };
 }
 
-function setupHeroPin(
+function setupHeroScroll(
   hero: HTMLElement,
   oskar: HTMLElement | null,
   marketing: HTMLElement | null,
@@ -123,18 +130,15 @@ function setupHeroPin(
   ScrollTrigger.create({
     trigger: hero,
     start: "top top",
-    end: "+=180%",
-    pin: hero,
-    pinSpacing: true,
-    // scrub 2.5 = ~2.5s lag between scroll-input and rendered position.
-    // Reads as a smooth "drift" rather than 1:1 tracking — premium feel.
-    scrub: 2.5,
+    // bottom 20% = animation finishes when 80% of the hero has scrolled out.
+    // No pin, no pinSpacing — normal document flow continues into Status Quo.
+    end: "bottom 20%",
+    scrub: 1.5,
     invalidateOnRefresh: true,
-    anticipatePin: 1,
     onUpdate: (self) => {
       const p = self.progress;
 
-      // Letter-spread runs through the whole pin, accelerating: -0.02em → +0.15em
+      // Letter-spread runs through the whole range, accelerating: -0.02em → +0.15em
       // ────────────────────────────────────────────────────────────────────
       // Phase B (0.40–0.70): Words split — Oskar -80px left, Marketing +80px right
       // Phase C (0.70–0.85): y:-40px, opacity 1 → 0.4
