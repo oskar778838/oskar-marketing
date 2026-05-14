@@ -583,6 +583,7 @@
   position: absolute;
   bottom: clamp(64px, 10vh, 120px);
   left: clamp(20px, 10vw, 96px);
+  max-width: calc(100vw - clamp(40px, 20vw, 192px));
   display: flex;
   flex-direction: column;
   gap: clamp(4px, 0.6vh, 8px);
@@ -592,6 +593,7 @@
   margin-top: 0;
   grid-column: unset;
   grid-row: unset;
+  text-align: left;
 }
 
 .hero--editorial .hero__tagline-line {
@@ -601,6 +603,9 @@
   letter-spacing: 0.3em;
   text-transform: uppercase;
   color: var(--gold-warm);
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: normal;
 }
 
 /* Bottom-right: CTA */
@@ -665,17 +670,34 @@
   }
 
   .hero--editorial .hero__tagline {
-    left: 50%;
-    transform: translateX(-50%);
+    left: 0;
+    right: 0;
+    transform: translateY(8px);
     bottom: 26vh;
+    max-width: 100%;
+    width: 100%;
+    padding-inline: 1.5rem;
     text-align: center;
     align-items: center;
   }
 
+  /* Mobile CTA wrap takes full viewport width and centers via flex.
+     No left/right anchoring — the wrap is a centering container,
+     the CTA itself stays at content width. max-width: 85vw on the
+     button prevents the label + arrow combo from clipping at 375px. */
   .hero--editorial .hero__cta-wrap {
-    right: auto;
-    left: 50%;
-    transform: translateX(-50%);
+    left: 0;
+    right: 0;
+    transform: none;
     bottom: 14vh;
+    width: 100%;
+    padding-inline: 1.5rem;
+    display: flex;
+    justify-content: center;
+  }
+
+  .hero--editorial .hero__cta-wrap .cta {
+    max-width: 85vw;
+    margin: 0 auto;
   }
 }

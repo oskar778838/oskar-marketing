@@ -130,9 +130,11 @@ function setupHeroScroll(
   ScrollTrigger.create({
     trigger: hero,
     start: "top top",
-    // bottom 20% = animation finishes when 80% of the hero has scrolled out.
-    // No pin, no pinSpacing — normal document flow continues into Status Quo.
-    end: "bottom 20%",
+    // bottom top = animation completes exactly when the bottom of the hero
+    // reaches the top of the viewport (i.e. hero is fully scrolled past).
+    // After that the page scrolls normally into Status Quo with no lingering
+    // scroll-bound transforms on the hero typography.
+    end: "bottom top",
     scrub: 1.5,
     invalidateOnRefresh: true,
     onUpdate: (self) => {
