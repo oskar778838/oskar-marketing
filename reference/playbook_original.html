@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Affiliate Marketing Playbook 2026 — Oskar Marketing</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..900,30..100&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+
+:root{
+--bg:#0A0A0A;
+--bg-alt:#111111;
+--surface:#1A1A1A;
+--surface-2:#222222;
+--border:rgba(255,255,255,0.08);
+--border-strong:rgba(255,107,26,0.3);
+--text:#FAFAFA;
+--text-dim:#B0B0B0;
+--text-muted:#777777;
+--orange:#FF6B1A;
+--orange-light:#FF8540;
+--orange-dim:rgba(255,107,26,0.1);
+--orange-glow:rgba(255,107,26,0.4);
+}
+
+html{scroll-behavior:smooth}
+body{
+background:var(--bg);
+color:var(--text);
+font-family:'JetBrains Mono',monospace;
+overflow-x:hidden;
+-webkit-font-smoothing:antialiased;
+font-feature-settings:"ss01";
+}
+
+body::before{
+content:'';
+position:fixed;
+inset:0;
+pointer-events:none;
+z-index:100;
+opacity:0.4;
+mix-blend-mode:overlay;
+background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.15'/></svg>");
+}
+
+/* Logo (Cloud Placeholder) */
+.logo-mark{
+position:absolute;
+top:24px;
+right:24px;
+width:36px;
+height:36px;
+background:linear-gradient(135deg,var(--orange) 0%,var(--orange-light) 100%);
+border-radius:8px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-family:'Fraunces',serif;
+font-size:20px;
+font-weight:700;
+font-style:italic;
+color:#0A0A0A;
+z-index:5;
+box-shadow:0 4px 20px var(--orange-glow);
+}
+
+/* Hero */
+.hero{
+min-height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:space-between;
+padding:32px 24px;
+position:relative;
+overflow:hidden;
+}
+.hero-bg{position:absolute;inset:0;opacity:0.4}
+.hero-bg::before{
+content:'';
+position:absolute;
+top:-200px;right:-200px;
+width:600px;height:600px;
+background:radial-gradient(circle,var(--orange) 0%,transparent 60%);
+filter:blur(80px);
+animation:float-orb 15s ease-in-out infinite;
+}
+.hero-bg::after{
+content:'';
+position:absolute;
+bottom:-100px;left:-100px;
+width:400px;height:400px;
+background:radial-gradient(circle,var(--orange) 0%,transparent 60%);
+filter:blur(60px);
+animation:float-orb 18s ease-in-out infinite reverse;
+}
+@keyframes float-orb{
+0%,100%{transform:translate(0,0) scale(1)}
+50%{transform:translate(40px,-40px) scale(1.1)}
+}
+
+.hero-top{display:flex;justify-content:space-between;align-items:center;position:relative;z-index:2;animation:fade-down 0.8s ease both;padding-right:50px}
+.hero-top-label{font-size:10px;letter-spacing:3px;color:var(--orange);font-weight:600;text-transform:uppercase}
+.hero-top-year{font-family:'Fraunces',serif;font-size:14px;color:var(--text-dim);font-style:italic;line-height:1.4}
+
+.hero-main{position:relative;z-index:2;animation:fade-up 1s ease 0.2s both}
+
+.hero-eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:24px}
+.hero-eyebrow-line{width:40px;height:1px;background:var(--orange)}
+.hero-eyebrow-text{font-size:11px;letter-spacing:4px;color:var(--orange);text-transform:uppercase;font-weight:600}
+
+.hero-title{
+font-family:'Fraunces',serif;
+font-size:clamp(48px,13vw,84px);
+line-height:1.1;
+letter-spacing:-0.04em;
+font-weight:400;
+font-variation-settings:"opsz" 144,"SOFT" 50;
+margin-bottom:8px;
+padding-bottom:8px;
+}
+.hero-title-line{display:block;padding-bottom:4px;line-height:1.1}
+.hero-title-italic{font-style:italic;color:var(--orange);font-variation-settings:"opsz" 144,"SOFT" 100}
+
+.hero-subtitle{
+font-family:'JetBrains Mono',monospace;
+font-size:13px;
+color:var(--text-dim);
+line-height:1.7;
+max-width:380px;
+margin-top:28px;
+font-weight:400;
+}
+
+.hero-bottom{position:relative;z-index:2;animation:fade-up 1s ease 0.4s both}
+
+.hero-meta{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:8px;
+margin-bottom:24px;
+border-top:1px solid var(--border);
+padding-top:24px;
+}
+.hero-meta-item{font-size:9px}
+.hero-meta-label{display:block;color:var(--text-muted);letter-spacing:2px;margin-bottom:6px;text-transform:uppercase}
+.hero-meta-value{display:block;font-family:'Fraunces',serif;font-size:22px;color:var(--text);font-style:italic;line-height:1.3;padding-bottom:4px}
+
+.hero-author{display:flex;align-items:center;justify-content:space-between;font-size:11px}
+.hero-author-name{color:var(--text);font-weight:600;letter-spacing:1px}
+.hero-author-tag{color:var(--orange)}
+
+.hero-scroll{
+position:absolute;
+bottom:24px;
+left:50%;
+transform:translateX(-50%);
+font-size:9px;
+color:var(--text-dim);
+letter-spacing:3px;
+animation:scroll-pulse 2s ease-in-out infinite;
+text-transform:uppercase;
+}
+@keyframes scroll-pulse{
+0%,100%{opacity:0.4;transform:translateX(-50%) translateY(0)}
+50%{opacity:1;transform:translateX(-50%) translateY(6px)}
+}
+
+@keyframes fade-down{
+from{opacity:0;transform:translateY(-20px)}
+to{opacity:1;transform:translateY(0)}
+}
+@keyframes fade-up{
+from{opacity:0;transform:translateY(30px)}
+to{opacity:1;transform:translateY(0)}
+}
+
+.reveal{opacity:0;transform:translateY(40px);transition:opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+section{padding:60px 24px;position:relative;border-top:1px solid var(--border)}
+
+.section-header{margin-bottom:40px}
+.section-number{
+font-family:'Fraunces',serif;
+font-size:80px;
+font-style:italic;
+color:var(--orange);
+line-height:1.2;
+font-variation-settings:"opsz" 144,"SOFT" 100;
+opacity:0.4;
+margin-bottom:-20px;
+font-weight:300;
+padding-bottom:8px;
+}
+.section-eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.section-eyebrow-line{width:30px;height:1px;background:var(--orange)}
+.section-eyebrow-text{font-size:10px;letter-spacing:3px;color:var(--orange);text-transform:uppercase;font-weight:600}
+
+.section-title{
+font-family:'Fraunces',serif;
+font-size:clamp(36px,9vw,52px);
+line-height:1.1;
+letter-spacing:-0.03em;
+font-weight:400;
+margin-bottom:20px;
+font-variation-settings:"opsz" 144;
+padding-bottom:6px;
+}
+.section-title em{font-style:italic;color:var(--orange)}
+
+.section-lede{font-size:13px;color:var(--text-dim);line-height:1.7;max-width:380px}
+
+/* Step Card */
+.step-card{
+margin-top:32px;
+padding:28px 24px;
+background:var(--surface);
+border:1px solid var(--border);
+border-radius:14px;
+position:relative;
+overflow:hidden;
+}
+.step-card::before{
+content:'';
+position:absolute;
+top:0;left:0;
+width:3px;
+height:100%;
+background:linear-gradient(180deg,var(--orange) 0%,transparent 100%);
+}
+.step-tag{
+display:inline-block;
+font-size:9px;
+letter-spacing:2.5px;
+color:var(--orange);
+font-weight:700;
+text-transform:uppercase;
+margin-bottom:14px;
+padding:5px 10px;
+background:var(--orange-dim);
+border-radius:4px;
+}
+.step-headline{
+font-family:'Fraunces',serif;
+font-size:22px;
+line-height:1.3;
+margin-bottom:14px;
+font-weight:500;
+padding-bottom:4px;
+}
+.step-headline em{font-style:italic;color:var(--orange)}
+.step-text{
+font-size:13px;
+color:var(--text-dim);
+line-height:1.75;
+margin-bottom:16px;
+}
+.step-text strong{color:#FFFFFF;font-weight:600}
+
+.step-action{
+margin-top:18px;
+padding:14px 16px;
+background:var(--bg);
+border-radius:8px;
+border-left:2px solid var(--orange);
+}
+.step-action-label{
+font-size:9px;
+letter-spacing:2px;
+color:var(--orange);
+text-transform:uppercase;
+font-weight:600;
+margin-bottom:6px;
+}
+.step-action-text{
+font-family:'Fraunces',serif;
+font-size:14px;
+color:var(--text);
+line-height:1.5;
+font-style:italic;
+}
+
+/* Mini List */
+.mini-list{
+display:flex;
+flex-direction:column;
+gap:10px;
+margin-top:16px;
+}
+.mini-item{
+display:flex;
+align-items:flex-start;
+gap:10px;
+padding:10px 12px;
+background:var(--bg);
+border-radius:6px;
+}
+.mini-bullet{
+color:var(--orange);
+font-family:'Fraunces',serif;
+font-style:italic;
+font-weight:700;
+flex-shrink:0;
+font-size:14px;
+line-height:1.4;
+}
+.mini-text{
+font-size:12px;
+color:var(--text-dim);
+line-height:1.6;
+}
+.mini-text strong{color:var(--text);font-weight:600}
+
+/* Bridge Section */
+.bridge-section{
+background:radial-gradient(ellipse at top,#1A0A05 0%,#0A0A0A 70%);
+padding:70px 24px;
+text-align:center;
+}
+.bridge-eyebrow{
+font-size:10px;
+letter-spacing:3px;
+color:var(--orange);
+text-transform:uppercase;
+font-weight:600;
+margin-bottom:18px;
+}
+.bridge-title{
+font-family:'Fraunces',serif;
+font-size:clamp(32px,8vw,46px);
+line-height:1.15;
+letter-spacing:-0.03em;
+margin-bottom:18px;
+font-variation-settings:"opsz" 144;
+font-weight:400;
+padding-bottom:6px;
+}
+.bridge-title em{font-style:italic;color:var(--orange)}
+.bridge-text{
+font-size:13px;
+color:var(--text-dim);
+line-height:1.8;
+max-width:400px;
+margin:0 auto;
+}
+.bridge-text strong{color:var(--text);font-weight:600}
+
+/* CTA Section */
+.cta-section{
+background:linear-gradient(180deg,#1A0505 0%,#0A0A0A 100%);
+position:relative;
+overflow:hidden;
+padding:60px 24px 80px;
+border-top:none;
+}
+.cta-section::before{
+content:'';
+position:absolute;
+top:50%;left:50%;
+transform:translate(-50%,-50%);
+width:600px;height:600px;
+background:radial-gradient(circle,var(--orange-glow) 0%,transparent 70%);
+filter:blur(80px);
+animation:pulse-glow 4s ease-in-out infinite;
+}
+@keyframes pulse-glow{0%,100%{opacity:0.5}50%{opacity:1}}
+
+.cta-content{position:relative;z-index:2}
+.cta-eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:20px;justify-content:center}
+.cta-eyebrow-line{width:40px;height:1px;background:var(--orange)}
+.cta-eyebrow-text{font-size:10px;letter-spacing:3px;color:var(--orange);text-transform:uppercase;font-weight:600}
+
+.cta-title{
+font-family:'Fraunces',serif;
+font-size:clamp(38px,10vw,56px);
+line-height:1.1;
+letter-spacing:-0.03em;
+text-align:center;
+margin-bottom:16px;
+font-variation-settings:"opsz" 144;
+font-weight:400;
+padding-bottom:8px;
+}
+.cta-title em{font-style:italic;color:var(--orange)}
+
+.cta-subtitle{
+font-size:13px;
+color:var(--text-dim);
+text-align:center;
+margin-bottom:36px;
+line-height:1.7;
+max-width:340px;
+margin-left:auto;
+margin-right:auto;
+}
+
+.benefits{display:flex;flex-direction:column;gap:12px;margin-bottom:32px}
+.benefit{
+display:flex;
+gap:14px;
+align-items:flex-start;
+padding:16px 18px;
+background:rgba(255,255,255,0.03);
+border:1px solid var(--border);
+border-radius:10px;
+backdrop-filter:blur(10px);
+}
+.benefit-icon{
+width:32px;height:32px;
+flex-shrink:0;
+background:var(--orange);
+color:#0A0A0A;
+border-radius:8px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-family:'Fraunces',serif;
+font-size:16px;
+font-weight:700;
+font-style:italic;
+line-height:1;
+}
+.benefit-content{flex:1}
+.benefit-title{font-family:'Fraunces',serif;font-size:16px;color:var(--text);margin-bottom:4px;font-weight:500;line-height:1.3;padding-bottom:2px}
+.benefit-text{font-size:11.5px;color:var(--text-dim);line-height:1.6}
+
+.price-box{
+margin:32px 0 20px;
+text-align:center;
+padding:24px;
+background:linear-gradient(135deg,rgba(255,107,26,0.12) 0%,rgba(255,107,26,0.06) 100%);
+border:1px solid var(--border-strong);
+border-radius:12px;
+}
+.price-box-label{
+font-size:9px;
+letter-spacing:2px;
+color:var(--orange);
+text-transform:uppercase;
+font-weight:600;
+margin-bottom:10px;
+}
+.price-box-main{
+font-family:'Fraunces',serif;
+font-size:38px;
+color:var(--text);
+font-weight:600;
+line-height:1.3;
+padding-bottom:6px;
+}
+.price-box-main em{color:var(--orange);font-style:italic}
+.price-box-sub{
+font-size:11px;
+color:var(--text-dim);
+font-family:'Fraunces',serif;
+font-style:italic;
+margin-top:6px;
+line-height:1.5;
+}
+
+.cta-btn-wrap{text-align:center;margin-bottom:18px}
+.cta-btn{
+display:inline-flex;
+align-items:center;
+gap:12px;
+padding:20px 32px;
+background:var(--orange);
+color:#0A0A0A;
+text-decoration:none;
+border-radius:12px;
+font-weight:700;
+font-size:13px;
+letter-spacing:1px;
+text-transform:uppercase;
+position:relative;
+overflow:hidden;
+transition:all 0.3s;
+box-shadow:0 10px 40px var(--orange-glow);
+}
+.cta-btn:hover{transform:translateY(-2px);box-shadow:0 15px 50px var(--orange-glow)}
+.cta-btn::before{
+content:'';
+position:absolute;
+inset:0;
+background:linear-gradient(120deg,transparent,rgba(255,255,255,0.4),transparent);
+transform:translateX(-100%);
+transition:transform 0.6s;
+}
+.cta-btn:hover::before{transform:translateX(100%)}
+.cta-btn-arrow{font-family:'Fraunces',serif;font-size:18px;font-style:italic;font-weight:400}
+
+.cta-risk{
+text-align:center;
+font-size:11px;
+color:var(--text-dim);
+font-family:'Fraunces',serif;
+font-style:italic;
+line-height:1.6;
+max-width:320px;
+margin:0 auto;
+}
+
+/* Footer */
+.footer{padding:40px 24px 30px;text-align:center;border-top:1px solid var(--border);background:#000}
+.footer-author{font-family:'Fraunces',serif;font-size:22px;margin-bottom:8px;font-weight:500;line-height:1.3;padding-bottom:2px}
+.footer-author em{color:var(--orange);font-style:italic}
+.footer-handle{font-size:11px;color:var(--orange);letter-spacing:2px;margin-bottom:24px}
+.footer-socials{display:flex;justify-content:center;gap:24px;margin-bottom:30px;font-size:10px;color:var(--text-dim);letter-spacing:1.5px;text-transform:uppercase}
+.footer-socials a{color:var(--text-dim);text-decoration:none;transition:color 0.2s}
+.footer-socials a:hover{color:var(--orange)}
+.footer-copy{font-size:9px;color:var(--text-muted);letter-spacing:2px}
+
+.progress{position:fixed;top:0;left:0;height:2px;background:var(--orange);z-index:1000;transition:width 0.1s;width:0%}
+
+@media (min-width:600px){
+section{padding:80px 40px}
+.hero{padding:40px}
+.footer{padding:60px 40px}
+.bridge-section,.cta-section{padding:80px 40px}
+}
+
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<!-- HERO -->
+<div class="hero">
+<div class="hero-bg"></div>
+
+<!-- LOGO PLACEHOLDER — Cowork: ersetzen mit echtem Oskar Marketing Logo -->
+<div class="logo-mark">O</div>
+
+<div class="hero-top">
+<span class="hero-top-label">PLAYBOOK · 2026</span>
+<span class="hero-top-year">Edition 01</span>
+</div>
+
+<div class="hero-main">
+<div class="hero-eyebrow">
+<span class="hero-eyebrow-line"></span>
+<span class="hero-eyebrow-text">Affiliate Marketing Guide</span>
+</div>
+<h1 class="hero-title">
+<span class="hero-title-line">Dein <em class="hero-title-italic">Start</em></span>
+<span class="hero-title-line">in <em class="hero-title-italic">4 Schritten</em>.</span>
+</h1>
+<p class="hero-subtitle">Ein praktisches Playbook für Anfänger die 2026 mit Affiliate Marketing starten wollen. Schritt für Schritt. Ohne Theorie. Ohne Hype.</p>
+</div>
+
+<div class="hero-bottom">
+<div class="hero-meta">
+<div class="hero-meta-item">
+<span class="hero-meta-label">Schritte</span>
+<span class="hero-meta-value">4</span>
+</div>
+<div class="hero-meta-item">
+<span class="hero-meta-label">Lesedauer</span>
+<span class="hero-meta-value">6 min</span>
+</div>
+<div class="hero-meta-item">
+<span class="hero-meta-label">Niveau</span>
+<span class="hero-meta-value">Start</span>
+</div>
+</div>
+<div class="hero-author">
+<span class="hero-author-name">OSKAR MARKETING</span>
+<span class="hero-author-tag">@oskarmarketing</span>
+</div>
+</div>
+
+<span class="hero-scroll">↓ Scrollen</span>
+</div>
+
+<!-- SCHRITT 01 — Was ist Affiliate Marketing -->
+<section>
+<div class="section-header reveal">
+<div class="section-number">01</div>
+<div class="section-eyebrow">
+<span class="section-eyebrow-line"></span>
+<span class="section-eyebrow-text">Grundlagen</span>
+</div>
+<h2 class="section-title">Was ist <em>Affiliate</em> Marketing?</h2>
+<p class="section-lede">Stell dir vor du empfiehlst einem Freund ein Restaurant. Der Inhaber gibt dir 10€ wenn dein Freund hingeht. Genau das ist Affiliate Marketing — nur online und in groß.</p>
+</div>
+
+<div class="step-card reveal">
+<span class="step-tag">▸ So funktioniert es</span>
+<div class="step-headline">Du empfiehlst — der Anbieter <em>zahlt</em>.</div>
+<div class="step-text">Du bewirbst fremde Produkte und bekommst eine Provision wenn jemand über deinen Link kauft. <strong>Keine eigenen Produkte. Kein Lager. Kein Risiko.</strong> Die Provisionen liegen typisch zwischen 5% und 50% pro Verkauf.</div>
+
+<div class="step-action">
+<div class="step-action-label">▸ Dein erster Schritt</div>
+<div class="step-action-text">"Suche dir ein Affiliate-Programm in deiner Nische — und registriere dich für deinen ersten Link."</div>
+</div>
+</div>
+</section>
+
+<!-- SCHRITT 02 — Die Nische -->
+<section>
+<div class="section-header reveal">
+<div class="section-number">02</div>
+<div class="section-eyebrow">
+<span class="section-eyebrow-line"></span>
+<span class="section-eyebrow-text">Positionierung</span>
+</div>
+<h2 class="section-title">Wähle deine <em>Nische</em>.</h2>
+<p class="section-lede">Die meisten Anfänger nehmen "Fitness" oder "Tech". Zu breit. Hier sind die echten Filter für die richtige Nische.</p>
+</div>
+
+<div class="step-card reveal">
+<span class="step-tag">▸ Der 3-Fragen-Filter</span>
+<div class="step-headline">Drei Fragen — eine <em>Antwort</em>.</div>
+<div class="step-text">Bevor du eine Nische wählst, beantworte diese drei Fragen ehrlich. <strong>Wenn alle drei "Ja" sind — du hast deine Nische gefunden.</strong></div>
+
+<div class="mini-list">
+<div class="mini-item">
+<span class="mini-bullet">1</span>
+<div class="mini-text"><strong>Kannst du 1 Stunde am Stück darüber reden ohne Notizen?</strong> Wenn nicht — andere Nische.</div>
+</div>
+<div class="mini-item">
+<span class="mini-bullet">2</span>
+<div class="mini-text"><strong>Gibt es Produkte mit 30%+ Provision in der Nische?</strong> Check vorher — sonst arbeitest du umsonst.</div>
+</div>
+<div class="mini-item">
+<span class="mini-bullet">3</span>
+<div class="mini-text"><strong>Hattest du selbst dieses Problem vor 6 Monaten?</strong> Deine eigene Erfahrung ist dein größter Vorteil.</div>
+</div>
+</div>
+
+<div class="step-action">
+<div class="step-action-label">▸ Dein zweiter Schritt</div>
+<div class="step-action-text">"Schreib drei mögliche Nischen auf — wende die 3 Fragen an — wähle die mit 3x Ja."</div>
+</div>
+</div>
+</section>
+
+<!-- SCHRITT 03 — Die Plattform -->
+<section>
+<div class="section-header reveal">
+<div class="section-number">03</div>
+<div class="section-eyebrow">
+<span class="section-eyebrow-line"></span>
+<span class="section-eyebrow-text">Reichweite</span>
+</div>
+<h2 class="section-title">Die richtige <em>Plattform</em>.</h2>
+<p class="section-lede">Du brauchst nicht alle Plattformen. Du brauchst eine — und musst sie richtig verstehen.</p>
+</div>
+
+<div class="step-card reveal">
+<span class="step-tag">▸ Start mit TikTok</span>
+<div class="step-headline">TikTok bringt dir <em>Reichweite</em> ohne Follower.</div>
+<div class="step-text">TikTok ist die einzige Plattform die einen 0-Follower-Account in einer Woche auf 10.000 Views pushen kann. <strong>Keine andere Plattform ist so anfängerfreundlich.</strong> Instagram und YouTube kommen später — wenn du eine Audience hast.</div>
+
+<div class="mini-list">
+<div class="mini-item">
+<span class="mini-bullet">▸</span>
+<div class="mini-text"><strong>Slide-Posts statt Videos.</strong> Einfacher zu produzieren, performen oft besser.</div>
+</div>
+<div class="mini-item">
+<span class="mini-bullet">▸</span>
+<div class="mini-text"><strong>Crossposting zu Instagram Reels</strong> bringt dir gratis Zusatz-Reichweite.</div>
+</div>
+</div>
+
+<div class="step-action">
+<div class="step-action-label">▸ Dein dritter Schritt</div>
+<div class="step-action-text">"Erstelle einen TikTok-Account in deiner Nische — poste in den ersten 14 Tagen täglich 2 Slide-Posts."</div>
+</div>
+</div>
+</section>
+
+<!-- SCHRITT 04 — Der Content -->
+<section>
+<div class="section-header reveal">
+<div class="section-number">04</div>
+<div class="section-eyebrow">
+<span class="section-eyebrow-line"></span>
+<span class="section-eyebrow-text">Content</span>
+</div>
+<h2 class="section-title">Der erste <em>Post</em>.</h2>
+<p class="section-lede">Jeder Post hat dieselbe Struktur. Wenn du die kennst — kannst du täglich posten ohne nachzudenken.</p>
+</div>
+
+<div class="step-card reveal">
+<span class="step-tag">▸ Die Hook-Formel</span>
+<div class="step-headline">Die ersten <em>3 Sekunden</em> entscheiden alles.</div>
+<div class="step-text">Wenn dein Hook in den ersten 3 Sekunden nicht packt — egal wie gut der Rest ist — der Zuschauer scrollt weiter. <strong>Der Hook macht 80% des Erfolgs aus.</strong></div>
+
+<div class="mini-list">
+<div class="mini-item">
+<span class="mini-bullet">▸</span>
+<div class="mini-text"><strong>Starte mit "Du" oder "Dein".</strong> "Dein Wecker klingelt um 6" schlägt jeden anderen Hook.</div>
+</div>
+<div class="mini-item">
+<span class="mini-bullet">▸</span>
+<div class="mini-text"><strong>Konkrete Zahl statt vager Behauptung.</strong> "Tag 47: 0€" schlägt "Mein erster Monat".</div>
+</div>
+<div class="mini-item">
+<span class="mini-bullet">▸</span>
+<div class="mini-text"><strong>Jede Caption endet mit Frage.</strong> Kommentare sind das stärkste Algorithmus-Signal.</div>
+</div>
+</div>
+
+<div class="step-action">
+<div class="step-action-label">▸ Dein vierter Schritt</div>
+<div class="step-action-text">"Schreibe heute deinen ersten Hook — und poste den ersten Post in den nächsten 24 Stunden."</div>
+</div>
+</div>
+</section>
+
+<!-- BRIDGE -->
+<section class="bridge-section">
+<div class="reveal">
+<div class="bridge-eyebrow">▸ Du hast jetzt die Basics</div>
+<h2 class="bridge-title">Aber wie geht es <em>weiter</em>?</h2>
+<p class="bridge-text">4 Schritte sind dein Anfang. Aber Affiliate Marketing ist mehr als die Basics. <strong>Was kommt nach dem ersten Post?</strong> Wie verkaufst du in DMs? Wann skalierst du? Welche Tools brauchst du wirklich? Das volle System bekommst du in der Affiliate Academy.</p>
+</div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+<div class="cta-content">
+<div class="cta-eyebrow reveal">
+<span class="cta-eyebrow-line"></span>
+<span class="cta-eyebrow-text">Der nächste Schritt</span>
+</div>
+<h2 class="cta-title reveal">Das komplette <em>System</em>.<br>Von <em>Mark Janzen</em>.</h2>
+<p class="cta-subtitle reveal">Vom ersten Setup bis zum 4-stelligen Monat. Mit täglichem Support, persönlich, ohne Bullshit.</p>
+
+<div class="benefits">
+<div class="benefit reveal">
+<div class="benefit-icon">85</div>
+<div class="benefit-content">
+<div class="benefit-title">85+ Schritt-für-Schritt Videos</div>
+<div class="benefit-text">In 8 Modulen — vom Mindset bis zum ersten Verkauf.</div>
+</div>
+</div>
+<div class="benefit reveal">
+<div class="benefit-icon">M</div>
+<div class="benefit-content">
+<div class="benefit-title">Mark's persönlicher WhatsApp-Support</div>
+<div class="benefit-text">Direkter 1:1 Zugang zu Mark — keine Assistenten.</div>
+</div>
+</div>
+<div class="benefit reveal">
+<div class="benefit-icon">∞</div>
+<div class="benefit-content">
+<div class="benefit-title">Tägliche Live-Teamcalls</div>
+<div class="benefit-text">Q&A und Live-Strategien mit Mark — fast jeden Tag.</div>
+</div>
+</div>
+<div class="benefit reveal">
+<div class="benefit-icon">350</div>
+<div class="benefit-content">
+<div class="benefit-title">Community mit 350+ Mitgliedern</div>
+<div class="benefit-text">Exklusive Gruppe mit erfahrenen Affiliates.</div>
+</div>
+</div>
+</div>
+
+<div class="price-box reveal">
+<div class="price-box-label">▸ Der Einstieg</div>
+<div class="price-box-main">Ab <em>5€</em></div>
+<div class="price-box-sub">Günstiger als ein Mittagessen — und du entscheidest selbst ob du dabei bleibst.</div>
+</div>
+
+<div class="cta-btn-wrap reveal">
+<a href="https://www.checkout-ds24.com/product/583562?aff=Bestproducts99978" class="cta-btn" target="_blank">
+<span>Jetzt für 5€ starten</span>
+<span class="cta-btn-arrow">→</span>
+</a>
+</div>
+
+<p class="cta-risk reveal">Schau dir Modul 01 an — dann entscheidest du selbst.</p>
+</div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+<div class="footer-author">Oskar <em>Marketing</em></div>
+<div class="footer-handle">@OSKARMARKETING</div>
+<div class="footer-socials">
+<a href="https://tiktok.com/@oskarmarketing" target="_blank">TikTok</a>
+<a href="https://instagram.com/oskarmarketing" target="_blank">Instagram</a>
+<a href="https://youtube.com/@oskarmarketing" target="_blank">YouTube</a>
+</div>
+<div class="footer-copy">© 2026 · MADE FOR THOSE WHO BUILD</div>
+</footer>
+
+<script>
+const progress=document.getElementById('progress');
+window.addEventListener('scroll',()=>{
+const pct=(window.scrollY/(document.body.scrollHeight-window.innerHeight))*100;
+progress.style.width=pct+'%';
+});
+
+const observer=new IntersectionObserver((entries)=>{
+entries.forEach((entry,i)=>{
+if(entry.isIntersecting){
+setTimeout(()=>entry.target.classList.add('visible'),i*60);
+observer.unobserve(entry.target);
+}
+});
+},{threshold:0.15,rootMargin:'0px 0px -10% 0px'});
+
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+</script>
+
+</body>
+</html>
