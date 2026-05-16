@@ -933,9 +933,11 @@
 }
 
 /* ── Ghost CTA (subordinate hero secondary) ─────────────────── */
+/* Subtle gold border + visible padding so the element reads as a button
+   while staying subordinate to the primary Academy CTA. */
 .cta--ghost {
-  border: none;
-  padding: var(--s-3) 0;
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  padding: 12px 24px;
   background: transparent;
   font-size: 10px;
   letter-spacing: 0.22em;
@@ -950,6 +952,7 @@
 .cta--ghost:hover {
   color: var(--gold-warm);
   background: transparent;
+  border-color: rgba(201, 168, 76, 0.8);
   transform: translateX(2px);
 }
 

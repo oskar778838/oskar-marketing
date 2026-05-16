@@ -677,12 +677,27 @@
     left: 0;
     right: 0;
     transform: translateY(8px);
-    bottom: 26vh;
+    /* Lift the tagline so the 4-line mono caps block clears the CTA stack
+       with a guaranteed ≥32px gap regardless of viewport height.
+       calc reserves: 14vh (CTA bottom-offset) + ~120px (CTA stack incl.
+       primary + ghost + 12px internal gap) + 32px (required clearance). */
+    bottom: calc(14vh + 152px);
     max-width: 100%;
     width: 100%;
     padding-inline: 1.5rem;
     text-align: center;
     align-items: center;
+    /* Internal breathing between the 4 mono-caps lines. */
+    gap: 10px;
+    /* Documents the intent — has no effect under absolute positioning
+       but reads correctly if this block is ever flowed normally. */
+    margin-bottom: 32px;
+  }
+
+  .hero--editorial .hero__tagline-line {
+    line-height: 1.7;
+    font-size: 10px;
+    letter-spacing: 0.24em;
   }
 
   /* Mobile CTA wrap takes full viewport width and centers via flex.
@@ -693,9 +708,16 @@
     left: 0;
     right: 0;
     transform: none;
-    bottom: 14vh;
+    /* Clamp keeps the stack ≥96px from the viewport edge on short screens
+       (iPhone SE: 14vh = 93px → too tight) without pushing it up on tall ones. */
+    bottom: clamp(96px, 14vh, 140px);
     width: 100%;
     padding-inline: 1.5rem;
+    /* Extra room from the viewport edge so the ghost CTA never kisses the
+     scroll indicator beneath it. */
+    padding-bottom: 24px;
+    /* Intent marker for the gap to the tagline above (see tagline.bottom). */
+    margin-top: 32px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -706,5 +728,14 @@
   .hero--editorial .hero__cta-wrap .cta {
     max-width: 85vw;
     margin: 0 auto;
+  }
+}
+
+/* Extra tagline tightening at iPhone SE width to avoid any wrap risk on
+   the longest line ("VOM SYSTEM ZUM IMPERIUM"). */
+@media (max-width: 420px) {
+  .hero--editorial .hero__tagline-line {
+    font-size: 9px;
+    letter-spacing: 0.22em;
   }
 }
