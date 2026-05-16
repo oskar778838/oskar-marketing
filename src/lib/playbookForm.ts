@@ -1,15 +1,15 @@
 // Playbook email-capture form.
 //
-// Submits to Brevo's hosted form endpoint (action URL pasted by the user
-// after creating a Web Form in the Brevo dashboard — see docs/BREVO-SETUP.md).
-// Brevo's endpoint doesn't expose CORS headers, so we POST with no-cors
-// and accept the opaque response — the actual confirmation channel is
-// Brevo's double-opt-in email.
-//
-// If the action URL is still a placeholder, the submit is blocked
-// gracefully and a clear error is shown instead of leaking to the user.
+// POSTs JSON to the Cloudflare Worker's /subscribe endpoint. The Worker
+// validates and forwards to Brevo's double-opt-in API, which sends the
+// confirmation mail. Success here means "DOI mail sent", not "confirmed".
 
-const PLACEHOLDER_ACTION = "{{BREVO_FORM_ACTION}}";
+import { SUBSCRIBE_API_URL } from "../config";
+
+interface SubscribeResponse {
+  ok: boolean;
+  error?: string;
+}
 
 export function initPlaybookForm(): void {
   const form = document.getElementById("playbook-form") as HTMLFormElement | null;
@@ -20,6 +20,8 @@ export function initPlaybookForm(): void {
   const defaultLabel = labelEl?.dataset.defaultLabel ?? labelEl?.textContent ?? "Playbook holen";
   const successEl = form.querySelector<HTMLElement>("[data-success]");
   const errorEl = form.querySelector<HTMLElement>("[data-error]");
+  const emailInput = form.querySelector<HTMLInputElement>('input[name="EMAIL"]');
+  const consentInput = form.querySelector<HTMLInputElement>('input[name="OPT_IN"]');
 
   const showError = (msg: string): void => {
     if (!errorEl) return;
@@ -49,24 +51,40 @@ export function initPlaybookForm(): void {
       return;
     }
 
-    const action = form.action || "";
-    if (!action || action.includes(PLACEHOLDER_ACTION)) {
+    if (!SUBSCRIBE_API_URL) {
       showError(
         "Formular noch nicht konfiguriert. Schreib mir direkt: opheck@gmx.de"
       );
       return;
     }
 
-    setBusy(true);
-    const body = new FormData(form);
+    const email = (emailInput?.value ?? "").trim().toLowerCase();
+    const consent = consentInput?.checked === true;
 
-    void fetch(action, { method: "POST", body, mode: "no-cors" })
-      .then(() => {
-        showSuccess();
+    setBusy(true);
+
+    void fetch(`${SUBSCRIBE_API_URL.replace(/\/$/, "")}/subscribe`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({ email, consent }),
+    })
+      .then(async (res) => {
+        const data = (await res.json().catch(() => ({}))) as SubscribeResponse;
+        if (res.ok && data.ok) {
+          showSuccess();
+          return;
+        }
+        showError(
+          data.error ??
+            "Anmeldung gerade nicht möglich. Versuche es später nochmal oder schreib mir: opheck@gmx.de"
+        );
       })
       .catch(() => {
         showError(
-          "Anmeldung gerade nicht möglich. Versuche es später nochmal oder schreib mir: opheck@gmx.de"
+          "Netzwerk-Fehler. Versuche es später nochmal oder schreib mir: opheck@gmx.de"
         );
       })
       .finally(() => {

@@ -21,6 +21,25 @@ export const WEB3FORMS_PLACEHOLDER_PREFIX = "PLACEHOLDER";
 /** Legacy — bleibt für Backward-Compat, aber null. */
 export const BOOKING_API_URL: string | null = null;
 
+// ── Brevo subscribe (Playbook lead capture) ──────────────────────────
+//
+// Cloudflare Worker that forwards POST /subscribe to Brevo's double-opt-in
+// API. Full setup walkthrough: docs/BREVO-SETUP.md.
+//
+// To activate the form:
+//   1. cd worker && npx wrangler deploy
+//   2. Copy the deployed URL from wrangler's output, e.g.
+//        https://oskarmarketing-booking.<your-subdomain>.workers.dev
+//   3. Paste it below, REPLACING the null literal:
+//        export const SUBSCRIBE_API_URL: string | null =
+//          "https://oskarmarketing-booking.<your-subdomain>.workers.dev";
+//   4. npm run build && git push (GitHub Action redeploys Pages).
+//
+// While this is null the form renders, validates locally, but on submit
+// shows the graceful "Formular noch nicht konfiguriert" message instead
+// of silently failing.
+export const SUBSCRIBE_API_URL: string | null = null;
+
 // Slot generation rules (kept on the client so the UI is responsive even
 // when offline). The backend re-validates that a chosen slot matches one
 // of these candidates.

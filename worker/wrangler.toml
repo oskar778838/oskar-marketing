@@ -24,8 +24,20 @@ SMS_ENABLED = "true"
 # Allowed Origins for CORS (comma-separated). Add custom domain later.
 ALLOWED_ORIGINS = "https://oskar778838.github.io,https://oskarmarketing.de,http://localhost:5173,http://127.0.0.1:5173"
 
+# ── Brevo (newsletter / playbook double-opt-in) ──────────
+# List ID the contact gets added to once they confirm. "3" = Playbook list.
+BREVO_LIST_ID = "3"
+# Brevo DOI email template ID. Create the template in Brevo (Campaigns →
+# Templates), copy the numeric ID, paste it here. Leave at 0 to keep the
+# /subscribe endpoint disabled until the template exists.
+BREVO_DOI_TEMPLATE_ID = "0"
+# After the user clicks the confirm link in Brevo's DOI email, Brevo redirects
+# them here.
+BREVO_REDIRECT_URL = "https://oskar778838.github.io/oskar-marketing/playbook.html?confirmed=1"
+
 # ── Secrets (NEVER commit values) ────────────────────────
 # Set with:
 #   wrangler secret put RESEND_API_KEY
 #   wrangler secret put TWILIO_ACCOUNT_SID
 #   wrangler secret put TWILIO_AUTH_TOKEN
+#   wrangler secret put BREVO_API_KEY     # from Brevo → SMTP & API → API keys

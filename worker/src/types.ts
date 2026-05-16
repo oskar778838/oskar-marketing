@@ -9,11 +9,15 @@ export interface Env {
   TWILIO_FROM: string;
   SMS_ENABLED: string; // "true" | "false"
   ALLOWED_ORIGINS: string; // comma-separated
+  BREVO_LIST_ID: string; // numeric, e.g. "3"
+  BREVO_DOI_TEMPLATE_ID: string; // numeric, "0" = endpoint disabled
+  BREVO_REDIRECT_URL: string;
 
   // Secrets (set via `wrangler secret put`)
   RESEND_API_KEY: string;
   TWILIO_ACCOUNT_SID: string;
   TWILIO_AUTH_TOKEN: string;
+  BREVO_API_KEY: string;
 }
 
 export interface BookingRequest {
@@ -40,4 +44,14 @@ export interface BookingResponse {
 export interface SlotsResponse {
   ok: boolean;
   slots: string[];
+}
+
+export interface SubscribeRequest {
+  email: string;
+  consent: boolean;
+}
+
+export interface SubscribeResponse {
+  ok: boolean;
+  error?: string;
 }
