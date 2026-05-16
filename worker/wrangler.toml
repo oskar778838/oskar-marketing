@@ -33,7 +33,7 @@ BREVO_LIST_ID = "3"
 BREVO_DOI_TEMPLATE_ID = "1"
 # After the user clicks the confirm link in Brevo's DOI email, Brevo redirects
 # them here.
-BREVO_REDIRECT_URL = "https://oskar778838.github.io/oskar-marketing/playbook.html?confirmed=1"
+BREVO_REDIRECT_URL = "https://oskar778838.github.io/oskar-marketing/playbook.html"
 
 # ── Secrets (NEVER commit values) ────────────────────────
 # Set with:
