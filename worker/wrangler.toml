@@ -7,7 +7,7 @@ compatibility_date = "2025-01-01"
 # Then paste the returned ID here, replacing the placeholder below.
 [[kv_namespaces]]
 binding = "BOOKINGS"
-id = "REPLACE_AFTER_wrangler_kv_namespace_create"
+id = "c509b600173e4fadaa227d1cb4e77c8b"
 
 # ── Public, non-secret config ────────────────────────────
 [vars]
