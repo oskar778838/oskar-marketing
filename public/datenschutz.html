@@ -201,14 +201,24 @@
       <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener">docs.github.com/.../github-general-privacy-statement</a>
     </p>
 
-    <h3>b) Bei Buchung eines Termins über das Formular</h3>
-    <p>Wenn du einen Termin buchst, erhebe ich:</p>
+    <h3>b) Bei Buchung eines Termins (Pro-Beratung)</h3>
+    <p>
+      Die Terminbuchung läuft über einen eingebetteten Kalender von
+      Cal.com (EU-Instanz, siehe §5). Wenn du einen Termin buchst,
+      gibst du direkt im Cal-Widget folgendes ein:
+    </p>
     <ul>
-      <li><strong>Email-Adresse</strong> — für die Terminbestätigung und Rückfragen</li>
-      <li><strong>Telefonnummer</strong> — für die Terminbestätigung per SMS und ggf. den Anruf zur vereinbarten Zeit</li>
-      <li><strong>Optionale Nachricht</strong> — wenn du im Formular etwas mitteilst</li>
-      <li><strong>Slot-Auswahl</strong> — Datum und Uhrzeit deines gewünschten Gesprächs</li>
+      <li><strong>Name</strong> — für die Anrede in Bestätigung und Call</li>
+      <li><strong>Email-Adresse</strong> — für die Terminbestätigung, Erinnerung und ggf. Rückfragen</li>
+      <li><strong>Optionale Nachricht</strong> — wenn du Cal mitteilen willst, worum es gehen soll</li>
+      <li><strong>Slot-Auswahl</strong> — Datum und Uhrzeit des Gesprächs</li>
     </ul>
+    <p>
+      Cal.com erstellt automatisch einen Google-Meet-Link für den Call
+      und sendet die Kalender-Einladung an deine Email-Adresse.
+      Sub-Auftragsverarbeiter: Cal.com Inc. (EU-Datenresidenz via cal.eu)
+      und Google Ireland Ltd. (für Meet) — siehe §5.
+    </p>
 
     <h3>c) Bei Anmeldung zum Playbook (Email-Capture)</h3>
     <p>
@@ -227,8 +237,9 @@
     <h2>3. Wofür verwende ich diese Daten?</h2>
     <p><strong>Für die Terminbuchung:</strong></p>
     <ul>
-      <li>Terminbestätigung per Email an dich</li>
-      <li>Benachrichtigung an mich (Email + SMS) damit ich den Termin im Kalender habe</li>
+      <li>Terminbestätigung + Kalender-Einladung per Email an dich (durch Cal.com erzeugt)</li>
+      <li>Erinnerungs-Email vor dem Termin (durch Cal.com)</li>
+      <li>Bereitstellung eines Google-Meet-Links für den Call</li>
       <li>Kontaktaufnahme falls etwas dazwischenkommt</li>
     </ul>
     <p>
@@ -245,13 +256,15 @@
 
     <h2>4. Wie lange werden die Daten gespeichert?</h2>
     <p>
-      Buchungsdaten werden in einem Cloudflare-KV-Speicher abgelegt mit einer
-      automatischen Lösch-Frist von <strong>30 Tagen</strong>. Danach werden sie
-      ohne weiteres Zutun gelöscht.
+      Buchungsdaten liegen in deinem Cal.com-Account (EU-Datenresidenz) für
+      die Dauer des Termin-Lifecycles plus Cal's Standard-Aufbewahrungsfrist.
+      Du kannst eine Löschung jederzeit per Email an
+      <a href="mailto:opheck@gmx.de">opheck@gmx.de</a> verlangen — ich
+      lösche dann meinen Eintrag bei Cal und du erhältst eine Bestätigung.
     </p>
     <p>
-      Email- und SMS-Versand-Logs bleiben gemäß den jeweiligen Anbieter-Richtlinien
-      (Resend, Twilio) für deren Betriebszeitraum gespeichert (typischerweise 30-90 Tage).
+      Email-Versand-Logs bleiben gemäß Anbieter-Richtlinien für deren
+      Betriebszeitraum gespeichert (typischerweise 30-90 Tage).
     </p>
 
     <h2>5. Auftragsverarbeiter</h2>
@@ -303,6 +316,28 @@
       Speicherdauer: bis zur Austragung durch dich oder maximal 24 Monate
       Inaktivität. Jeder Mail liegt ein Unsubscribe-Link bei (von Brevo
       automatisch eingefügt). Keine Weitergabe an Dritte.
+    </p>
+
+    <h3>Cal.com Inc.</h3>
+    <p>
+      Bereitstellung des Terminbuchungs-Widgets in der Termin-Section. Cal
+      verarbeitet die Buchungs-Daten (Name, Email, Termin, optionale
+      Nachricht), die du direkt im Widget eingibst.<br />
+      Sitz: USA, EU-Datenresidenz aktiviert via cal.eu (Daten bleiben in
+      EU-Rechenzentren).<br />
+      Datenschutzerklärung:
+      <a href="https://cal.com/privacy" target="_blank" rel="noopener">cal.com/privacy</a>
+      · DPA über Cal.com Enterprise-Vertrag.
+    </p>
+
+    <h3>Google Ireland Ltd.</h3>
+    <p>
+      Bereitstellung der Video-Conferencing-Räume bei gebuchten
+      Pro-Beratungen über Google Meet (Meet-Link wird automatisch von Cal
+      pro Buchung erzeugt).<br />
+      Sitz: Irland (EU).<br />
+      Datenschutzerklärung:
+      <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">policies.google.com/privacy</a>
     </p>
 
     <h2>6. Deine Rechte</h2>
