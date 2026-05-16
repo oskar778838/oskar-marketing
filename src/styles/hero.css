@@ -578,36 +578,6 @@
   will-change: transform, opacity, filter;
 }
 
-/* Bottom-left: 4-line mono tagline */
-.hero--editorial .hero__tagline {
-  position: absolute;
-  bottom: clamp(64px, 10vh, 120px);
-  left: clamp(20px, 10vw, 96px);
-  max-width: calc(100vw - clamp(40px, 20vw, 192px));
-  display: flex;
-  flex-direction: column;
-  gap: clamp(4px, 0.6vh, 8px);
-  z-index: 8;
-  opacity: 0;
-  transform: translateY(8px);
-  margin-top: 0;
-  grid-column: unset;
-  grid-row: unset;
-  text-align: left;
-}
-
-.hero--editorial .hero__tagline-line {
-  display: block;
-  font-family: var(--font-mono);
-  font-size: clamp(10px, 0.75vw, 11px);
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--gold-warm);
-  white-space: normal;
-  word-break: normal;
-  overflow-wrap: normal;
-}
-
 /* Bottom-right: CTA (column-stacked primary + ghost) */
 .hero--editorial .hero__cta-wrap {
   position: absolute;
@@ -673,35 +643,6 @@
     width: 90vw;
   }
 
-  .hero--editorial .hero__tagline {
-    left: 0;
-    right: 0;
-    transform: translateY(8px);
-    /* Lift the tagline so the 4-line mono caps block clears the CTA stack
-       with a guaranteed ≥32px gap regardless of viewport height.
-       Empirically (Chrome 375-ish viewport, vh≈530): CTA wrap renders at
-       135px tall (primary 60 + gap 12 + ghost 48 + padding-bottom 24 + own
-       border quirks). 14vh + 200px reserves: 14vh CTA bottom-offset + 135
-       wrap height + 32 required clearance + ~33 safety buffer. */
-    bottom: calc(14vh + 200px);
-    max-width: 100%;
-    width: 100%;
-    padding-inline: 1.5rem;
-    text-align: center;
-    align-items: center;
-    /* Internal breathing between the 4 mono-caps lines. */
-    gap: 10px;
-    /* Documents the intent — has no effect under absolute positioning
-       but reads correctly if this block is ever flowed normally. */
-    margin-bottom: 32px;
-  }
-
-  .hero--editorial .hero__tagline-line {
-    line-height: 1.7;
-    font-size: 10px;
-    letter-spacing: 0.24em;
-  }
-
   /* Mobile CTA wrap takes full viewport width and centers via flex.
      No left/right anchoring — the wrap is a centering container,
      the CTA itself stays at content width. max-width: 85vw on the
@@ -716,10 +657,8 @@
     width: 100%;
     padding-inline: 1.5rem;
     /* Extra room from the viewport edge so the ghost CTA never kisses the
-     scroll indicator beneath it. */
+       scroll indicator beneath it. */
     padding-bottom: 24px;
-    /* Intent marker for the gap to the tagline above (see tagline.bottom). */
-    margin-top: 32px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -733,11 +672,3 @@
   }
 }
 
-/* Extra tagline tightening at iPhone SE width to avoid any wrap risk on
-   the longest line ("VOM SYSTEM ZUM IMPERIUM"). */
-@media (max-width: 420px) {
-  .hero--editorial .hero__tagline-line {
-    font-size: 9px;
-    letter-spacing: 0.22em;
-  }
-}

@@ -31,9 +31,6 @@ export function initEditorialHero(_lenis: Lenis | null): EditorialHeroHandle | n
   if (!hero) return null;
   mounted = true;
 
-  // Animated day-counter token
-  fillDayCounter(hero);
-
   if (PREFERS_REDUCED_MOTION) {
     // Reduced-motion: render everything to final state immediately.
     settleStaticReveal(hero);
@@ -51,7 +48,6 @@ export function initEditorialHero(_lenis: Lenis | null): EditorialHeroHandle | n
 
   // Initial state: meta blocks hidden; chars hidden (CSS handles)
   gsap.set(".hero--editorial .hero__meta", { opacity: 0, y: -8 });
-  gsap.set(".hero--editorial .hero__tagline", { opacity: 0, y: 8 });
   gsap.set(".hero--editorial .hero__cta-wrap", { opacity: 0, y: 12 });
   gsap.set(".hero--editorial .hero__scroll", { opacity: 0 });
 
@@ -66,9 +62,8 @@ export function initEditorialHero(_lenis: Lenis | null): EditorialHeroHandle | n
     stagger: 0.1,
   }, 0.0);
 
-  // 0.6: tagline + cta + scroll
-  tl.to(".hero--editorial .hero__tagline", { opacity: 1, y: 0, duration: 0.7 }, 0.5)
-    .to(".hero--editorial .hero__cta-wrap", { opacity: 1, y: 0, duration: 0.7 }, 0.6)
+  // 0.6: cta + scroll
+  tl.to(".hero--editorial .hero__cta-wrap", { opacity: 1, y: 0, duration: 0.7 }, 0.6)
     .to(".hero--editorial .hero__scroll", { opacity: 1, duration: 0.6 }, 0.8);
 
   // 1.2: Oskar char-by-char (60ms stagger, 1.2s duration each)
@@ -123,7 +118,6 @@ function setupHeroScroll(
   oskar: HTMLElement | null,
   marketing: HTMLElement | null,
 ): void {
-  const tagline = hero.querySelector<HTMLElement>(".hero__tagline");
   const cta = hero.querySelector<HTMLElement>(".hero__cta-wrap");
   const scroll = hero.querySelector<HTMLElement>(".hero__scroll");
 
@@ -176,7 +170,6 @@ function setupHeroScroll(
           opacity: oMid * oLate,
         });
       }
-      if (tagline) gsap.set(tagline, { y: -segD * 80, opacity: 1 - segD });
       if (cta) gsap.set(cta, { y: -segD * 80, opacity: 1 - segD });
       if (scroll) gsap.set(scroll, { opacity: 1 - clamp01(p * 4) });
 
@@ -205,16 +198,3 @@ function settleStaticReveal(hero: HTMLElement): void {
   });
 }
 
-/**
- * Replaces "TAG —" with "TAG NNN" based on a fixed start-date
- * (29.04.2026 = day 1 of Build-in-Public). Keeps the format constant width.
- */
-function fillDayCounter(hero: HTMLElement): void {
-  const el = hero.querySelector<HTMLElement>("[data-day-counter]");
-  if (!el) return;
-  const START = new Date(Date.UTC(2026, 3, 29)); // 29.04.2026 = day 1
-  const now = new Date();
-  const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
-  const days = Math.max(1, Math.round((today.getTime() - START.getTime()) / 86_400_000) + 1);
-  el.textContent = `TAG ${days.toString().padStart(3, "0")}`;
-}
