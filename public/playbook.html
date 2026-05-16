@@ -336,6 +336,180 @@ line-height:1.5;
 font-style:italic;
 }
 
+/* Step Visuals — diagram / stats / compare / timeline */
+.step-visual--diagram{
+display:flex;
+align-items:center;
+gap:12px;
+margin:20px 0;
+padding:20px 16px;
+background:rgba(201,168,76,0.06);
+border-radius:10px;
+border-left:2px solid var(--orange);
+flex-wrap:wrap;
+}
+.diagram-node{
+padding:10px 14px;
+background:var(--bg);
+border:1px solid var(--border);
+border-radius:6px;
+font-family:'JetBrains Mono',monospace;
+font-size:11px;
+letter-spacing:1.5px;
+text-transform:uppercase;
+color:var(--text);
+}
+.diagram-arrow{
+font-family:'Fraunces',serif;
+font-style:italic;
+font-size:12px;
+color:var(--orange);
+white-space:nowrap;
+}
+.step-stats{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:12px;
+margin:16px 0;
+}
+.step-stat{
+text-align:center;
+padding:14px 10px;
+background:var(--bg);
+border-radius:8px;
+border:1px solid var(--border);
+}
+.step-stat-value{
+display:block;
+font-family:'Fraunces',serif;
+font-size:22px;
+font-style:italic;
+color:var(--orange);
+font-weight:600;
+line-height:1.3;
+}
+.step-stat-label{
+display:block;
+margin-top:4px;
+font-size:9px;
+letter-spacing:1.5px;
+color:var(--text-muted);
+text-transform:uppercase;
+}
+.step-visual--compare{
+margin:20px 0;
+padding:18px 16px;
+background:rgba(201,168,76,0.04);
+border-radius:10px;
+}
+.compare-platform{
+display:grid;
+grid-template-columns:100px 1fr;
+align-items:center;
+gap:14px;
+margin-bottom:12px;
+padding-bottom:10px;
+border-bottom:1px solid var(--border);
+}
+.compare-platform:last-child{
+margin-bottom:0;
+padding-bottom:0;
+border-bottom:none;
+}
+.compare-platform-name{
+font-family:'JetBrains Mono',monospace;
+font-size:11px;
+letter-spacing:1.5px;
+text-transform:uppercase;
+color:var(--text);
+font-weight:600;
+}
+.compare-bar{
+height:6px;
+background:linear-gradient(90deg,var(--orange),var(--orange-light));
+border-radius:3px;
+position:relative;
+}
+.compare-platform:not(.compare-platform--win) .compare-bar{
+background:rgba(255,255,255,0.15);
+}
+.compare-platform-meta{
+grid-column:2;
+font-size:10px;
+color:var(--text-muted);
+margin-top:4px;
+font-style:italic;
+font-family:'Fraunces',serif;
+}
+.step-visual--timeline{
+margin:24px 0 20px;
+padding:24px 16px 16px;
+background:rgba(201,168,76,0.04);
+border-radius:10px;
+}
+.timeline-track{
+position:relative;
+height:60px;
+background:linear-gradient(90deg,
+rgba(201,168,76,0.4) 0%,
+rgba(201,168,76,0.15) 33%,
+rgba(255,255,255,0.05) 100%);
+border-radius:30px;
+margin-bottom:14px;
+}
+.timeline-marker{
+position:absolute;
+top:50%;
+transform:translateY(-50%);
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:2px;
+}
+.timeline-marker--critical{
+transform:translateY(-50%) translateX(8px);
+}
+.timeline-marker--critical::before{
+content:'';
+position:absolute;
+background:var(--orange);
+border-radius:50%;
+width:12px;
+height:12px;
+top:-16px;
+left:50%;
+transform:translateX(-50%);
+box-shadow:0 0 16px var(--orange-glow);
+}
+.timeline-time{
+font-family:'Fraunces',serif;
+font-size:13px;
+font-style:italic;
+color:var(--orange);
+font-weight:600;
+}
+.timeline-label{
+font-family:'JetBrains Mono',monospace;
+font-size:8px;
+letter-spacing:1px;
+text-transform:uppercase;
+color:var(--text-dim);
+white-space:nowrap;
+}
+.timeline-note{
+font-size:11px;
+color:var(--text-dim);
+font-style:italic;
+font-family:'Fraunces',serif;
+text-align:center;
+margin-top:8px;
+}
+@media (max-width:480px){
+.step-stats{grid-template-columns:1fr}
+.step-visual--diagram{flex-direction:column;align-items:flex-start}
+.compare-platform{grid-template-columns:80px 1fr}
+}
+
 /* Mini List */
 .mini-list{
 display:flex;
@@ -673,7 +847,29 @@ section{padding:80px 40px}
 <div class="step-card reveal">
 <span class="step-tag">▸ So funktioniert es</span>
 <div class="step-headline">Du empfiehlst — der Anbieter <em>zahlt</em>.</div>
-<div class="step-text">Du bewirbst fremde Produkte und bekommst eine Provision wenn jemand über deinen Link kauft. <strong>Keine eigenen Produkte. Kein Lager. Kein Risiko.</strong> Die Provisionen liegen typisch zwischen 5% und 50% pro Verkauf.</div>
+<div class="step-text">Kein eigenes Produkt, kein Lager, kein Risiko.</div>
+
+<div class="step-visual step-visual--diagram">
+<div class="diagram-node">DU</div>
+<div class="diagram-arrow">→ empfiehlst →</div>
+<div class="diagram-node">PRODUKT</div>
+<div class="diagram-arrow">→ jemand kauft →</div>
+<div class="diagram-node">PROVISION</div>
+</div>
+<div class="step-stats">
+<div class="step-stat">
+<span class="step-stat-value">5-50%</span>
+<span class="step-stat-label">Provision pro Verkauf</span>
+</div>
+<div class="step-stat">
+<span class="step-stat-value">0€</span>
+<span class="step-stat-label">Eigene Produkte nötig</span>
+</div>
+<div class="step-stat">
+<span class="step-stat-value">0€</span>
+<span class="step-stat-label">Lager-Kosten</span>
+</div>
+</div>
 
 <div class="step-action">
 <div class="step-action-label">▸ Dein erster Schritt</div>
@@ -697,7 +893,7 @@ section{padding:80px 40px}
 <div class="step-card reveal">
 <span class="step-tag">▸ Der 3-Fragen-Filter</span>
 <div class="step-headline">Drei Fragen — eine <em>Antwort</em>.</div>
-<div class="step-text">Bevor du eine Nische wählst, beantworte diese drei Fragen ehrlich. <strong>Wenn alle drei "Ja" sind — du hast deine Nische gefunden.</strong></div>
+<div class="step-text">Wenn alle drei <strong>"Ja"</strong> sind — du hast deine Nische gefunden.</div>
 
 <div class="mini-list">
 <div class="mini-item">
@@ -736,7 +932,25 @@ section{padding:80px 40px}
 <div class="step-card reveal">
 <span class="step-tag">▸ Start mit TikTok</span>
 <div class="step-headline">TikTok bringt dir <em>Reichweite</em> ohne Follower.</div>
-<div class="step-text">TikTok ist die einzige Plattform die einen 0-Follower-Account in einer Woche auf 10.000 Views pushen kann. <strong>Keine andere Plattform ist so anfängerfreundlich.</strong> Instagram und YouTube kommen später — wenn du eine Audience hast.</div>
+<div class="step-text">TikTok ist die einzige Plattform die dich auch <strong>ohne Follower</strong> findet.</div>
+
+<div class="step-visual step-visual--compare">
+<div class="compare-platform compare-platform--win">
+<span class="compare-platform-name">TikTok</span>
+<div class="compare-bar" style="width:95%"></div>
+<span class="compare-platform-meta">Anfänger-friendly · 0-Follower-Boost</span>
+</div>
+<div class="compare-platform">
+<span class="compare-platform-name">Instagram</span>
+<div class="compare-bar" style="width:55%"></div>
+<span class="compare-platform-meta">Braucht Audience-Build</span>
+</div>
+<div class="compare-platform">
+<span class="compare-platform-name">YouTube</span>
+<div class="compare-bar" style="width:30%"></div>
+<span class="compare-platform-meta">Langfristig · Long-Form</span>
+</div>
+</div>
 
 <div class="mini-list">
 <div class="mini-item">
@@ -771,7 +985,29 @@ section{padding:80px 40px}
 <div class="step-card reveal">
 <span class="step-tag">▸ Die Hook-Formel</span>
 <div class="step-headline">Die ersten <em>3 Sekunden</em> entscheiden alles.</div>
-<div class="step-text">Wenn dein Hook in den ersten 3 Sekunden nicht packt — egal wie gut der Rest ist — der Zuschauer scrollt weiter. <strong>Der Hook macht 80% des Erfolgs aus.</strong></div>
+<div class="step-text">Die ersten <strong>3 Sekunden</strong> entscheiden ob jemand bleibt.</div>
+
+<div class="step-visual step-visual--timeline">
+<div class="timeline-track">
+<div class="timeline-marker timeline-marker--critical" style="left:0%">
+<span class="timeline-time">0s</span>
+<span class="timeline-label">Hook</span>
+</div>
+<div class="timeline-marker" style="left:33%">
+<span class="timeline-time">3s</span>
+<span class="timeline-label">Decision Point</span>
+</div>
+<div class="timeline-marker" style="left:66%">
+<span class="timeline-time">15s</span>
+<span class="timeline-label">Mid-Engagement</span>
+</div>
+<div class="timeline-marker" style="right:0%">
+<span class="timeline-time">30s</span>
+<span class="timeline-label">CTA</span>
+</div>
+</div>
+<p class="timeline-note">80% der Viewer entscheiden in den ersten 3 Sekunden.</p>
+</div>
 
 <div class="mini-list">
 <div class="mini-item">
