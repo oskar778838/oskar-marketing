@@ -12,6 +12,7 @@ import { initSmoothScroll } from "./lib/smoothScroll";
 import { runChoreography } from "./lib/choreography";
 import { initScrollProgress } from "./lib/scrollProgress";
 import { initBooking } from "./lib/booking";
+import { initPlaybookForm } from "./lib/playbookForm";
 import { initCounters } from "./lib/counters";
 import { initEasterEgg, updateDayCounter } from "./lib/easter-egg";
 import { initEditorialHero } from "./lib/editorialHero";
@@ -30,6 +31,7 @@ function boot(): void {
   initMagnetic();
   initScrollProgress();
   initBooking();
+  initPlaybookForm();
   initCounters();
   initEasterEgg();
   updateDayCounter();

@@ -14,8 +14,9 @@ const SECTIONS_BIO: SectionDef[] = [
   { selector: "#proof", num: "02", label: "Proof" },
   { selector: "#academy", num: "03", label: "Academy" },
   { selector: "#termin", num: "04", label: "Termin" },
-  { selector: "#social", num: "05", label: "Channels" },
-  { selector: "#end", num: "06", label: "Manifest" },
+  { selector: "#playbook", num: "05", label: "Playbook" },
+  { selector: "#social", num: "06", label: "Channels" },
+  { selector: "#end", num: "07", label: "Manifest" },
 ];
 
 const SECTIONS_PRO: SectionDef[] = [

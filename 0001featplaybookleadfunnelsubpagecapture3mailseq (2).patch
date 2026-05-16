@@ -1,0 +1,2641 @@
+From 15b019a6cb006b05f9e8bbd42ca77c15bf91fc90 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sat, 16 May 2026 09:13:51 +0000
+Subject: [PATCH] =?UTF-8?q?feat:=20playbook=20lead-funnel=20=E2=80=94=20su?=
+ =?UTF-8?q?bpage,=20capture,=203-mail=20sequence?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Part 1 — Playbook subpage (public/playbook.html):
+  - Migrated reference/playbook_original.html to gold/obsidian palette
+  - Reduced background motion (orb blur 80→50px, anim 15s→25s, pulse 0.5/1.0→0.3/0.6)
+  - Logo placeholder replaced with ./logo.svg
+  - Affiliate disclosure under CTA (Werbe-Hinweis, gold-warm mono caps)
+  - Quantitative Mark-Janzen claims softened to qualitative phrasing
+  - SEO meta + OG tags + JSON-LD HowTo (4 steps)
+  - Footer back-link to bio root
+
+Part 2 — Bio site lead-capture:
+  - New section 05 Playbook between Termin and Channels (email-capture form)
+  - Channels renumbered 05→06, Manifest 06→07 (vlabels, labels, nav, indicator)
+  - Hero gets subordinate ghost CTA "Playbook lesen →" stacked under primary
+  - src/lib/playbookForm.ts: submit handler with Brevo no-cors POST,
+    placeholder guard, success/error states
+  - .playbook__* + .cta--ghost styles in sections.css
+  - Datenschutz updated: new §2c email-capture data, §3 restructured to
+    distinguish Terminbuchung vs Playbook usage, §5 adds Brevo (Sendinblue
+    SAS) as Auftragsverarbeiter with DPA + EU-Sitz note
+  - Sitemap entry for /playbook.html
+  - docs/email-sequence/{mail-1,mail-2,mail-3}.md: full draft text,
+    mail 2 uses qualitative phrasing to avoid stale-metric aging
+  - docs/BREVO-SETUP.md: 8-step dashboard walkthrough
+
+Action item: paste real Brevo form-action URL into index.html at
+{{BREVO_FORM_ACTION}} after running BREVO-SETUP.md steps 1-3.
+
+https://claude.ai/code/session_01RPp4MRqy5AZZpYiLvHmU7v
+---
+ docs/BREVO-SETUP.md              | 150 ++++++
+ docs/email-sequence/mail-1.md    |  63 +++
+ docs/email-sequence/mail-2.md    |  65 +++
+ docs/email-sequence/mail-3.md    |  79 +++
+ index.html                       |  97 +++-
+ public/datenschutz.html          |  45 +-
+ public/playbook.html             | 867 +++++++++++++++++++++++++++++++
+ public/sitemap.xml               |   5 +
+ reference/playbook_original.html | 814 +++++++++++++++++++++++++++++
+ src/lib/playbookForm.ts          |  76 +++
+ src/lib/sectionIndicator.ts      |   5 +-
+ src/main.ts                      |   2 +
+ src/styles/hero.css              |   9 +-
+ src/styles/sections.css          | 114 ++++
+ 14 files changed, 2375 insertions(+), 16 deletions(-)
+ create mode 100644 docs/BREVO-SETUP.md
+ create mode 100644 docs/email-sequence/mail-1.md
+ create mode 100644 docs/email-sequence/mail-2.md
+ create mode 100644 docs/email-sequence/mail-3.md
+ create mode 100644 public/playbook.html
+ create mode 100644 reference/playbook_original.html
+ create mode 100644 src/lib/playbookForm.ts
+
+diff --git a/docs/BREVO-SETUP.md b/docs/BREVO-SETUP.md
+new file mode 100644
+index 0000000..3bb0c9d
+--- /dev/null
++++ b/docs/BREVO-SETUP.md
+@@ -0,0 +1,150 @@
++# Brevo Setup — Playbook Lead-Funnel
++
++Diese Anleitung führt durch die Brevo-Web-Dashboard-Schritte, die Claude
++nicht automatisieren kann. Nach Abschluss läuft der Lead-Funnel:
++
++```
++Bio-Site Formular  →  Brevo DOI-Bestätigung  →  Mail 1 sofort
++                                                Mail 2 +2 Tage
++                                                Mail 3 +5 Tage
++```
++
++Voraussetzung: ein Brevo-Account (Free Tier reicht — 300 Mails/Tag,
++unbegrenzt Kontakte).
++
++---
++
++## 1. Account anlegen
++
++1. https://www.brevo.com → "Sign Up Free".
++2. Email: `opheck@gmx.de`. Passwort setzen.
++3. Email-Verifizierung: Brevo schickt einen Code, eintragen.
++4. Beim ersten Login: "Was möchtest du tun?" → **Email Marketing**.
++5. Sender-Profil-Onboarding überspringen (machen wir in Schritt 5).
++
++---
++
++## 2. Liste anlegen
++
++1. Sidebar: **Contacts** → **Lists** → **+ Create a list**.
++2. Name: `Affiliate Funnel`.
++3. Save. (List-ID merken — wird automatisch beim Form-Bau referenziert.)
++
++---
++
++## 3. Web-Form bauen
++
++1. Sidebar: **Forms** → **+ Create a form** → **Subscription form**
++   → **Embed**.
++2. Form-Name (intern): `Playbook Capture`.
++3. **Fields:**
++   - `Email` (Required, schon vorhanden).
++   - Alle anderen Default-Felder löschen oder als optional belassen.
++4. **Target list:** `Affiliate Funnel`.
++5. **Double Opt-In:** ✅ aktivieren (Pflicht für DE-Recht).
++6. **DOI-Template anpassen:**
++   - Sender: `Oskar Marketing <opheck@gmx.de>` (nach Schritt 5 setzbar).
++   - Subject: `Bitte bestätige deine Anmeldung`.
++   - Body: ein kurzer Satz plus den Bestätigungs-Button.
++7. **Confirmation page (nach Bestätigung):** Redirect to
++   `https://oskar778838.github.io/oskar-marketing/playbook.html` —
++   so landet der User direkt am Playbook nach DOI-Klick.
++8. **Save & publish.**
++9. Brevo zeigt einen `<form action="https://...sibforms.com/serve/...">`-
++   Snippet. **Nur die `action`-URL** kopieren — den Rest des Markups
++   ignorieren wir, wir haben eigenes Markup.
++
++---
++
++## 4. Form-URL in den Code einsetzen
++
++In `index.html`, im Playbook-Form (`<form id="playbook-form" ...>`),
++ersetze den Placeholder:
++
++```html
++action="{{BREVO_FORM_ACTION}}"
++```
++
++durch die echte URL aus Schritt 3.9, z.B.:
++
++```html
++action="https://sibforms.com/serve/MUIFAJ..."
++```
++
++Committen, pushen. GitHub Action deployt automatisch.
++
++---
++
++## 5. Sender-Verifizierung
++
++Damit Brevo nicht über generische Brevo-Adresse versendet:
++
++1. Sidebar: **Senders & IP** → **Senders** → **+ Add a sender**.
++2. From-Name: `Oskar Marketing`.
++3. From-Email: `opheck@gmx.de`.
++4. Brevo schickt einen Bestätigungs-Link an die Adresse — bestätigen.
++
++Bei eigener Domain (optional, später): SPF + DKIM in der DNS-Zone
++hinterlegen (Brevo zeigt die Records). Bei `gmx.de` reicht die
++Default-Verifizierung.
++
++---
++
++## 6. Automation bauen
++
++1. Sidebar: **Automations** → **+ Create a new automation** → **From
++   scratch**.
++2. Name: `Playbook 3-Mail-Sequence`.
++3. **Trigger:** `A contact is added to a list` → `Affiliate Funnel`.
++   (Das feuert NACH DOI, nicht beim ersten Form-Submit — sehr wichtig.)
++4. **Step 1 — Send email:**
++   - Subject: kopieren aus `docs/email-sequence/mail-1.md`.
++   - Body: Plain-Text Body kopieren.
++   - Sender: dein verifizierter Sender aus Schritt 5.
++5. **Step 2 — Wait:** `2 days`.
++6. **Step 3 — Send email:**
++   - Subject + Body aus `docs/email-sequence/mail-2.md`.
++7. **Step 4 — Wait:** `3 days`. (= T+5 ab Anmeldung)
++8. **Step 5 — Send email:**
++   - Subject + Body aus `docs/email-sequence/mail-3.md`.
++9. **Save → Activate.**
++
++---
++
++## 7. End-to-End-Test
++
++1. Eigene Email (z.B. zweites Postfach) ins Playbook-Formular eintragen.
++2. Consent-Checkbox setzen, absenden.
++3. Browser: Erfolgs-Meldung "Check deine Inbox" muss erscheinen.
++4. Inbox: DOI-Mail in ≤2 Min.
++5. DOI-Link klicken → Redirect zur Playbook-Subpage.
++6. Mail 1 sollte innerhalb 1-2 Min eintreffen.
++7. Brevo-Automation-UI: Contact in der "Currently running"-Liste
++   sichtbar mit Schritt-Indikator.
++8. Mail 2 + Mail 3 lassen sich nicht künstlich beschleunigen — am
++   einfachsten: zweiter Test mit anderer Email zum Live-Validieren der
++   Wartezeiten oder Brevo's Step-Skipping nutzen falls verfügbar.
++
++---
++
++## 8. Going-Live-Checklist
++
++- [ ] Sender verifiziert (Schritt 5).
++- [ ] DOI aktiviert auf dem Form (Schritt 3.5).
++- [ ] Form-URL in `index.html` eingesetzt (Schritt 4).
++- [ ] Automation aktiv (Schritt 6.9).
++- [ ] End-to-End mit eigener Email durchlaufen (Schritt 7).
++- [ ] Brevo-Eintrag in `public/datenschutz.html` ist live deployt.
++- [ ] Mail 3 enthält Affiliate-Disclosure ohne Edit-Drift.
++
++---
++
++## Wartungs-Hinweise
++
++- **Preisänderung bei Mark Janzen** → Mail 3 in Brevo direkt anpassen
++  (Pakete-Block). Eigene `docs/email-sequence/mail-3.md` ebenfalls
++  aktualisieren als Single-Source-of-Truth.
++- **Spam-Quote prüfen:** Brevo Statistics → Bounces + Spam-Reports.
++  Bei >0.1 % Spam-Rate Subject-Line von Mail 3 abschwächen.
++- **Re-Engagement:** nach 6 Monaten Inaktivität automatisch
++  unsubscriben (Brevo bietet Re-Engagement-Workflows).
+diff --git a/docs/email-sequence/mail-1.md b/docs/email-sequence/mail-1.md
+new file mode 100644
+index 0000000..cb5a941
+--- /dev/null
++++ b/docs/email-sequence/mail-1.md
+@@ -0,0 +1,63 @@
++# Mail 1 — Sofort nach DOI-Bestätigung
++
++**Trigger:** Contact added to Brevo list "Affiliate Funnel" (post-DOI)
++**Versand:** sofort
++**Länge:** ~190 Wörter
++
++---
++
++## Subject
++
++```
++Dein Playbook ist da. Plus: das hier kommt zuerst.
++```
++
++## Preheader
++
++```
++Tag 16. 7.600 Views. 0 Sales. Bevor du klickst — eine Sache vorab.
++```
++
++## Body (Plain-Text)
++
++```
++Hi,
++
++danke. Hier ist dein Playbook:
++https://oskar778838.github.io/oskar-marketing/playbook.html
++
++Bevor du klickst — eine Sache vorab.
++
++Ich schreib das aus Tag 16. 7.600 Views/Woche. 60 Posts live. Sales: 0.
++
++Klingt schief? Ist es nicht. Das ist genau der Punkt an dem die meisten
++aufgeben — und an dem das System anfängt zu greifen, wenn man
++durchhält. Das Playbook beschreibt was ich seit Tag 1 gemacht hätte,
++wenn ich nochmal von vorne anfangen müsste.
++
++Eine Sache die nicht im Playbook steht: Ich hätte am ersten Tag nicht
++drei Plattformen parallel angefasst. Nur eine. Volle Kraft. Die
++anderen erst, wenn die erste läuft.
++
++Lies das Playbook und antworte mir auf diese Mail mit der ersten Frage
++die hochkommt. Ich les jede.
++
++— Oskar, Tag 16
++   Build in Public
++```
++
++## Sender
++
++- From: `Oskar Marketing <opheck@gmx.de>`
++- Reply-To: `opheck@gmx.de`
++
++## Anmerkungen
++
++- Subject macht keine Versprechung — er liefert (Playbook) und kündigt
++  Substanz an ("das hier kommt zuerst"), ohne Hype.
++- Tag-16-Snapshot ist hart in die Mail eingebrannt — passt zur
++  Build-in-Public-Story, kein Aging-Problem weil der Tag-16-Bezug per
++  Definition historisch ist.
++- CTA ist die Playbook-URL als Plain-Link. Keine Button-Optik nötig.
++- "Antworte mir" senkt die Hürde zur Konversation. Echte Reaktionen
++  liefern bessere Daten als Click-Tracking.
+diff --git a/docs/email-sequence/mail-2.md b/docs/email-sequence/mail-2.md
+new file mode 100644
+index 0000000..f40372f
+--- /dev/null
++++ b/docs/email-sequence/mail-2.md
+@@ -0,0 +1,65 @@
++# Mail 2 — Tag 18 Update + These
++
++**Trigger:** 2 Tage nach Anmeldung (Wait-Step in Brevo-Automation)
++**Versand:** T+2 Tage
++**Länge:** ~155 Wörter
++
++> Quantitative Selbstreport-Claims wurden bewusst durch qualitative
++> Formulierungen ersetzt — die Mail läuft evergreen in der Brevo-Automation
++> und soll nicht mit veralteten Zahlen altern.
++
++---
++
++## Subject
++
++```
++Tag 18. Eine These die ich gerade teste.
++```
++
++## Preheader
++
++```
++Engagement-Pattern dreht sich. Reichweite ohne Engagement = Statistik-Müll.
++```
++
++## Body (Plain-Text)
++
++```
++Update.
++
++Seit Mail 1 sind zwei Tage vergangen. Tag 18 jetzt. Reichweite stabil
++im 4-stelligen Bereich pro Woche. Sales weiterhin 0.
++
++Aber: das Engagement-Pattern auf TikTok hat sich gedreht, nachdem ich
++aufgehört habe Hooks zu verwenden die "viral funktionieren sollen".
++Stattdessen: konkrete Zahlen und Fragen die nur ich beantworten kann.
++
++These die ich teste: Reichweite ohne Engagement ist Statistik-Müll.
++Echte Kommentare schlagen Vanity-Views.
++
++Was ist bei dir passiert seit du das Playbook gelesen hast? Welche
++Stelle hat geklickt — und welche nicht?
++
++Hintergrund: ich gehe gerade selbst eine Academy durch. Mehr dazu in
++der nächsten und letzten Mail. Falls dich das Setup nicht interessiert:
++einfach diese Mail ignorieren.
++
++— Oskar, Tag 18
++```
++
++## Sender
++
++- From: `Oskar Marketing <opheck@gmx.de>`
++- Reply-To: `opheck@gmx.de`
++
++## Anmerkungen
++
++- Keine Zahlen-Snapshots (verdoppelte Comments, exakte Views, Ratio-
++  Claims) — alles qualitativ formuliert damit die Mail in 3, 6, 12
++  Monaten noch glaubwürdig liest.
++- Wendet die Tag-18-Persona aus Mail 1 weiter ohne neue Metriken zu
++  versprechen.
++- Reply-Aufruf bleibt die zentrale Konversions-Mechanik der Sequenz —
++  auch wenn keine Antwort kommt, baut die Mail Vertrauen.
++- Letzter Absatz kündigt Mail 3 an und gibt explizite Opt-Out-Option
++  ("ignorieren") — senkt Spam-Klick-Risiko.
+diff --git a/docs/email-sequence/mail-3.md b/docs/email-sequence/mail-3.md
+new file mode 100644
+index 0000000..189f85b
+--- /dev/null
++++ b/docs/email-sequence/mail-3.md
+@@ -0,0 +1,79 @@
++# Mail 3 — Academy-Pitch mit Disclosure
++
++**Trigger:** 3 Tage nach Mail 2 (= T+5 Tage nach Anmeldung)
++**Versand:** T+5 Tage
++**Länge:** ~225 Wörter
++
++> Letzter automatischer Touchpoint. Enthält Mark-Janzen-Affiliate-Link
++> plus rechtlich vorgeschriebenen Werbe-Hinweis (§6 TMG / UWG).
++
++---
++
++## Subject
++
++```
++Letzte Mail — danach hörst du nur, wenn du willst
++```
++
++## Preheader
++
++```
++Was ich rausziehe, was für wen nicht passt, und der Link wenn du startest.
++```
++
++## Body (Plain-Text)
++
++```
++Letzter automatischer Touchpoint. Versprochen.
++
++Ich hab in den letzten zwei Mails erwähnt, dass ich selbst eine
++Academy durchgehe. Das ist die Mark Janzen Affiliate Academy.
++
++Zwei Pakete:
++
++— Plus, 397 €
++  Step-by-Step Plan, private Community, 1× wöchentlich Group-Coaching,
++  2 Monate Coaching-Phase.
++
++— Pro, 830 €
++  Alles vom Plus plus intensiveres Mentoring-Setup.
++
++Was ich konkret rausziehe: Struktur. Die ersten zwei Wochen alleine
++hätten mir zwei Monate Trial-and-Error erspart, wenn ich von Anfang
++an drin gewesen wäre.
++
++Wenn das nichts für dich ist:
++— wenn du bereits 3+ Monate konstant postest und Verkäufe machst
++— wenn dein Budget unter 400 € ist und enger als das schmerzt
++— wenn du gegen strukturierte Programme ein generelles Veto hast
++
++Dann lass es. Kein Drama.
++
++Falls du startest, hier der Link:
++https://www.checkout-ds24.com/product/583562?aff=Bestproducts99978
++
++Werbe-Hinweis: Affiliate-Link. Ich erhalte eine Provision wenn du
++startest. Das kostet dich nichts extra.
++
++Wenn nicht jetzt, kein Problem. Du bleibst auf der Liste. Ich melde
++mich nur, wenn ich etwas Wichtiges habe.
++
++— Oskar
++```
++
++## Sender
++
++- From: `Oskar Marketing <opheck@gmx.de>`
++- Reply-To: `opheck@gmx.de`
++
++## Anmerkungen
++
++- Disclosure direkt unter dem Affiliate-Link — wie auf der Playbook-
++  Subpage. Spiegelt den rechtlichen Mindeststandard für Werbung.
++- Negativ-Filter (3 Anti-Käufer-Kriterien) wirkt wie ein Vertrauens-
++  Signal und reduziert Refunds nachträglich.
++- "Du bleibst auf der Liste" ist explizit — gibt Abonnenten die Wahl
++  ohne harte Re-Confirm-Mechanik.
++- Preise (397 / 830 €) sind keine "altern schlecht"-Claims — das sind
++  Produkt-Preise, die der Anbieter setzt. Sollten sich die Preise
++  ändern, ist diese Mail in <5 Min in Brevo updatebar.
+diff --git a/index.html b/index.html
+index ddeba07..3379676 100644
+--- a/index.html
++++ b/index.html
+@@ -161,8 +161,9 @@
+         <li><a class="nav-dropdown__item" href="#proof" data-nav-target="proof" data-cursor-hover><span class="nav-dropdown__num t-mono-gold">02</span><span class="nav-dropdown__label t-display-italic">Proof</span></a></li>
+         <li><a class="nav-dropdown__item" href="#academy" data-nav-target="academy" data-cursor-hover><span class="nav-dropdown__num t-mono-gold">03</span><span class="nav-dropdown__label t-display-italic">Academy</span></a></li>
+         <li><a class="nav-dropdown__item" href="#termin" data-nav-target="termin" data-cursor-hover><span class="nav-dropdown__num t-mono-gold">04</span><span class="nav-dropdown__label t-display-italic">Termin</span></a></li>
+-        <li><a class="nav-dropdown__item" href="#social" data-nav-target="social" data-cursor-hover><span class="nav-dropdown__num t-mono-gold">05</span><span class="nav-dropdown__label t-display-italic">Channels</span></a></li>
+-        <li><a class="nav-dropdown__item" href="#end" data-nav-target="end" data-cursor-hover><span class="nav-dropdown__num t-mono-gold">06</span><span class="nav-dropdown__label t-display-italic">Manifest</span></a></li>
++        <li><a class="nav-dropdown__item" href="#playbook" data-nav-target="playbook" data-cursor-hover><span class="nav-dropdown__num t-mono-gold">05</span><span class="nav-dropdown__label t-display-italic">Playbook</span></a></li>
++        <li><a class="nav-dropdown__item" href="#social" data-nav-target="social" data-cursor-hover><span class="nav-dropdown__num t-mono-gold">06</span><span class="nav-dropdown__label t-display-italic">Channels</span></a></li>
++        <li><a class="nav-dropdown__item" href="#end" data-nav-target="end" data-cursor-hover><span class="nav-dropdown__num t-mono-gold">07</span><span class="nav-dropdown__label t-display-italic">Manifest</span></a></li>
+       </ul>
+     </nav>
+ 
+@@ -219,6 +220,10 @@
+             </span>
+             <span class="cta__shimmer" aria-hidden="true"></span>
+           </a>
++          <a href="./playbook.html" class="cta cta--ghost" data-cursor-hover>
++            <span class="cta__label">Playbook lesen</span>
++            <span class="cta__arrow" aria-hidden="true">→</span>
++          </a>
+         </div>
+ 
+         <!-- Bottom-center: scroll indicator -->
+@@ -556,13 +561,89 @@
+       </section>
+ 
+       <!-- ════════════════════════════════════════════════════ -->
+-      <!-- 04 — SOCIAL MATRIX                                    -->
++      <!-- 05 — PLAYBOOK (lead-magnet capture)                  -->
++      <!-- ════════════════════════════════════════════════════ -->
++      <section id="playbook" class="playbook" aria-labelledby="playbook-h">
++        <span class="section-vlabel" aria-hidden="true">Playbook · 05</span>
++        <div class="container playbook__inner">
++          <header class="playbook__head">
++            <span class="section-label">05 / Playbook</span>
++            <h2 id="playbook-h" class="playbook__h t-display">
++              <span data-split>Bevor du buchst</span>
++              <span class="t-display-italic" data-split>nimm das Playbook</span>
++            </h2>
++            <p class="playbook__sub">
++              Mein komplettes Affiliate-Marketing-System als Playbook.
++              Kostenlos, sofort per Email. Kein Spam.
++            </p>
++          </header>
++
++          <form
++            class="playbook__form"
++            id="playbook-form"
++            action="{{BREVO_FORM_ACTION}}"
++            method="POST"
++            data-brevo-form
++            novalidate
++          >
++            <div class="field">
++              <label for="pb-email" class="t-mono">Email</label>
++              <input
++                id="pb-email"
++                name="EMAIL"
++                type="email"
++                required
++                autocomplete="email"
++                inputmode="email"
++                placeholder="du@example.com"
++              />
++            </div>
++
++            <label class="consent">
++              <input id="pb-consent" name="OPT_IN" type="checkbox" required value="1" />
++              <span class="consent__text">
++                Ich stimme zu, dass meine Email-Adresse von Brevo (Sendinblue
++                SAS) zur Versendung von Marketing-Inhalten verarbeitet wird.
++                Widerruf jederzeit möglich.
++                <a href="./datenschutz.html" target="_blank" rel="noopener">Datenschutz</a>.
++              </span>
++            </label>
++
++            <button
++              type="submit"
++              class="cta cta--track"
++              data-magnetic
++              data-cursor-hover
++            >
++              <span class="cta__label" data-default-label="Playbook holen">Playbook holen</span>
++              <span class="cta__arrow" aria-hidden="true">
++                <svg viewBox="0 0 24 24" fill="none" width="18" height="18">
++                  <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
++                </svg>
++              </span>
++              <span class="cta__shimmer" aria-hidden="true"></span>
++            </button>
++
++            <p class="playbook__privacy t-mono">
++              Brevo verarbeitet DSGVO-konform. Du trägst dich mit einem Klick wieder aus.
++            </p>
++
++            <p class="playbook__success" hidden data-success>
++              Check deine Inbox. Das Playbook ist unterwegs.
++            </p>
++            <p class="playbook__error" hidden data-error></p>
++          </form>
++        </div>
++      </section>
++
++      <!-- ════════════════════════════════════════════════════ -->
++      <!-- 06 — SOCIAL MATRIX                                    -->
+       <!-- ════════════════════════════════════════════════════ -->
+       <section id="social" class="social" aria-labelledby="social-h">
+-        <span class="section-vlabel" aria-hidden="true">Channels · 05</span>
++        <span class="section-vlabel" aria-hidden="true">Channels · 06</span>
+         <div class="container social__inner">
+           <header class="social__head">
+-            <span class="section-label">05 / Channels</span>
++            <span class="section-label">06 / Channels</span>
+             <h2 id="social-h" class="social__h t-display">
+               <span class="t-display-italic">Folge</span> dem Build
+             </h2>
+@@ -653,12 +734,12 @@
+       </section>
+ 
+       <!-- ════════════════════════════════════════════════════ -->
+-      <!-- 04 — FOOTER                                           -->
++      <!-- 07 — FOOTER / MANIFEST                                -->
+       <!-- ════════════════════════════════════════════════════ -->
+       <section id="end" class="end" aria-labelledby="end-h">
+-        <span class="section-vlabel" aria-hidden="true">Manifest · 06</span>
++        <span class="section-vlabel" aria-hidden="true">Manifest · 07</span>
+         <div class="container end__inner">
+-          <span class="section-label">06 / Manifest</span>
++          <span class="section-label">07 / Manifest</span>
+ 
+           <blockquote id="end-h" class="end__quote t-display">
+             <span data-split>Tag für Tag bauen.</span>
+diff --git a/public/datenschutz.html b/public/datenschutz.html
+index 24583e6..ab3b403 100644
+--- a/public/datenschutz.html
++++ b/public/datenschutz.html
+@@ -186,7 +186,7 @@
+     </div>
+ 
+     <h2>2. Welche Daten erhebe ich?</h2>
+-    <p>Diese Seite (oskarmarketing.bio) erhebt Daten in zwei Fällen:</p>
++    <p>Diese Seite (oskarmarketing.bio) erhebt Daten in drei Fällen:</p>
+ 
+     <h3>a) Beim Aufruf der Seite (Server-Logs)</h3>
+     <p>
+@@ -210,18 +210,38 @@
+       <li><strong>Slot-Auswahl</strong> — Datum und Uhrzeit deines gewünschten Gesprächs</li>
+     </ul>
+ 
++    <h3>c) Bei Anmeldung zum Playbook (Email-Capture)</h3>
++    <p>
++      Wenn du dich über das Playbook-Formular einträgst, erhebe ich
++      ausschließlich:
++    </p>
++    <ul>
++      <li><strong>Email-Adresse</strong> — für die Zusendung des Playbooks und der 3-teiligen Folge-Mail-Sequenz</li>
++      <li><strong>Einwilligung (Opt-In)</strong> — dein bestätigtes Häkchen plus die Bestätigung des Double-Opt-In-Links per Email</li>
++    </ul>
++    <p>
++      Die Daten werden an meinen Email-Dienstleister Brevo (siehe §5) übergeben.
++      Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (deine ausdrückliche Einwilligung).
++    </p>
++
+     <h2>3. Wofür verwende ich diese Daten?</h2>
+-    <p>Ausschließlich für die Durchführung des angefragten Gesprächs:</p>
++    <p><strong>Für die Terminbuchung:</strong></p>
+     <ul>
+       <li>Terminbestätigung per Email an dich</li>
+       <li>Benachrichtigung an mich (Email + SMS) damit ich den Termin im Kalender habe</li>
+       <li>Kontaktaufnahme falls etwas dazwischenkommt</li>
+     </ul>
+     <p>
+-      <strong>Keine</strong> Newsletter-Anmeldung, <strong>kein</strong> Werbeversand,
+-      <strong>keine</strong> Weitergabe an Dritte für Marketing-Zwecke.
++      Im Rahmen der Terminbuchung erfolgt <strong>kein</strong> Marketing-Versand
++      und <strong>keine</strong> Weitergabe an Dritte für Werbe-Zwecke.
+     </p>
+-    <p>Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO (vorvertragliche Maßnahme) und Art. 6 Abs. 1 lit. a DSGVO (deine ausdrückliche Einwilligung im Formular).</p>
++    <p>
++      <strong>Für die Playbook-Anmeldung:</strong> Wenn du dich über das
++      Playbook-Formular einträgst, verwende ich deine Email-Adresse zusätzlich,
++      um dir das Playbook plus eine 3-teilige Mail-Sequenz zuzustellen. Du
++      kannst dich jederzeit per Klick im Mail-Footer austragen.
++    </p>
++    <p>Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO (vorvertragliche Maßnahme bei Terminbuchung) und Art. 6 Abs. 1 lit. a DSGVO (deine ausdrückliche Einwilligung im jeweiligen Formular).</p>
+ 
+     <h2>4. Wie lange werden die Daten gespeichert?</h2>
+     <p>
+@@ -270,6 +290,21 @@
+       <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener">github.com privacy</a>
+     </p>
+ 
++    <h3>Sendinblue SAS (Brevo)</h3>
++    <p>
++      Versand des Lead-Magnet-Playbooks und der nachfolgenden 3-Mail-Sequenz
++      bei Anmeldung über das Email-Formular.<br />
++      Sitz: Frankreich (EU) · Datenverarbeitung innerhalb der EU.<br />
++      Datenschutzerklärung:
++      <a href="https://www.brevo.com/legal/privacypolicy/" target="_blank" rel="noopener">brevo.com/legal/privacypolicy</a>
++      · Auftragsverarbeitungsvertrag (DPA) abgeschlossen.
++    </p>
++    <p style="font-size:13px;color:var(--muted);">
++      Speicherdauer: bis zur Austragung durch dich oder maximal 24 Monate
++      Inaktivität. Jeder Mail liegt ein Unsubscribe-Link bei (von Brevo
++      automatisch eingefügt). Keine Weitergabe an Dritte.
++    </p>
++
+     <h2>6. Deine Rechte</h2>
+     <p>Du hast jederzeit das Recht auf:</p>
+     <ul>
+diff --git a/public/playbook.html b/public/playbook.html
+new file mode 100644
+index 0000000..fec710d
+--- /dev/null
++++ b/public/playbook.html
+@@ -0,0 +1,867 @@
++<!DOCTYPE html>
++<html lang="de">
++<head>
++<meta charset="UTF-8">
++<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
++<meta name="theme-color" content="#050505">
++<meta name="color-scheme" content="dark">
++
++<title>Affiliate Marketing Playbook 2026 · oskarmarketing</title>
++<meta name="description" content="Affiliate Marketing Playbook 2026. 4 Schritte für deinen Start. Kostenlos.">
++<link rel="canonical" href="https://oskar778838.github.io/oskar-marketing/playbook.html">
++<link rel="icon" type="image/svg+xml" href="./favicon.svg">
++
++<meta property="og:type" content="article">
++<meta property="og:url" content="https://oskar778838.github.io/oskar-marketing/playbook.html">
++<meta property="og:title" content="Affiliate Playbook · oskarmarketing">
++<meta property="og:description" content="4 Schritte für deinen Affiliate-Start. Build in Public, dokumentiert.">
++<meta property="og:image" content="./og-image.svg">
++<meta name="twitter:card" content="summary_large_image">
++
++<link rel="preconnect" href="https://fonts.googleapis.com">
++<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
++<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..900,30..100&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
++
++<script type="application/ld+json">
++{
++  "@context": "https://schema.org",
++  "@type": "HowTo",
++  "name": "Affiliate Marketing Playbook 2026",
++  "description": "4 Schritte für den Affiliate-Start.",
++  "step": [
++    { "@type": "HowToStep", "position": 1, "name": "Was ist Affiliate Marketing?" },
++    { "@type": "HowToStep", "position": 2, "name": "Wähle deine Nische" },
++    { "@type": "HowToStep", "position": 3, "name": "Die richtige Plattform" },
++    { "@type": "HowToStep", "position": 4, "name": "Der erste Post" }
++  ]
++}
++</script>
++
++<style>
++*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
++
++:root{
++--bg:#050505;
++--bg-alt:#0A0908;
++--surface:#1A1A1A;
++--surface-2:#222222;
++--border:rgba(255,255,255,0.08);
++--border-strong:rgba(201,168,76,0.3);
++--text:#FAFAFA;
++--text-dim:#B0B0B0;
++--text-muted:#777777;
++--orange:#C9A84C;
++--orange-light:#E8C96A;
++--orange-dim:rgba(201,168,76,0.1);
++--orange-glow:rgba(201,168,76,0.4);
++}
++
++html{scroll-behavior:smooth}
++body{
++background:var(--bg);
++color:var(--text);
++font-family:'JetBrains Mono',monospace;
++overflow-x:hidden;
++-webkit-font-smoothing:antialiased;
++font-feature-settings:"ss01";
++}
++
++body::before{
++content:'';
++position:fixed;
++inset:0;
++pointer-events:none;
++z-index:100;
++opacity:0.4;
++mix-blend-mode:overlay;
++background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.15'/></svg>");
++}
++
++/* Logo */
++.logo-mark{
++position:absolute;
++top:24px;
++right:24px;
++width:48px;
++height:48px;
++display:flex;
++align-items:center;
++justify-content:center;
++z-index:5;
++}
++.logo-mark img{width:100%;height:100%;object-fit:contain;display:block}
++
++/* Hero */
++.hero{
++min-height:100vh;
++display:flex;
++flex-direction:column;
++justify-content:space-between;
++padding:32px 24px;
++position:relative;
++overflow:hidden;
++}
++.hero-bg{position:absolute;inset:0;opacity:0.4}
++.hero-bg::before{
++content:'';
++position:absolute;
++top:-200px;right:-200px;
++width:600px;height:600px;
++background:radial-gradient(circle,var(--orange) 0%,transparent 60%);
++filter:blur(50px);
++animation:float-orb 25s ease-in-out infinite;
++}
++.hero-bg::after{
++content:'';
++position:absolute;
++bottom:-100px;left:-100px;
++width:400px;height:400px;
++background:radial-gradient(circle,var(--orange) 0%,transparent 60%);
++filter:blur(50px);
++animation:float-orb 25s ease-in-out infinite reverse;
++}
++@keyframes float-orb{
++0%,100%{transform:translate(0,0) scale(1)}
++50%{transform:translate(40px,-40px) scale(1.1)}
++}
++
++.hero-top{display:flex;justify-content:space-between;align-items:center;position:relative;z-index:2;animation:fade-down 0.8s ease both;padding-right:60px}
++.hero-top-label{font-size:10px;letter-spacing:3px;color:var(--orange);font-weight:600;text-transform:uppercase}
++.hero-top-year{font-family:'Fraunces',serif;font-size:14px;color:var(--text-dim);font-style:italic;line-height:1.4}
++
++.hero-main{position:relative;z-index:2;animation:fade-up 1s ease 0.2s both}
++
++.hero-eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:24px}
++.hero-eyebrow-line{width:40px;height:1px;background:var(--orange)}
++.hero-eyebrow-text{font-size:11px;letter-spacing:4px;color:var(--orange);text-transform:uppercase;font-weight:600}
++
++.hero-title{
++font-family:'Fraunces',serif;
++font-size:clamp(48px,13vw,84px);
++line-height:1.1;
++letter-spacing:-0.04em;
++font-weight:400;
++font-variation-settings:"opsz" 144,"SOFT" 50;
++margin-bottom:8px;
++padding-bottom:8px;
++}
++.hero-title-line{display:block;padding-bottom:4px;line-height:1.1}
++.hero-title-italic{font-style:italic;color:var(--orange);font-variation-settings:"opsz" 144,"SOFT" 100}
++
++.hero-subtitle{
++font-family:'JetBrains Mono',monospace;
++font-size:13px;
++color:var(--text-dim);
++line-height:1.7;
++max-width:380px;
++margin-top:28px;
++font-weight:400;
++}
++
++.hero-bottom{position:relative;z-index:2;animation:fade-up 1s ease 0.4s both}
++
++.hero-meta{
++display:grid;
++grid-template-columns:repeat(3,1fr);
++gap:8px;
++margin-bottom:24px;
++border-top:1px solid var(--border);
++padding-top:24px;
++}
++.hero-meta-item{font-size:9px}
++.hero-meta-label{display:block;color:var(--text-muted);letter-spacing:2px;margin-bottom:6px;text-transform:uppercase}
++.hero-meta-value{display:block;font-family:'Fraunces',serif;font-size:22px;color:var(--text);font-style:italic;line-height:1.3;padding-bottom:4px}
++
++.hero-author{display:flex;align-items:center;justify-content:space-between;font-size:11px}
++.hero-author-name{color:var(--text);font-weight:600;letter-spacing:1px}
++.hero-author-tag{color:var(--orange)}
++
++.hero-scroll{
++position:absolute;
++bottom:24px;
++left:50%;
++transform:translateX(-50%);
++font-size:9px;
++color:var(--text-dim);
++letter-spacing:3px;
++animation:scroll-pulse 2s ease-in-out infinite;
++text-transform:uppercase;
++}
++@keyframes scroll-pulse{
++0%,100%{opacity:0.4;transform:translateX(-50%) translateY(0)}
++50%{opacity:1;transform:translateX(-50%) translateY(6px)}
++}
++
++@keyframes fade-down{
++from{opacity:0;transform:translateY(-20px)}
++to{opacity:1;transform:translateY(0)}
++}
++@keyframes fade-up{
++from{opacity:0;transform:translateY(30px)}
++to{opacity:1;transform:translateY(0)}
++}
++
++.reveal{opacity:0;transform:translateY(40px);transition:opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1)}
++.reveal.visible{opacity:1;transform:translateY(0)}
++
++section{padding:60px 24px;position:relative;border-top:1px solid var(--border)}
++
++.section-header{margin-bottom:40px}
++.section-number{
++font-family:'Fraunces',serif;
++font-size:80px;
++font-style:italic;
++color:var(--orange);
++line-height:1.2;
++font-variation-settings:"opsz" 144,"SOFT" 100;
++opacity:0.4;
++margin-bottom:-20px;
++font-weight:300;
++padding-bottom:8px;
++}
++.section-eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:16px}
++.section-eyebrow-line{width:30px;height:1px;background:var(--orange)}
++.section-eyebrow-text{font-size:10px;letter-spacing:3px;color:var(--orange);text-transform:uppercase;font-weight:600}
++
++.section-title{
++font-family:'Fraunces',serif;
++font-size:clamp(36px,9vw,52px);
++line-height:1.1;
++letter-spacing:-0.03em;
++font-weight:400;
++margin-bottom:20px;
++font-variation-settings:"opsz" 144;
++padding-bottom:6px;
++}
++.section-title em{font-style:italic;color:var(--orange)}
++
++.section-lede{font-size:13px;color:var(--text-dim);line-height:1.7;max-width:380px}
++
++/* Step Card */
++.step-card{
++margin-top:32px;
++padding:28px 24px;
++background:var(--surface);
++border:1px solid var(--border);
++border-radius:14px;
++position:relative;
++overflow:hidden;
++}
++.step-card::before{
++content:'';
++position:absolute;
++top:0;left:0;
++width:3px;
++height:100%;
++background:linear-gradient(180deg,var(--orange) 0%,transparent 100%);
++}
++.step-tag{
++display:inline-block;
++font-size:9px;
++letter-spacing:2.5px;
++color:var(--orange);
++font-weight:700;
++text-transform:uppercase;
++margin-bottom:14px;
++padding:5px 10px;
++background:var(--orange-dim);
++border-radius:4px;
++}
++.step-headline{
++font-family:'Fraunces',serif;
++font-size:22px;
++line-height:1.3;
++margin-bottom:14px;
++font-weight:500;
++padding-bottom:4px;
++}
++.step-headline em{font-style:italic;color:var(--orange)}
++.step-text{
++font-size:13px;
++color:var(--text-dim);
++line-height:1.75;
++margin-bottom:16px;
++}
++.step-text strong{color:#FFFFFF;font-weight:600}
++
++.step-action{
++margin-top:18px;
++padding:14px 16px;
++background:var(--bg);
++border-radius:8px;
++border-left:2px solid var(--orange);
++}
++.step-action-label{
++font-size:9px;
++letter-spacing:2px;
++color:var(--orange);
++text-transform:uppercase;
++font-weight:600;
++margin-bottom:6px;
++}
++.step-action-text{
++font-family:'Fraunces',serif;
++font-size:14px;
++color:var(--text);
++line-height:1.5;
++font-style:italic;
++}
++
++/* Mini List */
++.mini-list{
++display:flex;
++flex-direction:column;
++gap:10px;
++margin-top:16px;
++}
++.mini-item{
++display:flex;
++align-items:flex-start;
++gap:10px;
++padding:10px 12px;
++background:var(--bg);
++border-radius:6px;
++}
++.mini-bullet{
++color:var(--orange);
++font-family:'Fraunces',serif;
++font-style:italic;
++font-weight:700;
++flex-shrink:0;
++font-size:14px;
++line-height:1.4;
++}
++.mini-text{
++font-size:12px;
++color:var(--text-dim);
++line-height:1.6;
++}
++.mini-text strong{color:var(--text);font-weight:600}
++
++/* Bridge Section */
++.bridge-section{
++background:radial-gradient(ellipse at top,#0F0908 0%,#050505 70%);
++padding:70px 24px;
++text-align:center;
++}
++.bridge-eyebrow{
++font-size:10px;
++letter-spacing:3px;
++color:var(--orange);
++text-transform:uppercase;
++font-weight:600;
++margin-bottom:18px;
++}
++.bridge-title{
++font-family:'Fraunces',serif;
++font-size:clamp(32px,8vw,46px);
++line-height:1.15;
++letter-spacing:-0.03em;
++margin-bottom:18px;
++font-variation-settings:"opsz" 144;
++font-weight:400;
++padding-bottom:6px;
++}
++.bridge-title em{font-style:italic;color:var(--orange)}
++.bridge-text{
++font-size:13px;
++color:var(--text-dim);
++line-height:1.8;
++max-width:400px;
++margin:0 auto;
++}
++.bridge-text strong{color:var(--text);font-weight:600}
++
++/* CTA Section */
++.cta-section{
++background:linear-gradient(180deg,#0F0908 0%,#050505 100%);
++position:relative;
++overflow:hidden;
++padding:60px 24px 80px;
++border-top:none;
++}
++.cta-section::before{
++content:'';
++position:absolute;
++top:50%;left:50%;
++transform:translate(-50%,-50%);
++width:600px;height:600px;
++background:radial-gradient(circle,var(--orange-glow) 0%,transparent 70%);
++filter:blur(80px);
++animation:pulse-glow 4s ease-in-out infinite;
++}
++@keyframes pulse-glow{0%,100%{opacity:0.3}50%{opacity:0.6}}
++
++.cta-content{position:relative;z-index:2}
++.cta-eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:20px;justify-content:center}
++.cta-eyebrow-line{width:40px;height:1px;background:var(--orange)}
++.cta-eyebrow-text{font-size:10px;letter-spacing:3px;color:var(--orange);text-transform:uppercase;font-weight:600}
++
++.cta-title{
++font-family:'Fraunces',serif;
++font-size:clamp(38px,10vw,56px);
++line-height:1.1;
++letter-spacing:-0.03em;
++text-align:center;
++margin-bottom:16px;
++font-variation-settings:"opsz" 144;
++font-weight:400;
++padding-bottom:8px;
++}
++.cta-title em{font-style:italic;color:var(--orange)}
++
++.cta-subtitle{
++font-size:13px;
++color:var(--text-dim);
++text-align:center;
++margin-bottom:36px;
++line-height:1.7;
++max-width:340px;
++margin-left:auto;
++margin-right:auto;
++}
++
++.benefits{display:flex;flex-direction:column;gap:12px;margin-bottom:32px}
++.benefit{
++display:flex;
++gap:14px;
++align-items:flex-start;
++padding:16px 18px;
++background:rgba(255,255,255,0.03);
++border:1px solid var(--border);
++border-radius:10px;
++backdrop-filter:blur(10px);
++}
++.benefit-icon{
++width:32px;height:32px;
++flex-shrink:0;
++background:var(--orange);
++color:#050505;
++border-radius:8px;
++display:flex;
++align-items:center;
++justify-content:center;
++font-family:'Fraunces',serif;
++font-size:16px;
++font-weight:700;
++font-style:italic;
++line-height:1;
++}
++.benefit-content{flex:1}
++.benefit-title{font-family:'Fraunces',serif;font-size:16px;color:var(--text);margin-bottom:4px;font-weight:500;line-height:1.3;padding-bottom:2px}
++.benefit-text{font-size:11.5px;color:var(--text-dim);line-height:1.6}
++
++.price-box{
++margin:32px 0 20px;
++text-align:center;
++padding:24px;
++background:linear-gradient(135deg,rgba(201,168,76,0.12) 0%,rgba(201,168,76,0.06) 100%);
++border:1px solid var(--border-strong);
++border-radius:12px;
++}
++.price-box-label{
++font-size:9px;
++letter-spacing:2px;
++color:var(--orange);
++text-transform:uppercase;
++font-weight:600;
++margin-bottom:10px;
++}
++.price-box-main{
++font-family:'Fraunces',serif;
++font-size:38px;
++color:var(--text);
++font-weight:600;
++line-height:1.3;
++padding-bottom:6px;
++}
++.price-box-main em{color:var(--orange);font-style:italic}
++.price-box-sub{
++font-size:11px;
++color:var(--text-dim);
++font-family:'Fraunces',serif;
++font-style:italic;
++margin-top:6px;
++line-height:1.5;
++}
++
++.cta-btn-wrap{text-align:center;margin-bottom:12px}
++.cta-btn{
++display:inline-flex;
++align-items:center;
++gap:12px;
++padding:20px 32px;
++background:var(--orange);
++color:#050505;
++text-decoration:none;
++border-radius:12px;
++font-weight:700;
++font-size:13px;
++letter-spacing:1px;
++text-transform:uppercase;
++position:relative;
++overflow:hidden;
++transition:all 0.3s;
++box-shadow:0 10px 40px var(--orange-glow);
++}
++.cta-btn:hover{transform:translateY(-2px);box-shadow:0 15px 50px var(--orange-glow)}
++.cta-btn::before{
++content:'';
++position:absolute;
++inset:0;
++background:linear-gradient(120deg,transparent,rgba(255,255,255,0.4),transparent);
++transform:translateX(-100%);
++transition:transform 0.6s;
++}
++.cta-btn:hover::before{transform:translateX(100%)}
++.cta-btn-arrow{font-family:'Fraunces',serif;font-size:18px;font-style:italic;font-weight:400}
++
++.cta-disclosure{
++margin:0 auto 18px;
++max-width:340px;
++font-family:'JetBrains Mono',monospace;
++font-size:9px;
++letter-spacing:0.2em;
++text-transform:uppercase;
++opacity:0.7;
++color:var(--orange-light);
++text-align:center;
++line-height:1.6;
++}
++
++.cta-risk{
++text-align:center;
++font-size:11px;
++color:var(--text-dim);
++font-family:'Fraunces',serif;
++font-style:italic;
++line-height:1.6;
++max-width:320px;
++margin:0 auto;
++}
++
++/* Footer */
++.footer{padding:40px 24px 30px;text-align:center;border-top:1px solid var(--border);background:#000}
++.footer-author{font-family:'Fraunces',serif;font-size:22px;margin-bottom:8px;font-weight:500;line-height:1.3;padding-bottom:2px}
++.footer-author em{color:var(--orange);font-style:italic}
++.footer-handle{font-size:11px;color:var(--orange);letter-spacing:2px;margin-bottom:24px}
++.footer-socials{display:flex;justify-content:center;gap:24px;margin-bottom:30px;font-size:10px;color:var(--text-dim);letter-spacing:1.5px;text-transform:uppercase}
++.footer-socials a{color:var(--text-dim);text-decoration:none;transition:color 0.2s}
++.footer-socials a:hover{color:var(--orange)}
++.footer-back{
++display:inline-block;
++margin-bottom:18px;
++font-family:'JetBrains Mono',monospace;
++font-size:11px;
++letter-spacing:0.2em;
++text-transform:uppercase;
++color:var(--orange-light);
++text-decoration:none;
++opacity:0.7;
++transition:opacity 180ms ease;
++}
++.footer-back:hover{opacity:1}
++.footer-copy{font-size:9px;color:var(--text-muted);letter-spacing:2px}
++
++.progress{position:fixed;top:0;left:0;height:2px;background:var(--orange);z-index:1000;transition:width 0.1s;width:0%}
++
++@media (min-width:600px){
++section{padding:80px 40px}
++.hero{padding:40px}
++.footer{padding:60px 40px}
++.bridge-section,.cta-section{padding:80px 40px}
++}
++
++</style>
++</head>
++<body>
++
++<div class="progress" id="progress"></div>
++
++<!-- HERO -->
++<div class="hero">
++<div class="hero-bg"></div>
++
++<div class="logo-mark"><img src="./logo.svg" alt="oskarmarketing" /></div>
++
++<div class="hero-top">
++<span class="hero-top-label">PLAYBOOK · 2026</span>
++<span class="hero-top-year">Edition 01</span>
++</div>
++
++<div class="hero-main">
++<div class="hero-eyebrow">
++<span class="hero-eyebrow-line"></span>
++<span class="hero-eyebrow-text">Affiliate Marketing Guide</span>
++</div>
++<h1 class="hero-title">
++<span class="hero-title-line">Dein <em class="hero-title-italic">Start</em></span>
++<span class="hero-title-line">in <em class="hero-title-italic">4 Schritten</em>.</span>
++</h1>
++<p class="hero-subtitle">Ein praktisches Playbook für Anfänger die 2026 mit Affiliate Marketing starten wollen. Schritt für Schritt. Ohne Theorie. Ohne Hype.</p>
++</div>
++
++<div class="hero-bottom">
++<div class="hero-meta">
++<div class="hero-meta-item">
++<span class="hero-meta-label">Schritte</span>
++<span class="hero-meta-value">4</span>
++</div>
++<div class="hero-meta-item">
++<span class="hero-meta-label">Lesedauer</span>
++<span class="hero-meta-value">6 min</span>
++</div>
++<div class="hero-meta-item">
++<span class="hero-meta-label">Niveau</span>
++<span class="hero-meta-value">Start</span>
++</div>
++</div>
++<div class="hero-author">
++<span class="hero-author-name">OSKAR MARKETING</span>
++<span class="hero-author-tag">@oskarmarketing</span>
++</div>
++</div>
++
++<span class="hero-scroll">↓ Scrollen</span>
++</div>
++
++<!-- SCHRITT 01 — Was ist Affiliate Marketing -->
++<section>
++<div class="section-header reveal">
++<div class="section-number">01</div>
++<div class="section-eyebrow">
++<span class="section-eyebrow-line"></span>
++<span class="section-eyebrow-text">Grundlagen</span>
++</div>
++<h2 class="section-title">Was ist <em>Affiliate</em> Marketing?</h2>
++<p class="section-lede">Stell dir vor du empfiehlst einem Freund ein Restaurant. Der Inhaber gibt dir 10€ wenn dein Freund hingeht. Genau das ist Affiliate Marketing — nur online und in groß.</p>
++</div>
++
++<div class="step-card reveal">
++<span class="step-tag">▸ So funktioniert es</span>
++<div class="step-headline">Du empfiehlst — der Anbieter <em>zahlt</em>.</div>
++<div class="step-text">Du bewirbst fremde Produkte und bekommst eine Provision wenn jemand über deinen Link kauft. <strong>Keine eigenen Produkte. Kein Lager. Kein Risiko.</strong> Die Provisionen liegen typisch zwischen 5% und 50% pro Verkauf.</div>
++
++<div class="step-action">
++<div class="step-action-label">▸ Dein erster Schritt</div>
++<div class="step-action-text">"Suche dir ein Affiliate-Programm in deiner Nische — und registriere dich für deinen ersten Link."</div>
++</div>
++</div>
++</section>
++
++<!-- SCHRITT 02 — Die Nische -->
++<section>
++<div class="section-header reveal">
++<div class="section-number">02</div>
++<div class="section-eyebrow">
++<span class="section-eyebrow-line"></span>
++<span class="section-eyebrow-text">Positionierung</span>
++</div>
++<h2 class="section-title">Wähle deine <em>Nische</em>.</h2>
++<p class="section-lede">Die meisten Anfänger nehmen "Fitness" oder "Tech". Zu breit. Hier sind die echten Filter für die richtige Nische.</p>
++</div>
++
++<div class="step-card reveal">
++<span class="step-tag">▸ Der 3-Fragen-Filter</span>
++<div class="step-headline">Drei Fragen — eine <em>Antwort</em>.</div>
++<div class="step-text">Bevor du eine Nische wählst, beantworte diese drei Fragen ehrlich. <strong>Wenn alle drei "Ja" sind — du hast deine Nische gefunden.</strong></div>
++
++<div class="mini-list">
++<div class="mini-item">
++<span class="mini-bullet">1</span>
++<div class="mini-text"><strong>Kannst du 1 Stunde am Stück darüber reden ohne Notizen?</strong> Wenn nicht — andere Nische.</div>
++</div>
++<div class="mini-item">
++<span class="mini-bullet">2</span>
++<div class="mini-text"><strong>Gibt es Produkte mit 30%+ Provision in der Nische?</strong> Check vorher — sonst arbeitest du umsonst.</div>
++</div>
++<div class="mini-item">
++<span class="mini-bullet">3</span>
++<div class="mini-text"><strong>Hattest du selbst dieses Problem vor 6 Monaten?</strong> Deine eigene Erfahrung ist dein größter Vorteil.</div>
++</div>
++</div>
++
++<div class="step-action">
++<div class="step-action-label">▸ Dein zweiter Schritt</div>
++<div class="step-action-text">"Schreib drei mögliche Nischen auf — wende die 3 Fragen an — wähle die mit 3x Ja."</div>
++</div>
++</div>
++</section>
++
++<!-- SCHRITT 03 — Die Plattform -->
++<section>
++<div class="section-header reveal">
++<div class="section-number">03</div>
++<div class="section-eyebrow">
++<span class="section-eyebrow-line"></span>
++<span class="section-eyebrow-text">Reichweite</span>
++</div>
++<h2 class="section-title">Die richtige <em>Plattform</em>.</h2>
++<p class="section-lede">Du brauchst nicht alle Plattformen. Du brauchst eine — und musst sie richtig verstehen.</p>
++</div>
++
++<div class="step-card reveal">
++<span class="step-tag">▸ Start mit TikTok</span>
++<div class="step-headline">TikTok bringt dir <em>Reichweite</em> ohne Follower.</div>
++<div class="step-text">TikTok ist die einzige Plattform die einen 0-Follower-Account in einer Woche auf 10.000 Views pushen kann. <strong>Keine andere Plattform ist so anfängerfreundlich.</strong> Instagram und YouTube kommen später — wenn du eine Audience hast.</div>
++
++<div class="mini-list">
++<div class="mini-item">
++<span class="mini-bullet">▸</span>
++<div class="mini-text"><strong>Slide-Posts statt Videos.</strong> Einfacher zu produzieren, performen oft besser.</div>
++</div>
++<div class="mini-item">
++<span class="mini-bullet">▸</span>
++<div class="mini-text"><strong>Crossposting zu Instagram Reels</strong> bringt dir gratis Zusatz-Reichweite.</div>
++</div>
++</div>
++
++<div class="step-action">
++<div class="step-action-label">▸ Dein dritter Schritt</div>
++<div class="step-action-text">"Erstelle einen TikTok-Account in deiner Nische — poste in den ersten 14 Tagen täglich 2 Slide-Posts."</div>
++</div>
++</div>
++</section>
++
++<!-- SCHRITT 04 — Der Content -->
++<section>
++<div class="section-header reveal">
++<div class="section-number">04</div>
++<div class="section-eyebrow">
++<span class="section-eyebrow-line"></span>
++<span class="section-eyebrow-text">Content</span>
++</div>
++<h2 class="section-title">Der erste <em>Post</em>.</h2>
++<p class="section-lede">Jeder Post hat dieselbe Struktur. Wenn du die kennst — kannst du täglich posten ohne nachzudenken.</p>
++</div>
++
++<div class="step-card reveal">
++<span class="step-tag">▸ Die Hook-Formel</span>
++<div class="step-headline">Die ersten <em>3 Sekunden</em> entscheiden alles.</div>
++<div class="step-text">Wenn dein Hook in den ersten 3 Sekunden nicht packt — egal wie gut der Rest ist — der Zuschauer scrollt weiter. <strong>Der Hook macht 80% des Erfolgs aus.</strong></div>
++
++<div class="mini-list">
++<div class="mini-item">
++<span class="mini-bullet">▸</span>
++<div class="mini-text"><strong>Starte mit "Du" oder "Dein".</strong> "Dein Wecker klingelt um 6" schlägt jeden anderen Hook.</div>
++</div>
++<div class="mini-item">
++<span class="mini-bullet">▸</span>
++<div class="mini-text"><strong>Konkrete Zahl statt vager Behauptung.</strong> "Tag 47: 0€" schlägt "Mein erster Monat".</div>
++</div>
++<div class="mini-item">
++<span class="mini-bullet">▸</span>
++<div class="mini-text"><strong>Jede Caption endet mit Frage.</strong> Kommentare sind das stärkste Algorithmus-Signal.</div>
++</div>
++</div>
++
++<div class="step-action">
++<div class="step-action-label">▸ Dein vierter Schritt</div>
++<div class="step-action-text">"Schreibe heute deinen ersten Hook — und poste den ersten Post in den nächsten 24 Stunden."</div>
++</div>
++</div>
++</section>
++
++<!-- BRIDGE -->
++<section class="bridge-section">
++<div class="reveal">
++<div class="bridge-eyebrow">▸ Du hast jetzt die Basics</div>
++<h2 class="bridge-title">Aber wie geht es <em>weiter</em>?</h2>
++<p class="bridge-text">4 Schritte sind dein Anfang. Aber Affiliate Marketing ist mehr als die Basics. <strong>Was kommt nach dem ersten Post?</strong> Wie verkaufst du in DMs? Wann skalierst du? Welche Tools brauchst du wirklich? Das volle System bekommst du in der Affiliate Academy.</p>
++</div>
++</section>
++
++<!-- CTA -->
++<section class="cta-section">
++<div class="cta-content">
++<div class="cta-eyebrow reveal">
++<span class="cta-eyebrow-line"></span>
++<span class="cta-eyebrow-text">Der nächste Schritt</span>
++</div>
++<h2 class="cta-title reveal">Das komplette <em>System</em>.<br>Von <em>Mark Janzen</em>.</h2>
++<p class="cta-subtitle reveal">Vom ersten Setup bis zum 4-stelligen Monat. Mit täglichem Support, persönlich, ohne Bullshit.</p>
++
++<div class="benefits">
++<div class="benefit reveal">
++<div class="benefit-icon">V</div>
++<div class="benefit-content">
++<div class="benefit-title">Umfassendes Video-Curriculum</div>
++<div class="benefit-text">Mehrere Module — vom Mindset bis zum ersten Verkauf.</div>
++</div>
++</div>
++<div class="benefit reveal">
++<div class="benefit-icon">M</div>
++<div class="benefit-content">
++<div class="benefit-title">Mark's persönlicher WhatsApp-Support</div>
++<div class="benefit-text">Direkter 1:1 Zugang zu Mark — keine Assistenten.</div>
++</div>
++</div>
++<div class="benefit reveal">
++<div class="benefit-icon">∞</div>
++<div class="benefit-content">
++<div class="benefit-title">Regelmäßige Live-Teamcalls</div>
++<div class="benefit-text">Q&A und Live-Strategien mit Mark — fast jeden Tag.</div>
++</div>
++</div>
++<div class="benefit reveal">
++<div class="benefit-icon">C</div>
++<div class="benefit-content">
++<div class="benefit-title">Wachsende, aktive Community</div>
++<div class="benefit-text">Exklusive Gruppe mit erfahrenen Affiliates.</div>
++</div>
++</div>
++</div>
++
++<div class="price-box reveal">
++<div class="price-box-label">▸ Der Einstieg</div>
++<div class="price-box-main">Ab <em>5€</em></div>
++<div class="price-box-sub">Günstiger als ein Mittagessen — und du entscheidest selbst ob du dabei bleibst.</div>
++</div>
++
++<div class="cta-btn-wrap reveal">
++<a href="https://www.checkout-ds24.com/product/583562?aff=Bestproducts99978" class="cta-btn" target="_blank" rel="sponsored noopener">
++<span>Jetzt für 5€ starten</span>
++<span class="cta-btn-arrow">→</span>
++</a>
++</div>
++
++<p class="cta-disclosure reveal">Werbe-Hinweis: Affiliate-Link. Ich erhalte eine Provision wenn du startest. Das kostet dich nichts extra.</p>
++
++<p class="cta-risk reveal">Schau dir Modul 01 an — dann entscheidest du selbst.</p>
++</div>
++</section>
++
++<!-- FOOTER -->
++<footer class="footer">
++<a href="./" class="footer-back">← Zur Hauptseite</a>
++<div class="footer-author">Oskar <em>Marketing</em></div>
++<div class="footer-handle">@OSKARMARKETING</div>
++<div class="footer-socials">
++<a href="https://tiktok.com/@oskarmarketing" target="_blank" rel="noopener">TikTok</a>
++<a href="https://instagram.com/oskarmarketing" target="_blank" rel="noopener">Instagram</a>
++<a href="https://youtube.com/@oskarmarketing" target="_blank" rel="noopener">YouTube</a>
++</div>
++<div class="footer-copy">© 2026 · MADE FOR THOSE WHO BUILD</div>
++</footer>
++
++<script>
++const progress=document.getElementById('progress');
++window.addEventListener('scroll',()=>{
++const pct=(window.scrollY/(document.body.scrollHeight-window.innerHeight))*100;
++progress.style.width=pct+'%';
++});
++
++const observer=new IntersectionObserver((entries)=>{
++entries.forEach((entry,i)=>{
++if(entry.isIntersecting){
++setTimeout(()=>entry.target.classList.add('visible'),i*60);
++observer.unobserve(entry.target);
++}
++});
++},{threshold:0.15,rootMargin:'0px 0px -10% 0px'});
++
++document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
++</script>
++
++</body>
++</html>
+diff --git a/public/sitemap.xml b/public/sitemap.xml
+index 92cc141..1307db1 100644
+--- a/public/sitemap.xml
++++ b/public/sitemap.xml
+@@ -5,4 +5,9 @@
+     <changefreq>weekly</changefreq>
+     <priority>1.0</priority>
+   </url>
++  <url>
++    <loc>https://oskarmarketing.de/playbook.html</loc>
++    <changefreq>monthly</changefreq>
++    <priority>0.8</priority>
++  </url>
+ </urlset>
+diff --git a/reference/playbook_original.html b/reference/playbook_original.html
+new file mode 100644
+index 0000000..1ad5fe4
+--- /dev/null
++++ b/reference/playbook_original.html
+@@ -0,0 +1,814 @@
++<!DOCTYPE html>
++<html lang="de">
++<head>
++<meta charset="UTF-8">
++<meta name="viewport" content="width=device-width, initial-scale=1.0">
++<title>Affiliate Marketing Playbook 2026 — Oskar Marketing</title>
++<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..900,30..100&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
++<style>
++*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
++
++:root{
++--bg:#0A0A0A;
++--bg-alt:#111111;
++--surface:#1A1A1A;
++--surface-2:#222222;
++--border:rgba(255,255,255,0.08);
++--border-strong:rgba(255,107,26,0.3);
++--text:#FAFAFA;
++--text-dim:#B0B0B0;
++--text-muted:#777777;
++--orange:#FF6B1A;
++--orange-light:#FF8540;
++--orange-dim:rgba(255,107,26,0.1);
++--orange-glow:rgba(255,107,26,0.4);
++}
++
++html{scroll-behavior:smooth}
++body{
++background:var(--bg);
++color:var(--text);
++font-family:'JetBrains Mono',monospace;
++overflow-x:hidden;
++-webkit-font-smoothing:antialiased;
++font-feature-settings:"ss01";
++}
++
++body::before{
++content:'';
++position:fixed;
++inset:0;
++pointer-events:none;
++z-index:100;
++opacity:0.4;
++mix-blend-mode:overlay;
++background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.15'/></svg>");
++}
++
++/* Logo (Cloud Placeholder) */
++.logo-mark{
++position:absolute;
++top:24px;
++right:24px;
++width:36px;
++height:36px;
++background:linear-gradient(135deg,var(--orange) 0%,var(--orange-light) 100%);
++border-radius:8px;
++display:flex;
++align-items:center;
++justify-content:center;
++font-family:'Fraunces',serif;
++font-size:20px;
++font-weight:700;
++font-style:italic;
++color:#0A0A0A;
++z-index:5;
++box-shadow:0 4px 20px var(--orange-glow);
++}
++
++/* Hero */
++.hero{
++min-height:100vh;
++display:flex;
++flex-direction:column;
++justify-content:space-between;
++padding:32px 24px;
++position:relative;
++overflow:hidden;
++}
++.hero-bg{position:absolute;inset:0;opacity:0.4}
++.hero-bg::before{
++content:'';
++position:absolute;
++top:-200px;right:-200px;
++width:600px;height:600px;
++background:radial-gradient(circle,var(--orange) 0%,transparent 60%);
++filter:blur(80px);
++animation:float-orb 15s ease-in-out infinite;
++}
++.hero-bg::after{
++content:'';
++position:absolute;
++bottom:-100px;left:-100px;
++width:400px;height:400px;
++background:radial-gradient(circle,var(--orange) 0%,transparent 60%);
++filter:blur(60px);
++animation:float-orb 18s ease-in-out infinite reverse;
++}
++@keyframes float-orb{
++0%,100%{transform:translate(0,0) scale(1)}
++50%{transform:translate(40px,-40px) scale(1.1)}
++}
++
++.hero-top{display:flex;justify-content:space-between;align-items:center;position:relative;z-index:2;animation:fade-down 0.8s ease both;padding-right:50px}
++.hero-top-label{font-size:10px;letter-spacing:3px;color:var(--orange);font-weight:600;text-transform:uppercase}
++.hero-top-year{font-family:'Fraunces',serif;font-size:14px;color:var(--text-dim);font-style:italic;line-height:1.4}
++
++.hero-main{position:relative;z-index:2;animation:fade-up 1s ease 0.2s both}
++
++.hero-eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:24px}
++.hero-eyebrow-line{width:40px;height:1px;background:var(--orange)}
++.hero-eyebrow-text{font-size:11px;letter-spacing:4px;color:var(--orange);text-transform:uppercase;font-weight:600}
++
++.hero-title{
++font-family:'Fraunces',serif;
++font-size:clamp(48px,13vw,84px);
++line-height:1.1;
++letter-spacing:-0.04em;
++font-weight:400;
++font-variation-settings:"opsz" 144,"SOFT" 50;
++margin-bottom:8px;
++padding-bottom:8px;
++}
++.hero-title-line{display:block;padding-bottom:4px;line-height:1.1}
++.hero-title-italic{font-style:italic;color:var(--orange);font-variation-settings:"opsz" 144,"SOFT" 100}
++
++.hero-subtitle{
++font-family:'JetBrains Mono',monospace;
++font-size:13px;
++color:var(--text-dim);
++line-height:1.7;
++max-width:380px;
++margin-top:28px;
++font-weight:400;
++}
++
++.hero-bottom{position:relative;z-index:2;animation:fade-up 1s ease 0.4s both}
++
++.hero-meta{
++display:grid;
++grid-template-columns:repeat(3,1fr);
++gap:8px;
++margin-bottom:24px;
++border-top:1px solid var(--border);
++padding-top:24px;
++}
++.hero-meta-item{font-size:9px}
++.hero-meta-label{display:block;color:var(--text-muted);letter-spacing:2px;margin-bottom:6px;text-transform:uppercase}
++.hero-meta-value{display:block;font-family:'Fraunces',serif;font-size:22px;color:var(--text);font-style:italic;line-height:1.3;padding-bottom:4px}
++
++.hero-author{display:flex;align-items:center;justify-content:space-between;font-size:11px}
++.hero-author-name{color:var(--text);font-weight:600;letter-spacing:1px}
++.hero-author-tag{color:var(--orange)}
++
++.hero-scroll{
++position:absolute;
++bottom:24px;
++left:50%;
++transform:translateX(-50%);
++font-size:9px;
++color:var(--text-dim);
++letter-spacing:3px;
++animation:scroll-pulse 2s ease-in-out infinite;
++text-transform:uppercase;
++}
++@keyframes scroll-pulse{
++0%,100%{opacity:0.4;transform:translateX(-50%) translateY(0)}
++50%{opacity:1;transform:translateX(-50%) translateY(6px)}
++}
++
++@keyframes fade-down{
++from{opacity:0;transform:translateY(-20px)}
++to{opacity:1;transform:translateY(0)}
++}
++@keyframes fade-up{
++from{opacity:0;transform:translateY(30px)}
++to{opacity:1;transform:translateY(0)}
++}
++
++.reveal{opacity:0;transform:translateY(40px);transition:opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1)}
++.reveal.visible{opacity:1;transform:translateY(0)}
++
++section{padding:60px 24px;position:relative;border-top:1px solid var(--border)}
++
++.section-header{margin-bottom:40px}
++.section-number{
++font-family:'Fraunces',serif;
++font-size:80px;
++font-style:italic;
++color:var(--orange);
++line-height:1.2;
++font-variation-settings:"opsz" 144,"SOFT" 100;
++opacity:0.4;
++margin-bottom:-20px;
++font-weight:300;
++padding-bottom:8px;
++}
++.section-eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:16px}
++.section-eyebrow-line{width:30px;height:1px;background:var(--orange)}
++.section-eyebrow-text{font-size:10px;letter-spacing:3px;color:var(--orange);text-transform:uppercase;font-weight:600}
++
++.section-title{
++font-family:'Fraunces',serif;
++font-size:clamp(36px,9vw,52px);
++line-height:1.1;
++letter-spacing:-0.03em;
++font-weight:400;
++margin-bottom:20px;
++font-variation-settings:"opsz" 144;
++padding-bottom:6px;
++}
++.section-title em{font-style:italic;color:var(--orange)}
++
++.section-lede{font-size:13px;color:var(--text-dim);line-height:1.7;max-width:380px}
++
++/* Step Card */
++.step-card{
++margin-top:32px;
++padding:28px 24px;
++background:var(--surface);
++border:1px solid var(--border);
++border-radius:14px;
++position:relative;
++overflow:hidden;
++}
++.step-card::before{
++content:'';
++position:absolute;
++top:0;left:0;
++width:3px;
++height:100%;
++background:linear-gradient(180deg,var(--orange) 0%,transparent 100%);
++}
++.step-tag{
++display:inline-block;
++font-size:9px;
++letter-spacing:2.5px;
++color:var(--orange);
++font-weight:700;
++text-transform:uppercase;
++margin-bottom:14px;
++padding:5px 10px;
++background:var(--orange-dim);
++border-radius:4px;
++}
++.step-headline{
++font-family:'Fraunces',serif;
++font-size:22px;
++line-height:1.3;
++margin-bottom:14px;
++font-weight:500;
++padding-bottom:4px;
++}
++.step-headline em{font-style:italic;color:var(--orange)}
++.step-text{
++font-size:13px;
++color:var(--text-dim);
++line-height:1.75;
++margin-bottom:16px;
++}
++.step-text strong{color:#FFFFFF;font-weight:600}
++
++.step-action{
++margin-top:18px;
++padding:14px 16px;
++background:var(--bg);
++border-radius:8px;
++border-left:2px solid var(--orange);
++}
++.step-action-label{
++font-size:9px;
++letter-spacing:2px;
++color:var(--orange);
++text-transform:uppercase;
++font-weight:600;
++margin-bottom:6px;
++}
++.step-action-text{
++font-family:'Fraunces',serif;
++font-size:14px;
++color:var(--text);
++line-height:1.5;
++font-style:italic;
++}
++
++/* Mini List */
++.mini-list{
++display:flex;
++flex-direction:column;
++gap:10px;
++margin-top:16px;
++}
++.mini-item{
++display:flex;
++align-items:flex-start;
++gap:10px;
++padding:10px 12px;
++background:var(--bg);
++border-radius:6px;
++}
++.mini-bullet{
++color:var(--orange);
++font-family:'Fraunces',serif;
++font-style:italic;
++font-weight:700;
++flex-shrink:0;
++font-size:14px;
++line-height:1.4;
++}
++.mini-text{
++font-size:12px;
++color:var(--text-dim);
++line-height:1.6;
++}
++.mini-text strong{color:var(--text);font-weight:600}
++
++/* Bridge Section */
++.bridge-section{
++background:radial-gradient(ellipse at top,#1A0A05 0%,#0A0A0A 70%);
++padding:70px 24px;
++text-align:center;
++}
++.bridge-eyebrow{
++font-size:10px;
++letter-spacing:3px;
++color:var(--orange);
++text-transform:uppercase;
++font-weight:600;
++margin-bottom:18px;
++}
++.bridge-title{
++font-family:'Fraunces',serif;
++font-size:clamp(32px,8vw,46px);
++line-height:1.15;
++letter-spacing:-0.03em;
++margin-bottom:18px;
++font-variation-settings:"opsz" 144;
++font-weight:400;
++padding-bottom:6px;
++}
++.bridge-title em{font-style:italic;color:var(--orange)}
++.bridge-text{
++font-size:13px;
++color:var(--text-dim);
++line-height:1.8;
++max-width:400px;
++margin:0 auto;
++}
++.bridge-text strong{color:var(--text);font-weight:600}
++
++/* CTA Section */
++.cta-section{
++background:linear-gradient(180deg,#1A0505 0%,#0A0A0A 100%);
++position:relative;
++overflow:hidden;
++padding:60px 24px 80px;
++border-top:none;
++}
++.cta-section::before{
++content:'';
++position:absolute;
++top:50%;left:50%;
++transform:translate(-50%,-50%);
++width:600px;height:600px;
++background:radial-gradient(circle,var(--orange-glow) 0%,transparent 70%);
++filter:blur(80px);
++animation:pulse-glow 4s ease-in-out infinite;
++}
++@keyframes pulse-glow{0%,100%{opacity:0.5}50%{opacity:1}}
++
++.cta-content{position:relative;z-index:2}
++.cta-eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:20px;justify-content:center}
++.cta-eyebrow-line{width:40px;height:1px;background:var(--orange)}
++.cta-eyebrow-text{font-size:10px;letter-spacing:3px;color:var(--orange);text-transform:uppercase;font-weight:600}
++
++.cta-title{
++font-family:'Fraunces',serif;
++font-size:clamp(38px,10vw,56px);
++line-height:1.1;
++letter-spacing:-0.03em;
++text-align:center;
++margin-bottom:16px;
++font-variation-settings:"opsz" 144;
++font-weight:400;
++padding-bottom:8px;
++}
++.cta-title em{font-style:italic;color:var(--orange)}
++
++.cta-subtitle{
++font-size:13px;
++color:var(--text-dim);
++text-align:center;
++margin-bottom:36px;
++line-height:1.7;
++max-width:340px;
++margin-left:auto;
++margin-right:auto;
++}
++
++.benefits{display:flex;flex-direction:column;gap:12px;margin-bottom:32px}
++.benefit{
++display:flex;
++gap:14px;
++align-items:flex-start;
++padding:16px 18px;
++background:rgba(255,255,255,0.03);
++border:1px solid var(--border);
++border-radius:10px;
++backdrop-filter:blur(10px);
++}
++.benefit-icon{
++width:32px;height:32px;
++flex-shrink:0;
++background:var(--orange);
++color:#0A0A0A;
++border-radius:8px;
++display:flex;
++align-items:center;
++justify-content:center;
++font-family:'Fraunces',serif;
++font-size:16px;
++font-weight:700;
++font-style:italic;
++line-height:1;
++}
++.benefit-content{flex:1}
++.benefit-title{font-family:'Fraunces',serif;font-size:16px;color:var(--text);margin-bottom:4px;font-weight:500;line-height:1.3;padding-bottom:2px}
++.benefit-text{font-size:11.5px;color:var(--text-dim);line-height:1.6}
++
++.price-box{
++margin:32px 0 20px;
++text-align:center;
++padding:24px;
++background:linear-gradient(135deg,rgba(255,107,26,0.12) 0%,rgba(255,107,26,0.06) 100%);
++border:1px solid var(--border-strong);
++border-radius:12px;
++}
++.price-box-label{
++font-size:9px;
++letter-spacing:2px;
++color:var(--orange);
++text-transform:uppercase;
++font-weight:600;
++margin-bottom:10px;
++}
++.price-box-main{
++font-family:'Fraunces',serif;
++font-size:38px;
++color:var(--text);
++font-weight:600;
++line-height:1.3;
++padding-bottom:6px;
++}
++.price-box-main em{color:var(--orange);font-style:italic}
++.price-box-sub{
++font-size:11px;
++color:var(--text-dim);
++font-family:'Fraunces',serif;
++font-style:italic;
++margin-top:6px;
++line-height:1.5;
++}
++
++.cta-btn-wrap{text-align:center;margin-bottom:18px}
++.cta-btn{
++display:inline-flex;
++align-items:center;
++gap:12px;
++padding:20px 32px;
++background:var(--orange);
++color:#0A0A0A;
++text-decoration:none;
++border-radius:12px;
++font-weight:700;
++font-size:13px;
++letter-spacing:1px;
++text-transform:uppercase;
++position:relative;
++overflow:hidden;
++transition:all 0.3s;
++box-shadow:0 10px 40px var(--orange-glow);
++}
++.cta-btn:hover{transform:translateY(-2px);box-shadow:0 15px 50px var(--orange-glow)}
++.cta-btn::before{
++content:'';
++position:absolute;
++inset:0;
++background:linear-gradient(120deg,transparent,rgba(255,255,255,0.4),transparent);
++transform:translateX(-100%);
++transition:transform 0.6s;
++}
++.cta-btn:hover::before{transform:translateX(100%)}
++.cta-btn-arrow{font-family:'Fraunces',serif;font-size:18px;font-style:italic;font-weight:400}
++
++.cta-risk{
++text-align:center;
++font-size:11px;
++color:var(--text-dim);
++font-family:'Fraunces',serif;
++font-style:italic;
++line-height:1.6;
++max-width:320px;
++margin:0 auto;
++}
++
++/* Footer */
++.footer{padding:40px 24px 30px;text-align:center;border-top:1px solid var(--border);background:#000}
++.footer-author{font-family:'Fraunces',serif;font-size:22px;margin-bottom:8px;font-weight:500;line-height:1.3;padding-bottom:2px}
++.footer-author em{color:var(--orange);font-style:italic}
++.footer-handle{font-size:11px;color:var(--orange);letter-spacing:2px;margin-bottom:24px}
++.footer-socials{display:flex;justify-content:center;gap:24px;margin-bottom:30px;font-size:10px;color:var(--text-dim);letter-spacing:1.5px;text-transform:uppercase}
++.footer-socials a{color:var(--text-dim);text-decoration:none;transition:color 0.2s}
++.footer-socials a:hover{color:var(--orange)}
++.footer-copy{font-size:9px;color:var(--text-muted);letter-spacing:2px}
++
++.progress{position:fixed;top:0;left:0;height:2px;background:var(--orange);z-index:1000;transition:width 0.1s;width:0%}
++
++@media (min-width:600px){
++section{padding:80px 40px}
++.hero{padding:40px}
++.footer{padding:60px 40px}
++.bridge-section,.cta-section{padding:80px 40px}
++}
++
++</style>
++</head>
++<body>
++
++<div class="progress" id="progress"></div>
++
++<!-- HERO -->
++<div class="hero">
++<div class="hero-bg"></div>
++
++<!-- LOGO PLACEHOLDER — Cowork: ersetzen mit echtem Oskar Marketing Logo -->
++<div class="logo-mark">O</div>
++
++<div class="hero-top">
++<span class="hero-top-label">PLAYBOOK · 2026</span>
++<span class="hero-top-year">Edition 01</span>
++</div>
++
++<div class="hero-main">
++<div class="hero-eyebrow">
++<span class="hero-eyebrow-line"></span>
++<span class="hero-eyebrow-text">Affiliate Marketing Guide</span>
++</div>
++<h1 class="hero-title">
++<span class="hero-title-line">Dein <em class="hero-title-italic">Start</em></span>
++<span class="hero-title-line">in <em class="hero-title-italic">4 Schritten</em>.</span>
++</h1>
++<p class="hero-subtitle">Ein praktisches Playbook für Anfänger die 2026 mit Affiliate Marketing starten wollen. Schritt für Schritt. Ohne Theorie. Ohne Hype.</p>
++</div>
++
++<div class="hero-bottom">
++<div class="hero-meta">
++<div class="hero-meta-item">
++<span class="hero-meta-label">Schritte</span>
++<span class="hero-meta-value">4</span>
++</div>
++<div class="hero-meta-item">
++<span class="hero-meta-label">Lesedauer</span>
++<span class="hero-meta-value">6 min</span>
++</div>
++<div class="hero-meta-item">
++<span class="hero-meta-label">Niveau</span>
++<span class="hero-meta-value">Start</span>
++</div>
++</div>
++<div class="hero-author">
++<span class="hero-author-name">OSKAR MARKETING</span>
++<span class="hero-author-tag">@oskarmarketing</span>
++</div>
++</div>
++
++<span class="hero-scroll">↓ Scrollen</span>
++</div>
++
++<!-- SCHRITT 01 — Was ist Affiliate Marketing -->
++<section>
++<div class="section-header reveal">
++<div class="section-number">01</div>
++<div class="section-eyebrow">
++<span class="section-eyebrow-line"></span>
++<span class="section-eyebrow-text">Grundlagen</span>
++</div>
++<h2 class="section-title">Was ist <em>Affiliate</em> Marketing?</h2>
++<p class="section-lede">Stell dir vor du empfiehlst einem Freund ein Restaurant. Der Inhaber gibt dir 10€ wenn dein Freund hingeht. Genau das ist Affiliate Marketing — nur online und in groß.</p>
++</div>
++
++<div class="step-card reveal">
++<span class="step-tag">▸ So funktioniert es</span>
++<div class="step-headline">Du empfiehlst — der Anbieter <em>zahlt</em>.</div>
++<div class="step-text">Du bewirbst fremde Produkte und bekommst eine Provision wenn jemand über deinen Link kauft. <strong>Keine eigenen Produkte. Kein Lager. Kein Risiko.</strong> Die Provisionen liegen typisch zwischen 5% und 50% pro Verkauf.</div>
++
++<div class="step-action">
++<div class="step-action-label">▸ Dein erster Schritt</div>
++<div class="step-action-text">"Suche dir ein Affiliate-Programm in deiner Nische — und registriere dich für deinen ersten Link."</div>
++</div>
++</div>
++</section>
++
++<!-- SCHRITT 02 — Die Nische -->
++<section>
++<div class="section-header reveal">
++<div class="section-number">02</div>
++<div class="section-eyebrow">
++<span class="section-eyebrow-line"></span>
++<span class="section-eyebrow-text">Positionierung</span>
++</div>
++<h2 class="section-title">Wähle deine <em>Nische</em>.</h2>
++<p class="section-lede">Die meisten Anfänger nehmen "Fitness" oder "Tech". Zu breit. Hier sind die echten Filter für die richtige Nische.</p>
++</div>
++
++<div class="step-card reveal">
++<span class="step-tag">▸ Der 3-Fragen-Filter</span>
++<div class="step-headline">Drei Fragen — eine <em>Antwort</em>.</div>
++<div class="step-text">Bevor du eine Nische wählst, beantworte diese drei Fragen ehrlich. <strong>Wenn alle drei "Ja" sind — du hast deine Nische gefunden.</strong></div>
++
++<div class="mini-list">
++<div class="mini-item">
++<span class="mini-bullet">1</span>
++<div class="mini-text"><strong>Kannst du 1 Stunde am Stück darüber reden ohne Notizen?</strong> Wenn nicht — andere Nische.</div>
++</div>
++<div class="mini-item">
++<span class="mini-bullet">2</span>
++<div class="mini-text"><strong>Gibt es Produkte mit 30%+ Provision in der Nische?</strong> Check vorher — sonst arbeitest du umsonst.</div>
++</div>
++<div class="mini-item">
++<span class="mini-bullet">3</span>
++<div class="mini-text"><strong>Hattest du selbst dieses Problem vor 6 Monaten?</strong> Deine eigene Erfahrung ist dein größter Vorteil.</div>
++</div>
++</div>
++
++<div class="step-action">
++<div class="step-action-label">▸ Dein zweiter Schritt</div>
++<div class="step-action-text">"Schreib drei mögliche Nischen auf — wende die 3 Fragen an — wähle die mit 3x Ja."</div>
++</div>
++</div>
++</section>
++
++<!-- SCHRITT 03 — Die Plattform -->
++<section>
++<div class="section-header reveal">
++<div class="section-number">03</div>
++<div class="section-eyebrow">
++<span class="section-eyebrow-line"></span>
++<span class="section-eyebrow-text">Reichweite</span>
++</div>
++<h2 class="section-title">Die richtige <em>Plattform</em>.</h2>
++<p class="section-lede">Du brauchst nicht alle Plattformen. Du brauchst eine — und musst sie richtig verstehen.</p>
++</div>
++
++<div class="step-card reveal">
++<span class="step-tag">▸ Start mit TikTok</span>
++<div class="step-headline">TikTok bringt dir <em>Reichweite</em> ohne Follower.</div>
++<div class="step-text">TikTok ist die einzige Plattform die einen 0-Follower-Account in einer Woche auf 10.000 Views pushen kann. <strong>Keine andere Plattform ist so anfängerfreundlich.</strong> Instagram und YouTube kommen später — wenn du eine Audience hast.</div>
++
++<div class="mini-list">
++<div class="mini-item">
++<span class="mini-bullet">▸</span>
++<div class="mini-text"><strong>Slide-Posts statt Videos.</strong> Einfacher zu produzieren, performen oft besser.</div>
++</div>
++<div class="mini-item">
++<span class="mini-bullet">▸</span>
++<div class="mini-text"><strong>Crossposting zu Instagram Reels</strong> bringt dir gratis Zusatz-Reichweite.</div>
++</div>
++</div>
++
++<div class="step-action">
++<div class="step-action-label">▸ Dein dritter Schritt</div>
++<div class="step-action-text">"Erstelle einen TikTok-Account in deiner Nische — poste in den ersten 14 Tagen täglich 2 Slide-Posts."</div>
++</div>
++</div>
++</section>
++
++<!-- SCHRITT 04 — Der Content -->
++<section>
++<div class="section-header reveal">
++<div class="section-number">04</div>
++<div class="section-eyebrow">
++<span class="section-eyebrow-line"></span>
++<span class="section-eyebrow-text">Content</span>
++</div>
++<h2 class="section-title">Der erste <em>Post</em>.</h2>
++<p class="section-lede">Jeder Post hat dieselbe Struktur. Wenn du die kennst — kannst du täglich posten ohne nachzudenken.</p>
++</div>
++
++<div class="step-card reveal">
++<span class="step-tag">▸ Die Hook-Formel</span>
++<div class="step-headline">Die ersten <em>3 Sekunden</em> entscheiden alles.</div>
++<div class="step-text">Wenn dein Hook in den ersten 3 Sekunden nicht packt — egal wie gut der Rest ist — der Zuschauer scrollt weiter. <strong>Der Hook macht 80% des Erfolgs aus.</strong></div>
++
++<div class="mini-list">
++<div class="mini-item">
++<span class="mini-bullet">▸</span>
++<div class="mini-text"><strong>Starte mit "Du" oder "Dein".</strong> "Dein Wecker klingelt um 6" schlägt jeden anderen Hook.</div>
++</div>
++<div class="mini-item">
++<span class="mini-bullet">▸</span>
++<div class="mini-text"><strong>Konkrete Zahl statt vager Behauptung.</strong> "Tag 47: 0€" schlägt "Mein erster Monat".</div>
++</div>
++<div class="mini-item">
++<span class="mini-bullet">▸</span>
++<div class="mini-text"><strong>Jede Caption endet mit Frage.</strong> Kommentare sind das stärkste Algorithmus-Signal.</div>
++</div>
++</div>
++
++<div class="step-action">
++<div class="step-action-label">▸ Dein vierter Schritt</div>
++<div class="step-action-text">"Schreibe heute deinen ersten Hook — und poste den ersten Post in den nächsten 24 Stunden."</div>
++</div>
++</div>
++</section>
++
++<!-- BRIDGE -->
++<section class="bridge-section">
++<div class="reveal">
++<div class="bridge-eyebrow">▸ Du hast jetzt die Basics</div>
++<h2 class="bridge-title">Aber wie geht es <em>weiter</em>?</h2>
++<p class="bridge-text">4 Schritte sind dein Anfang. Aber Affiliate Marketing ist mehr als die Basics. <strong>Was kommt nach dem ersten Post?</strong> Wie verkaufst du in DMs? Wann skalierst du? Welche Tools brauchst du wirklich? Das volle System bekommst du in der Affiliate Academy.</p>
++</div>
++</section>
++
++<!-- CTA -->
++<section class="cta-section">
++<div class="cta-content">
++<div class="cta-eyebrow reveal">
++<span class="cta-eyebrow-line"></span>
++<span class="cta-eyebrow-text">Der nächste Schritt</span>
++</div>
++<h2 class="cta-title reveal">Das komplette <em>System</em>.<br>Von <em>Mark Janzen</em>.</h2>
++<p class="cta-subtitle reveal">Vom ersten Setup bis zum 4-stelligen Monat. Mit täglichem Support, persönlich, ohne Bullshit.</p>
++
++<div class="benefits">
++<div class="benefit reveal">
++<div class="benefit-icon">85</div>
++<div class="benefit-content">
++<div class="benefit-title">85+ Schritt-für-Schritt Videos</div>
++<div class="benefit-text">In 8 Modulen — vom Mindset bis zum ersten Verkauf.</div>
++</div>
++</div>
++<div class="benefit reveal">
++<div class="benefit-icon">M</div>
++<div class="benefit-content">
++<div class="benefit-title">Mark's persönlicher WhatsApp-Support</div>
++<div class="benefit-text">Direkter 1:1 Zugang zu Mark — keine Assistenten.</div>
++</div>
++</div>
++<div class="benefit reveal">
++<div class="benefit-icon">∞</div>
++<div class="benefit-content">
++<div class="benefit-title">Tägliche Live-Teamcalls</div>
++<div class="benefit-text">Q&A und Live-Strategien mit Mark — fast jeden Tag.</div>
++</div>
++</div>
++<div class="benefit reveal">
++<div class="benefit-icon">350</div>
++<div class="benefit-content">
++<div class="benefit-title">Community mit 350+ Mitgliedern</div>
++<div class="benefit-text">Exklusive Gruppe mit erfahrenen Affiliates.</div>
++</div>
++</div>
++</div>
++
++<div class="price-box reveal">
++<div class="price-box-label">▸ Der Einstieg</div>
++<div class="price-box-main">Ab <em>5€</em></div>
++<div class="price-box-sub">Günstiger als ein Mittagessen — und du entscheidest selbst ob du dabei bleibst.</div>
++</div>
++
++<div class="cta-btn-wrap reveal">
++<a href="https://www.checkout-ds24.com/product/583562?aff=Bestproducts99978" class="cta-btn" target="_blank">
++<span>Jetzt für 5€ starten</span>
++<span class="cta-btn-arrow">→</span>
++</a>
++</div>
++
++<p class="cta-risk reveal">Schau dir Modul 01 an — dann entscheidest du selbst.</p>
++</div>
++</section>
++
++<!-- FOOTER -->
++<footer class="footer">
++<div class="footer-author">Oskar <em>Marketing</em></div>
++<div class="footer-handle">@OSKARMARKETING</div>
++<div class="footer-socials">
++<a href="https://tiktok.com/@oskarmarketing" target="_blank">TikTok</a>
++<a href="https://instagram.com/oskarmarketing" target="_blank">Instagram</a>
++<a href="https://youtube.com/@oskarmarketing" target="_blank">YouTube</a>
++</div>
++<div class="footer-copy">© 2026 · MADE FOR THOSE WHO BUILD</div>
++</footer>
++
++<script>
++const progress=document.getElementById('progress');
++window.addEventListener('scroll',()=>{
++const pct=(window.scrollY/(document.body.scrollHeight-window.innerHeight))*100;
++progress.style.width=pct+'%';
++});
++
++const observer=new IntersectionObserver((entries)=>{
++entries.forEach((entry,i)=>{
++if(entry.isIntersecting){
++setTimeout(()=>entry.target.classList.add('visible'),i*60);
++observer.unobserve(entry.target);
++}
++});
++},{threshold:0.15,rootMargin:'0px 0px -10% 0px'});
++
++document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
++</script>
++
++</body>
++</html>
+diff --git a/src/lib/playbookForm.ts b/src/lib/playbookForm.ts
+new file mode 100644
+index 0000000..19a2082
+--- /dev/null
++++ b/src/lib/playbookForm.ts
+@@ -0,0 +1,76 @@
++// Playbook email-capture form.
++//
++// Submits to Brevo's hosted form endpoint (action URL pasted by the user
++// after creating a Web Form in the Brevo dashboard — see docs/BREVO-SETUP.md).
++// Brevo's endpoint doesn't expose CORS headers, so we POST with no-cors
++// and accept the opaque response — the actual confirmation channel is
++// Brevo's double-opt-in email.
++//
++// If the action URL is still a placeholder, the submit is blocked
++// gracefully and a clear error is shown instead of leaking to the user.
++
++const PLACEHOLDER_ACTION = "{{BREVO_FORM_ACTION}}";
++
++export function initPlaybookForm(): void {
++  const form = document.getElementById("playbook-form") as HTMLFormElement | null;
++  if (!form) return;
++
++  const submitBtn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
++  const labelEl = submitBtn?.querySelector<HTMLElement>(".cta__label");
++  const defaultLabel = labelEl?.dataset.defaultLabel ?? labelEl?.textContent ?? "Playbook holen";
++  const successEl = form.querySelector<HTMLElement>("[data-success]");
++  const errorEl = form.querySelector<HTMLElement>("[data-error]");
++
++  const showError = (msg: string): void => {
++    if (!errorEl) return;
++    errorEl.textContent = msg;
++    errorEl.hidden = false;
++    if (successEl) successEl.hidden = true;
++  };
++
++  const showSuccess = (): void => {
++    if (successEl) successEl.hidden = false;
++    if (errorEl) errorEl.hidden = true;
++    form.reset();
++  };
++
++  const setBusy = (busy: boolean): void => {
++    if (!submitBtn || !labelEl) return;
++    submitBtn.disabled = busy;
++    labelEl.textContent = busy ? "Sende …" : defaultLabel;
++  };
++
++  form.addEventListener("submit", (e) => {
++    e.preventDefault();
++    if (errorEl) errorEl.hidden = true;
++
++    if (!form.checkValidity()) {
++      form.reportValidity();
++      return;
++    }
++
++    const action = form.action || "";
++    if (!action || action.includes(PLACEHOLDER_ACTION)) {
++      showError(
++        "Formular noch nicht konfiguriert. Schreib mir direkt: opheck@gmx.de"
++      );
++      return;
++    }
++
++    setBusy(true);
++    const body = new FormData(form);
++
++    void fetch(action, { method: "POST", body, mode: "no-cors" })
++      .then(() => {
++        showSuccess();
++      })
++      .catch(() => {
++        showError(
++          "Anmeldung gerade nicht möglich. Versuche es später nochmal oder schreib mir: opheck@gmx.de"
++        );
++      })
++      .finally(() => {
++        setBusy(false);
++      });
++  });
++}
+diff --git a/src/lib/sectionIndicator.ts b/src/lib/sectionIndicator.ts
+index 190d4ec..9fb2125 100644
+--- a/src/lib/sectionIndicator.ts
++++ b/src/lib/sectionIndicator.ts
+@@ -14,8 +14,9 @@ const SECTIONS_BIO: SectionDef[] = [
+   { selector: "#proof", num: "02", label: "Proof" },
+   { selector: "#academy", num: "03", label: "Academy" },
+   { selector: "#termin", num: "04", label: "Termin" },
+-  { selector: "#social", num: "05", label: "Channels" },
+-  { selector: "#end", num: "06", label: "Manifest" },
++  { selector: "#playbook", num: "05", label: "Playbook" },
++  { selector: "#social", num: "06", label: "Channels" },
++  { selector: "#end", num: "07", label: "Manifest" },
+ ];
+ 
+ const SECTIONS_PRO: SectionDef[] = [
+diff --git a/src/main.ts b/src/main.ts
+index 086010c..c1ee897 100644
+--- a/src/main.ts
++++ b/src/main.ts
+@@ -12,6 +12,7 @@ import { initSmoothScroll } from "./lib/smoothScroll";
+ import { runChoreography } from "./lib/choreography";
+ import { initScrollProgress } from "./lib/scrollProgress";
+ import { initBooking } from "./lib/booking";
++import { initPlaybookForm } from "./lib/playbookForm";
+ import { initCounters } from "./lib/counters";
+ import { initEasterEgg, updateDayCounter } from "./lib/easter-egg";
+ import { initEditorialHero } from "./lib/editorialHero";
+@@ -30,6 +31,7 @@ function boot(): void {
+   initMagnetic();
+   initScrollProgress();
+   initBooking();
++  initPlaybookForm();
+   initCounters();
+   initEasterEgg();
+   updateDayCounter();
+diff --git a/src/styles/hero.css b/src/styles/hero.css
+index de8984c..1ee6e7b 100644
+--- a/src/styles/hero.css
++++ b/src/styles/hero.css
+@@ -608,7 +608,7 @@
+   overflow-wrap: normal;
+ }
+ 
+-/* Bottom-right: CTA */
++/* Bottom-right: CTA (column-stacked primary + ghost) */
+ .hero--editorial .hero__cta-wrap {
+   position: absolute;
+   bottom: clamp(64px, 10vh, 120px);
+@@ -618,6 +618,10 @@
+   grid-column: unset;
+   grid-row: unset;
+   opacity: 0;
++  display: flex;
++  flex-direction: column;
++  align-items: flex-end;
++  gap: var(--s-3);
+ }
+ 
+ /* Bottom-center: scroll indicator */
+@@ -693,7 +697,10 @@
+     width: 100%;
+     padding-inline: 1.5rem;
+     display: flex;
++    flex-direction: column;
++    align-items: center;
+     justify-content: center;
++    gap: var(--s-3);
+   }
+ 
+   .hero--editorial .hero__cta-wrap .cta {
+diff --git a/src/styles/sections.css b/src/styles/sections.css
+index 8174fa0..f6146ea 100644
+--- a/src/styles/sections.css
++++ b/src/styles/sections.css
+@@ -844,3 +844,117 @@
+     font-size: var(--t-display-4xl);
+   }
+ }
++
++/* ══════════════════════════════════════════════════════════ */
++/* 05 — PLAYBOOK (lead-magnet capture)                         */
++/* ══════════════════════════════════════════════════════════ */
++.playbook {
++  padding-block: var(--s-11) var(--s-10);
++  position: relative;
++}
++
++.playbook__inner {
++  display: grid;
++  grid-template-columns: repeat(12, 1fr);
++  column-gap: var(--gutter);
++  row-gap: var(--s-9);
++}
++
++.playbook__head {
++  grid-column: 1 / span 12;
++  display: flex;
++  flex-direction: column;
++  gap: var(--s-5);
++  align-items: flex-start;
++  max-width: 720px;
++}
++
++.playbook__h {
++  font-size: var(--t-display-5xl);
++  line-height: 0.92;
++  display: flex;
++  flex-direction: column;
++  gap: var(--s-2);
++}
++
++.playbook__h .t-display-italic {
++  align-self: flex-start;
++  padding-left: clamp(20px, 6vw, 96px);
++  color: var(--gold-warm);
++}
++
++.playbook__sub {
++  color: var(--muted);
++  font-size: var(--t-body);
++  line-height: 1.55;
++  max-width: 56ch;
++}
++
++.playbook__form {
++  grid-column: 1 / span 12;
++  display: flex;
++  flex-direction: column;
++  gap: var(--s-5);
++  max-width: 560px;
++}
++
++.playbook__privacy {
++  font-size: var(--t-mono-xs);
++  color: var(--muted-low);
++  letter-spacing: 0.04em;
++  line-height: 1.6;
++}
++
++.playbook__success {
++  padding: var(--s-4) var(--s-5);
++  border-left: 2px solid var(--gold);
++  background: rgba(201, 168, 76, 0.06);
++  color: var(--gold-warm);
++  font-family: var(--font-display);
++  font-style: italic;
++  font-size: var(--t-body-lg);
++}
++
++.playbook__error {
++  padding: var(--s-3) var(--s-4);
++  border-left: 2px solid rgba(245, 87, 87, 0.7);
++  background: rgba(245, 87, 87, 0.06);
++  color: rgba(245, 200, 200, 0.92);
++  font-size: var(--t-body-sm);
++}
++
++@media (max-width: 768px) {
++  .playbook {
++    padding-block: var(--s-9);
++  }
++  .playbook__h {
++    font-size: var(--t-display-4xl);
++  }
++}
++
++/* ── Ghost CTA (subordinate hero secondary) ─────────────────── */
++.cta--ghost {
++  border: none;
++  padding: var(--s-3) 0;
++  background: transparent;
++  font-size: 10px;
++  letter-spacing: 0.22em;
++  color: var(--muted);
++  gap: var(--s-3);
++}
++
++.cta--ghost::before {
++  display: none;
++}
++
++.cta--ghost:hover {
++  color: var(--gold-warm);
++  background: transparent;
++  transform: translateX(2px);
++}
++
++.cta--ghost .cta__arrow {
++  font-family: var(--font-display);
++  font-style: italic;
++  font-size: 14px;
++}
+-- 
+2.43.0
+

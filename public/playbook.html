@@ -2,26 +2,58 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Affiliate Marketing Playbook 2026 — Oskar Marketing</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#050505">
+<meta name="color-scheme" content="dark">
+
+<title>Affiliate Marketing Playbook 2026 · oskarmarketing</title>
+<meta name="description" content="Affiliate Marketing Playbook 2026. 4 Schritte für deinen Start. Kostenlos.">
+<link rel="canonical" href="https://oskar778838.github.io/oskar-marketing/playbook.html">
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
+
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://oskar778838.github.io/oskar-marketing/playbook.html">
+<meta property="og:title" content="Affiliate Playbook · oskarmarketing">
+<meta property="og:description" content="4 Schritte für deinen Affiliate-Start. Build in Public, dokumentiert.">
+<meta property="og:image" content="./og-image.svg">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..900,30..100&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Affiliate Marketing Playbook 2026",
+  "description": "4 Schritte für den Affiliate-Start.",
+  "step": [
+    { "@type": "HowToStep", "position": 1, "name": "Was ist Affiliate Marketing?" },
+    { "@type": "HowToStep", "position": 2, "name": "Wähle deine Nische" },
+    { "@type": "HowToStep", "position": 3, "name": "Die richtige Plattform" },
+    { "@type": "HowToStep", "position": 4, "name": "Der erste Post" }
+  ]
+}
+</script>
+
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 
 :root{
---bg:#0A0A0A;
---bg-alt:#111111;
+--bg:#050505;
+--bg-alt:#0A0908;
 --surface:#1A1A1A;
 --surface-2:#222222;
 --border:rgba(255,255,255,0.08);
---border-strong:rgba(255,107,26,0.3);
+--border-strong:rgba(201,168,76,0.3);
 --text:#FAFAFA;
 --text-dim:#B0B0B0;
 --text-muted:#777777;
---orange:#FF6B1A;
---orange-light:#FF8540;
---orange-dim:rgba(255,107,26,0.1);
---orange-glow:rgba(255,107,26,0.4);
+--orange:#C9A84C;
+--orange-light:#E8C96A;
+--orange-dim:rgba(201,168,76,0.1);
+--orange-glow:rgba(201,168,76,0.4);
 }
 
 html{scroll-behavior:smooth}
@@ -45,26 +77,19 @@ mix-blend-mode:overlay;
 background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.15'/></svg>");
 }
 
-/* Logo (Cloud Placeholder) */
+/* Logo */
 .logo-mark{
 position:absolute;
 top:24px;
 right:24px;
-width:36px;
-height:36px;
-background:linear-gradient(135deg,var(--orange) 0%,var(--orange-light) 100%);
-border-radius:8px;
+width:48px;
+height:48px;
 display:flex;
 align-items:center;
 justify-content:center;
-font-family:'Fraunces',serif;
-font-size:20px;
-font-weight:700;
-font-style:italic;
-color:#0A0A0A;
 z-index:5;
-box-shadow:0 4px 20px var(--orange-glow);
 }
+.logo-mark img{width:100%;height:100%;object-fit:contain;display:block}
 
 /* Hero */
 .hero{
@@ -83,8 +108,8 @@ position:absolute;
 top:-200px;right:-200px;
 width:600px;height:600px;
 background:radial-gradient(circle,var(--orange) 0%,transparent 60%);
-filter:blur(80px);
-animation:float-orb 15s ease-in-out infinite;
+filter:blur(50px);
+animation:float-orb 25s ease-in-out infinite;
 }
 .hero-bg::after{
 content:'';
@@ -92,15 +117,15 @@ position:absolute;
 bottom:-100px;left:-100px;
 width:400px;height:400px;
 background:radial-gradient(circle,var(--orange) 0%,transparent 60%);
-filter:blur(60px);
-animation:float-orb 18s ease-in-out infinite reverse;
+filter:blur(50px);
+animation:float-orb 25s ease-in-out infinite reverse;
 }
 @keyframes float-orb{
 0%,100%{transform:translate(0,0) scale(1)}
 50%{transform:translate(40px,-40px) scale(1.1)}
 }
 
-.hero-top{display:flex;justify-content:space-between;align-items:center;position:relative;z-index:2;animation:fade-down 0.8s ease both;padding-right:50px}
+.hero-top{display:flex;justify-content:space-between;align-items:center;position:relative;z-index:2;animation:fade-down 0.8s ease both;padding-right:60px}
 .hero-top-label{font-size:10px;letter-spacing:3px;color:var(--orange);font-weight:600;text-transform:uppercase}
 .hero-top-year{font-family:'Fraunces',serif;font-size:14px;color:var(--text-dim);font-style:italic;line-height:1.4}
 
@@ -315,7 +340,7 @@ line-height:1.6;
 
 /* Bridge Section */
 .bridge-section{
-background:radial-gradient(ellipse at top,#1A0A05 0%,#0A0A0A 70%);
+background:radial-gradient(ellipse at top,#0F0908 0%,#050505 70%);
 padding:70px 24px;
 text-align:center;
 }
@@ -349,7 +374,7 @@ margin:0 auto;
 
 /* CTA Section */
 .cta-section{
-background:linear-gradient(180deg,#1A0505 0%,#0A0A0A 100%);
+background:linear-gradient(180deg,#0F0908 0%,#050505 100%);
 position:relative;
 overflow:hidden;
 padding:60px 24px 80px;
@@ -365,7 +390,7 @@ background:radial-gradient(circle,var(--orange-glow) 0%,transparent 70%);
 filter:blur(80px);
 animation:pulse-glow 4s ease-in-out infinite;
 }
-@keyframes pulse-glow{0%,100%{opacity:0.5}50%{opacity:1}}
+@keyframes pulse-glow{0%,100%{opacity:0.3}50%{opacity:0.6}}
 
 .cta-content{position:relative;z-index:2}
 .cta-eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:20px;justify-content:center}
@@ -411,7 +436,7 @@ backdrop-filter:blur(10px);
 width:32px;height:32px;
 flex-shrink:0;
 background:var(--orange);
-color:#0A0A0A;
+color:#050505;
 border-radius:8px;
 display:flex;
 align-items:center;
@@ -430,7 +455,7 @@ line-height:1;
 margin:32px 0 20px;
 text-align:center;
 padding:24px;
-background:linear-gradient(135deg,rgba(255,107,26,0.12) 0%,rgba(255,107,26,0.06) 100%);
+background:linear-gradient(135deg,rgba(201,168,76,0.12) 0%,rgba(201,168,76,0.06) 100%);
 border:1px solid var(--border-strong);
 border-radius:12px;
 }
@@ -460,14 +485,14 @@ margin-top:6px;
 line-height:1.5;
 }
 
-.cta-btn-wrap{text-align:center;margin-bottom:18px}
+.cta-btn-wrap{text-align:center;margin-bottom:12px}
 .cta-btn{
 display:inline-flex;
 align-items:center;
 gap:12px;
 padding:20px 32px;
 background:var(--orange);
-color:#0A0A0A;
+color:#050505;
 text-decoration:none;
 border-radius:12px;
 font-weight:700;
@@ -491,6 +516,19 @@ transition:transform 0.6s;
 .cta-btn:hover::before{transform:translateX(100%)}
 .cta-btn-arrow{font-family:'Fraunces',serif;font-size:18px;font-style:italic;font-weight:400}
 
+.cta-disclosure{
+margin:0 auto 18px;
+max-width:340px;
+font-family:'JetBrains Mono',monospace;
+font-size:9px;
+letter-spacing:0.2em;
+text-transform:uppercase;
+opacity:0.7;
+color:var(--orange-light);
+text-align:center;
+line-height:1.6;
+}
+
 .cta-risk{
 text-align:center;
 font-size:11px;
@@ -510,6 +548,19 @@ margin:0 auto;
 .footer-socials{display:flex;justify-content:center;gap:24px;margin-bottom:30px;font-size:10px;color:var(--text-dim);letter-spacing:1.5px;text-transform:uppercase}
 .footer-socials a{color:var(--text-dim);text-decoration:none;transition:color 0.2s}
 .footer-socials a:hover{color:var(--orange)}
+.footer-back{
+display:inline-block;
+margin-bottom:18px;
+font-family:'JetBrains Mono',monospace;
+font-size:11px;
+letter-spacing:0.2em;
+text-transform:uppercase;
+color:var(--orange-light);
+text-decoration:none;
+opacity:0.7;
+transition:opacity 180ms ease;
+}
+.footer-back:hover{opacity:1}
 .footer-copy{font-size:9px;color:var(--text-muted);letter-spacing:2px}
 
 .progress{position:fixed;top:0;left:0;height:2px;background:var(--orange);z-index:1000;transition:width 0.1s;width:0%}
@@ -531,8 +582,7 @@ section{padding:80px 40px}
 <div class="hero">
 <div class="hero-bg"></div>
 
-<!-- LOGO PLACEHOLDER — Cowork: ersetzen mit echtem Oskar Marketing Logo -->
-<div class="logo-mark">O</div>
+<div class="logo-mark"><img src="./logo.svg" alt="oskarmarketing" /></div>
 
 <div class="hero-top">
 <span class="hero-top-label">PLAYBOOK · 2026</span>
@@ -733,10 +783,10 @@ section{padding:80px 40px}
 
 <div class="benefits">
 <div class="benefit reveal">
-<div class="benefit-icon">85</div>
+<div class="benefit-icon">V</div>
 <div class="benefit-content">
-<div class="benefit-title">85+ Schritt-für-Schritt Videos</div>
-<div class="benefit-text">In 8 Modulen — vom Mindset bis zum ersten Verkauf.</div>
+<div class="benefit-title">Umfassendes Video-Curriculum</div>
+<div class="benefit-text">Mehrere Module — vom Mindset bis zum ersten Verkauf.</div>
 </div>
 </div>
 <div class="benefit reveal">
@@ -749,14 +799,14 @@ section{padding:80px 40px}
 <div class="benefit reveal">
 <div class="benefit-icon">∞</div>
 <div class="benefit-content">
-<div class="benefit-title">Tägliche Live-Teamcalls</div>
+<div class="benefit-title">Regelmäßige Live-Teamcalls</div>
 <div class="benefit-text">Q&A und Live-Strategien mit Mark — fast jeden Tag.</div>
 </div>
 </div>
 <div class="benefit reveal">
-<div class="benefit-icon">350</div>
+<div class="benefit-icon">C</div>
 <div class="benefit-content">
-<div class="benefit-title">Community mit 350+ Mitgliedern</div>
+<div class="benefit-title">Wachsende, aktive Community</div>
 <div class="benefit-text">Exklusive Gruppe mit erfahrenen Affiliates.</div>
 </div>
 </div>
@@ -769,11 +819,13 @@ section{padding:80px 40px}
 </div>
 
 <div class="cta-btn-wrap reveal">
-<a href="https://www.checkout-ds24.com/product/583562?aff=Bestproducts99978" class="cta-btn" target="_blank">
+<a href="https://www.checkout-ds24.com/product/583562?aff=Bestproducts99978" class="cta-btn" target="_blank" rel="sponsored noopener">
 <span>Jetzt für 5€ starten</span>
 <span class="cta-btn-arrow">→</span>
 </a>
 </div>
+
+<p class="cta-disclosure reveal">Werbe-Hinweis: Affiliate-Link. Ich erhalte eine Provision wenn du startest. Das kostet dich nichts extra.</p>
 
 <p class="cta-risk reveal">Schau dir Modul 01 an — dann entscheidest du selbst.</p>
 </div>
@@ -781,12 +833,13 @@ section{padding:80px 40px}
 
 <!-- FOOTER -->
 <footer class="footer">
+<a href="./" class="footer-back">← Zur Hauptseite</a>
 <div class="footer-author">Oskar <em>Marketing</em></div>
 <div class="footer-handle">@OSKARMARKETING</div>
 <div class="footer-socials">
-<a href="https://tiktok.com/@oskarmarketing" target="_blank">TikTok</a>
-<a href="https://instagram.com/oskarmarketing" target="_blank">Instagram</a>
-<a href="https://youtube.com/@oskarmarketing" target="_blank">YouTube</a>
+<a href="https://tiktok.com/@oskarmarketing" target="_blank" rel="noopener">TikTok</a>
+<a href="https://instagram.com/oskarmarketing" target="_blank" rel="noopener">Instagram</a>
+<a href="https://youtube.com/@oskarmarketing" target="_blank" rel="noopener">YouTube</a>
 </div>
 <div class="footer-copy">© 2026 · MADE FOR THOSE WHO BUILD</div>
 </footer>
@@ -811,8 +864,4 @@ document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
 </script>
 
 </body>
-<<<<<<< ours
 </html>
-=======
-</html>
->>>>>>> theirs
