@@ -23,22 +23,21 @@ export const BOOKING_API_URL: string | null = null;
 
 // ── Brevo subscribe (Playbook lead capture) ──────────────────────────
 //
-// Cloudflare Worker that forwards POST /subscribe to Brevo's double-opt-in
-// API. Full setup walkthrough: docs/BREVO-SETUP.md.
+// Full endpoint URL of the Cloudflare Worker route that forwards
+// double-opt-in subscribes to Brevo (see worker/src/worker.ts → handleSubscribe).
+// Full setup walkthrough: docs/BREVO-SETUP.md.
 //
-// To activate the form:
-//   1. cd worker && npx wrangler deploy
-//   2. Copy the deployed URL from wrangler's output, e.g.
-//        https://oskarmarketing-booking.<your-subdomain>.workers.dev
-//   3. Paste it below, REPLACING the null literal:
-//        export const SUBSCRIBE_API_URL: string | null =
-//          "https://oskarmarketing-booking.<your-subdomain>.workers.dev";
-//   4. npm run build && git push (GitHub Action redeploys Pages).
+// When to update this value:
+//   - Worker is redeployed under a different name (changes the subdomain).
+//   - Cloudflare account is migrated (changes the *.workers.dev subdomain).
+//   - You add a custom domain in front of the Worker (e.g. api.oskarmarketing.de).
+//   - The /subscribe route is renamed in worker/src/worker.ts.
 //
-// While this is null the form renders, validates locally, but on submit
-// shows the graceful "Formular noch nicht konfiguriert" message instead
-// of silently failing.
-export const SUBSCRIBE_API_URL: string | null = null;
+// Set to null while the Worker is not yet deployed — the form then renders
+// but on submit shows the graceful "Formular noch nicht konfiguriert"
+// message instead of silently failing.
+export const SUBSCRIBE_API_URL: string | null =
+  "https://oskarmarketing-booking.opheck.workers.dev/subscribe";
 
 // Slot generation rules (kept on the client so the UI is responsive even
 // when offline). The backend re-validates that a chosen slot matches one

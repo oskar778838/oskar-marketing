@@ -63,7 +63,7 @@ export function initPlaybookForm(): void {
 
     setBusy(true);
 
-    void fetch(`${SUBSCRIBE_API_URL.replace(/\/$/, "")}/subscribe`, {
+    void fetch(SUBSCRIBE_API_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
