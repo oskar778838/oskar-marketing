@@ -679,9 +679,11 @@
     transform: translateY(8px);
     /* Lift the tagline so the 4-line mono caps block clears the CTA stack
        with a guaranteed ≥32px gap regardless of viewport height.
-       calc reserves: 14vh (CTA bottom-offset) + ~120px (CTA stack incl.
-       primary + ghost + 12px internal gap) + 32px (required clearance). */
-    bottom: calc(14vh + 152px);
+       Empirically (Chrome 375-ish viewport, vh≈530): CTA wrap renders at
+       135px tall (primary 60 + gap 12 + ghost 48 + padding-bottom 24 + own
+       border quirks). 14vh + 200px reserves: 14vh CTA bottom-offset + 135
+       wrap height + 32 required clearance + ~33 safety buffer. */
+    bottom: calc(14vh + 200px);
     max-width: 100%;
     width: 100%;
     padding-inline: 1.5rem;
