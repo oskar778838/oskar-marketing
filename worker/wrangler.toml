@@ -30,7 +30,7 @@ BREVO_LIST_ID = "3"
 # Brevo DOI email template ID. Create the template in Brevo (Campaigns →
 # Templates), copy the numeric ID, paste it here. Leave at 0 to keep the
 # /subscribe endpoint disabled until the template exists.
-BREVO_DOI_TEMPLATE_ID = "0"
+BREVO_DOI_TEMPLATE_ID = "1"
 # After the user clicks the confirm link in Brevo's DOI email, Brevo redirects
 # them here.
 BREVO_REDIRECT_URL = "https://oskar778838.github.io/oskar-marketing/playbook.html?confirmed=1"
