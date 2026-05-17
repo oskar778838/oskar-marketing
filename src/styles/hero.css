@@ -91,7 +91,7 @@
 
 .hero__avatar-ring--inner {
   inset: 4px;
-  border: 0.5px solid rgba(201, 168, 76, 0.45);
+  border: 0.5px solid rgba(91, 91, 214, 0.45);
   animation: ring-rotate-ccw 7s linear infinite;
 }
 
@@ -113,8 +113,8 @@
   border-radius: 50%;
   background: radial-gradient(
     circle at 50% 50%,
-    rgba(232, 201, 106, 0.45),
-    rgba(139, 105, 20, 0.12) 60%,
+    rgba(168, 168, 255, 0.45),
+    rgba(68, 68, 184, 0.12) 60%,
     transparent 80%
   );
   filter: blur(8px);
@@ -128,7 +128,7 @@
   width: 64%;
   height: 64%;
   object-fit: contain;
-  filter: drop-shadow(0 0 8px rgba(201, 168, 76, 0.35));
+  filter: drop-shadow(0 0 8px rgba(91, 91, 214, 0.35));
   pointer-events: none;
   z-index: 2;
 }
@@ -319,7 +319,7 @@
   background: linear-gradient(
     100deg,
     transparent,
-    rgba(245, 230, 184, 0.18),
+    rgba(199, 199, 255, 0.18),
     transparent
   );
   transform: translateX(-200%) skewX(-18deg);
@@ -592,6 +592,72 @@
   flex-direction: column;
   align-items: flex-end;
   gap: var(--s-3);
+}
+
+/* ── Pivot eyebrow + subhead (Indigo-pivot copy around the H1) ────── */
+/* The eyebrow sits below the top-left meta cluster, the subhead+note
+   land below the H1 word-stack. Both fade + lift in via the existing
+   editorialHero.ts GSAP timeline, staggered with the H1 char reveal. */
+.hero--editorial .hero__pivot-eyebrow {
+  position: absolute;
+  top: clamp(76px, 14vh, 132px);
+  left: clamp(20px, 10vw, 96px);
+  z-index: 10;
+  font-family: var(--font-mono);
+  font-size: clamp(10px, 0.78vw, 12px);
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  opacity: 0;
+  white-space: nowrap;
+}
+
+.hero--editorial .hero__pivot-text {
+  position: absolute;
+  bottom: clamp(160px, 22vh, 240px);
+  left: clamp(20px, 8vw, 96px);
+  z-index: 9;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  max-width: 32ch;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.hero--editorial .hero__pivot-sub {
+  font-size: clamp(20px, 2.2vw, 32px);
+  line-height: 1.2;
+  color: var(--color-ink);
+  font-weight: 400;
+}
+
+.hero--editorial .hero__pivot-note {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(14px, 1.1vw, 18px);
+  color: var(--color-ink-muted);
+  line-height: 1.45;
+  letter-spacing: 0.005em;
+}
+
+@media (max-width: 768px) {
+  .hero--editorial .hero__pivot-eyebrow {
+    top: clamp(72px, 12vh, 100px);
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+  }
+
+  .hero--editorial .hero__pivot-text {
+    position: static;
+    margin-top: 60vh;
+    margin-inline: auto;
+    padding-inline: var(--s-5);
+    align-items: center;
+    text-align: center;
+    max-width: 36ch;
+  }
 }
 
 /* Bottom-center: scroll indicator */

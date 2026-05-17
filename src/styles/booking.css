@@ -63,7 +63,7 @@
   width: 100%;
   min-height: 720px;
   margin-top: var(--s-6);
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(14, 17, 22, 0.02);
   border: 1px solid var(--hairline);
   border-radius: 4px;
   overflow: hidden;
@@ -97,7 +97,7 @@
 .cal-skeleton__spinner {
   width: 32px;
   height: 32px;
-  border: 2px solid rgba(201, 168, 76, 0.18);
+  border: 2px solid rgba(91, 91, 214, 0.18);
   border-top-color: var(--gold);
   border-radius: 50%;
   animation: cal-spin 0.9s linear infinite;
@@ -125,7 +125,7 @@
 .termin__fallback a {
   color: var(--gold-warm);
   text-decoration: none;
-  border-bottom: 1px solid rgba(201, 168, 76, 0.3);
+  border-bottom: 1px solid rgba(91, 91, 214, 0.3);
   transition: border-color 200ms var(--ease-default);
 }
 
@@ -423,7 +423,7 @@
   padding: var(--s-3) var(--s-4);
   border-left: 2px solid rgba(245, 87, 87, 0.7);
   background: rgba(245, 87, 87, 0.06);
-  color: rgba(245, 230, 184, 0.85);
+  color: rgba(14, 17, 22, 0.85);
   font-size: var(--t-body-sm);
 }
 
