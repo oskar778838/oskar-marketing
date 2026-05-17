@@ -19,16 +19,21 @@
     <line x1="-8" y1="34" x2="8" y2="34" stroke="url(#goldGrad)" stroke-width="1.2"/>
   </g>
 
-  <!-- M letter (right): geometric with serif feet -->
+  <!-- M letter (right): geometric with serif feet.
+       Diagonals meet at y=-2 (just above center) so the outer verticals
+       dominate the lower half — reads unmistakably as M, not V. -->
   <g transform="translate(120, 100)" stroke="url(#goldGrad)" stroke-width="3" fill="none" stroke-linecap="square">
     <!-- left vertical -->
     <line x1="-22" y1="-32" x2="-22" y2="32"/>
-    <!-- left diagonal -->
-    <line x1="-22" y1="-32" x2="0" y2="14"/>
-    <!-- right diagonal -->
-    <line x1="22" y1="-32" x2="0" y2="14"/>
+    <!-- left diagonal (top-left → center) -->
+    <line x1="-22" y1="-32" x2="0" y2="-2"/>
+    <!-- right diagonal (top-right → center) -->
+    <line x1="22" y1="-32" x2="0" y2="-2"/>
     <!-- right vertical -->
     <line x1="22" y1="-32" x2="22" y2="32"/>
+    <!-- top serifs -->
+    <line x1="-30" y1="-32" x2="-14" y2="-32" stroke-width="1.2"/>
+    <line x1="14" y1="-32" x2="30" y2="-32" stroke-width="1.2"/>
     <!-- serif feet -->
     <line x1="-30" y1="32" x2="-14" y2="32" stroke-width="1.2"/>
     <line x1="14" y1="32" x2="30" y2="32" stroke-width="1.2"/>
