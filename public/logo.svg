@@ -4,8 +4,8 @@
        refined editorial palette. Cormorant-inspired serif letterforms. -->
   <defs>
     <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#E8C96A"/>
-      <stop offset="100%" stop-color="#C9A84C"/>
+      <stop offset="0%" stop-color="#A8A8FF"/>
+      <stop offset="100%" stop-color="#5B5BD6"/>
     </linearGradient>
   </defs>
 

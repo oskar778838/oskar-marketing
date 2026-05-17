@@ -1,53 +1,53 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
   <defs>
     <radialGradient id="mesh1" cx="22%" cy="28%" r="55%">
-      <stop offset="0%" stop-color="#C9A84C" stop-opacity="0.25"/>
-      <stop offset="100%" stop-color="#050505" stop-opacity="0"/>
+      <stop offset="0%" stop-color="#5B5BD6" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#F5F7F8" stop-opacity="0"/>
     </radialGradient>
     <radialGradient id="mesh2" cx="78%" cy="72%" r="50%">
-      <stop offset="0%" stop-color="#8B6914" stop-opacity="0.30"/>
-      <stop offset="100%" stop-color="#050505" stop-opacity="0"/>
+      <stop offset="0%" stop-color="#A8A8FF" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#F5F7F8" stop-opacity="0"/>
     </radialGradient>
     <linearGradient id="vignette" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#000" stop-opacity="0.5"/>
-      <stop offset="50%" stop-color="#000" stop-opacity="0"/>
-      <stop offset="100%" stop-color="#000" stop-opacity="0.6"/>
+      <stop offset="0%" stop-color="#0E1116" stop-opacity="0.08"/>
+      <stop offset="50%" stop-color="#0E1116" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#0E1116" stop-opacity="0.10"/>
     </linearGradient>
   </defs>
 
-  <rect width="1200" height="630" fill="#050505"/>
+  <rect width="1200" height="630" fill="#F5F7F8"/>
   <rect width="1200" height="630" fill="url(#mesh1)"/>
   <rect width="1200" height="630" fill="url(#mesh2)"/>
 
   <!-- editorial label -->
-  <g font-family="JetBrains Mono, monospace" font-size="14" fill="#C9A84C" letter-spacing="3">
-    <line x1="80" y1="100" x2="120" y2="100" stroke="#C9A84C" stroke-width="1"/>
+  <g font-family="JetBrains Mono, monospace" font-size="14" fill="#5B5BD6" letter-spacing="3">
+    <line x1="80" y1="100" x2="120" y2="100" stroke="#5B5BD6" stroke-width="1"/>
     <text x="135" y="105">00 / INDEX</text>
   </g>
 
   <!-- avatar ring -->
   <g transform="translate(120, 350)">
-    <circle cx="0" cy="0" r="60" fill="none" stroke="#C9A84C" stroke-width="1.4"/>
-    <circle cx="0" cy="0" r="72" fill="none" stroke="#C9A84C" stroke-width="0.5" opacity="0.4"/>
-    <circle cx="0" cy="0" r="4" fill="#E8C96A"/>
+    <circle cx="0" cy="0" r="60" fill="none" stroke="#5B5BD6" stroke-width="1.4"/>
+    <circle cx="0" cy="0" r="72" fill="none" stroke="#5B5BD6" stroke-width="0.5" opacity="0.4"/>
+    <circle cx="0" cy="0" r="4" fill="#A8A8FF"/>
   </g>
 
   <!-- name -->
-  <g font-family="Cormorant Garamond, serif" fill="#EDE9E3">
+  <g font-family="Cormorant Garamond, serif" fill="#0E1116">
     <text x="240" y="340" font-size="160" font-weight="300" letter-spacing="-4">Oskar</text>
-    <text x="380" y="490" font-size="160" font-weight="400" font-style="italic" fill="#E8C96A" letter-spacing="-2">Marketing</text>
+    <text x="380" y="490" font-size="160" font-weight="400" font-style="italic" fill="#5B5BD6" letter-spacing="-2">Marketing</text>
   </g>
 
   <!-- footer mono -->
-  <g font-family="JetBrains Mono, monospace" font-size="13" fill="rgba(237,233,227,0.55)" letter-spacing="3">
+  <g font-family="JetBrains Mono, monospace" font-size="13" fill="rgba(74,79,90,0.75)" letter-spacing="3">
     <text x="80" y="580">BUILD IN PUBLIC</text>
-    <text x="280" y="580" fill="#C9A84C">·</text>
+    <text x="280" y="580" fill="#5B5BD6">·</text>
     <text x="305" y="580">AFFILIATE MARKETING</text>
-    <text x="555" y="580" fill="#C9A84C">·</text>
-    <text x="580" y="580">TAG 14</text>
+    <text x="555" y="580" fill="#5B5BD6">·</text>
+    <text x="580" y="580">INDIGO PIVOT</text>
   </g>
 
-  <text x="1120" y="580" font-family="JetBrains Mono, monospace" font-size="13" fill="#C9A84C" text-anchor="end" letter-spacing="3">EDITION 01</text>
+  <text x="1120" y="580" font-family="JetBrains Mono, monospace" font-size="13" fill="#5B5BD6" text-anchor="end" letter-spacing="3">EDITION 01</text>
 
   <rect width="1200" height="630" fill="url(#vignette)"/>
 </svg>
