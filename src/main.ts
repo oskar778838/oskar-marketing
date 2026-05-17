@@ -6,6 +6,7 @@ import "./styles/hero.css";
 import "./styles/sections.css";
 import "./styles/booking.css";
 
+import { getBuildDay } from "./config";
 import { initCursor } from "./lib/cursor";
 import { initMagnetic } from "./lib/magnetic";
 import { initSmoothScroll } from "./lib/smoothScroll";
@@ -35,6 +36,7 @@ function boot(): void {
   initCounters();
   initEasterEgg();
   updateDayCounter();
+  writePivotDayCopy();
   initEditorialHero(lenisInstance);
   initSectionIndicator();
   initNavMenu(lenisInstance);
@@ -60,6 +62,16 @@ if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", boot, { once: true });
 } else {
   boot();
+}
+
+// Pivot eyebrow + any other [data-pivot-day] consumer gets the live Tag-N
+// value derived from PROJECT_START_DATE. Single source of truth — never
+// hard-code a Tag value in markup.
+function writePivotDayCopy(): void {
+  const tag = getBuildDay();
+  document.querySelectorAll<HTMLElement>("[data-pivot-day]").forEach((el) => {
+    el.textContent = `— TAG ${tag} / BRAND PIVOTED —`;
+  });
 }
 
 function registerServiceWorker(): void {

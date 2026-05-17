@@ -1,5 +1,7 @@
-// Konami easter egg: ↑↑↓↓←→←→ B A → invert all golds to cyan for 5s.
-// Plus a small console personality message at boot.
+// Konami easter egg: ↑↑↓↓←→←→ B A → invert all indigo accents to cyan for 5s.
+// Plus a small console personality message at boot, and the meta day-x counter.
+
+import { getBuildDay } from "../config";
 
 const CODE = [
   "ArrowUp",
@@ -61,17 +63,14 @@ function printConsoleSignature(): void {
 }
 
 /**
- * Auto-update Tag-X based on a fixed start date. Writes the day count
- * into <meta name="day-x" content="N"> for SEO/analytics freshness
- * (the visible hero tagline now shows views/wk instead).
+ * Auto-update Tag-X based on the canonical project start date. Writes the
+ * day count into <meta name="day-x" content="N"> for SEO/analytics
+ * freshness. Anchored to `PROJECT_START_DATE` in src/config.ts so the
+ * pivot eyebrow, journal LIVE marker, and proof-strip "Tage gebaut" all
+ * read the same number.
  */
-export function updateDayCounter(startISO = "2026-04-29"): void {
-  const start = new Date(startISO);
-  const today = new Date();
-  const days = Math.max(
-    0,
-    Math.floor((today.getTime() - start.getTime()) / (1000 * 60 * 60 * 24))
-  );
+export function updateDayCounter(): void {
+  const days = getBuildDay();
   let meta = document.querySelector<HTMLMetaElement>('meta[name="day-x"]');
   if (!meta) {
     meta = document.createElement("meta");

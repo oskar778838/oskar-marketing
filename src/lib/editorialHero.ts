@@ -50,6 +50,8 @@ export function initEditorialHero(_lenis: Lenis | null): EditorialHeroHandle | n
   gsap.set(".hero--editorial .hero__meta", { opacity: 0, y: -8 });
   gsap.set(".hero--editorial .hero__cta-wrap", { opacity: 0, y: 12 });
   gsap.set(".hero--editorial .hero__scroll", { opacity: 0 });
+  gsap.set(".hero--editorial .hero__pivot-eyebrow", { opacity: 0, y: -6 });
+  gsap.set(".hero--editorial .hero__pivot-text", { opacity: 0, y: 16 });
 
   const tl = gsap.timeline({ defaults: { ease: "power3.out" }, delay: 0.2 });
 
@@ -62,9 +64,34 @@ export function initEditorialHero(_lenis: Lenis | null): EditorialHeroHandle | n
     stagger: 0.1,
   }, 0.0);
 
+  // 0.3: pivot eyebrow — announces TAG-N before the H1 reveal so the
+  // viewer reads the "TAG · / BRAND PIVOTED" frame before the brand
+  // name lands.
+  tl.to(".hero--editorial .hero__pivot-eyebrow", {
+    opacity: 1,
+    y: 0,
+    duration: 0.7,
+    ease: "power2.out",
+  }, 0.3);
+
   // 0.6: cta + scroll
   tl.to(".hero--editorial .hero__cta-wrap", { opacity: 1, y: 0, duration: 0.7 }, 0.6)
     .to(".hero--editorial .hero__scroll", { opacity: 1, duration: 0.6 }, 0.8);
+
+  // 2.4: pivot subhead + note — lands after the H1 char-stagger completes
+  // (Marketing finishes ~2.2s in). Quiet entrance, the H1 stays the focal
+  // point. pointer-events flips back on once visible so links/copy are
+  // selectable.
+  tl.to(".hero--editorial .hero__pivot-text", {
+    opacity: 1,
+    y: 0,
+    duration: 0.9,
+    ease: "power2.out",
+    onStart: () => {
+      const t = document.querySelector<HTMLElement>(".hero--editorial .hero__pivot-text");
+      if (t) t.style.pointerEvents = "auto";
+    },
+  }, 2.4);
 
   // 1.2: Oskar char-by-char (60ms stagger, 1.2s duration each)
   if (oskarSplit?.chars) {
@@ -196,5 +223,9 @@ function settleStaticReveal(hero: HTMLElement): void {
     c.style.opacity = "1";
     c.style.filter = "none";
   });
+  // Pivot subhead must be interactive even in reduced-motion (CSS sets
+  // pointer-events: none until the GSAP onStart hook flips it).
+  const pivotText = hero.querySelector<HTMLElement>(".hero__pivot-text");
+  if (pivotText) pivotText.style.pointerEvents = "auto";
 }
 
