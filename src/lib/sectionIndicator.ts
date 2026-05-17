@@ -12,11 +12,13 @@ const SECTIONS_BIO: SectionDef[] = [
   { selector: "#hero", num: "00", label: "Index" },
   { selector: "#status", num: "01", label: "Status Quo" },
   { selector: "#proof", num: "02", label: "Proof" },
-  { selector: "#academy", num: "03", label: "Academy" },
-  { selector: "#termin", num: "04", label: "Termin" },
-  { selector: "#playbook", num: "05", label: "Playbook" },
-  { selector: "#social", num: "06", label: "Channels" },
-  { selector: "#end", num: "07", label: "Manifest" },
+  { selector: "#journal", num: "03", label: "Build in Public" },
+  { selector: "#academy", num: "04", label: "Das System" },
+  { selector: "#termin", num: "05", label: "Termin" },
+  { selector: "#playbook", num: "06", label: "Playbook" },
+  { selector: "#social", num: "07", label: "Channels" },
+  { selector: "#faq", num: "08", label: "FAQ" },
+  { selector: "#end", num: "09", label: "Manifest" },
 ];
 
 const SECTIONS_PRO: SectionDef[] = [

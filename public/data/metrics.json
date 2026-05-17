@@ -1,0 +1,38 @@
+{
+  "updated": "2026-05-17",
+  "metrics": [
+    {
+      "key": "views",
+      "label": "TikTok Views (60 Tage)",
+      "value": 28000,
+      "delta": null,
+      "deltaUnit": null,
+      "format": "comma"
+    },
+    {
+      "key": "profile",
+      "label": "Profile Views (60 Tage)",
+      "value": 185,
+      "delta": null,
+      "deltaUnit": null,
+      "format": "comma"
+    },
+    {
+      "key": "shipped",
+      "label": "Tage gebaut",
+      "value": 19,
+      "delta": null,
+      "deltaUnit": null,
+      "computed": "buildDay",
+      "format": "plain"
+    },
+    {
+      "key": "transparency",
+      "label": "Hardcoded Lügen",
+      "value": 0,
+      "delta": 0,
+      "deltaUnit": null,
+      "format": "plain"
+    }
+  ]
+}

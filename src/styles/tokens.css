@@ -1,30 +1,44 @@
-/* Konami easter egg — gold tones invert to cyan for 5s. */
-html.easter-egg-active {
-  --gold: #22d3ee !important;
-  --gold-warm: #67e8f9 !important;
-  --gold-deep: #0e7490 !important;
-  --pearl-rare: #cffafe !important;
-  --hairline: rgba(34, 211, 238, 0.32) !important;
-}
-
 :root {
-  /* ── Color: 4-step obsidian + gold + warm pearl ───────────── */
-  --obsidian-0: #050505;
-  --obsidian-1: #0a0908;
-  --obsidian-2: #111110;
-  --obsidian-3: #18161a;
+  /* ── NEW canonical palette: off-white snow + electric twilight indigo ── */
+  --color-base: #F5F7F8;          /* Off-White Snow */
+  --color-surface: #FAFBFC;       /* lifted surface (cards) */
+  --color-ink: #0E1116;           /* Twilight Black — primary text */
+  --color-ink-muted: #4A4F5A;     /* secondary text */
 
-  --gold: #c9a84c;
-  --gold-warm: #e8c96a;
-  --gold-deep: #8b6914;
+  --color-accent: #5B5BD6;        /* Electric Twilight — primary brand */
+  --color-accent-deep: #4444B8;   /* pressed / shadow */
+  --color-glow: #A8A8FF;          /* Periwinkle Halo — warm accent */
+  --color-glow-soft: #C7C7FF;     /* Soft Lavender — high-tier highlight */
 
-  --pearl: #ede9e3;       /* "white" — warm */
-  --pearl-rare: #f5e6b8;  /* hover-only secondary */
+  --color-line: #D6DBE2;          /* visible borders */
+  --color-line-subtle: #E8ECF1;   /* hairlines */
 
-  --muted: rgba(237, 233, 227, 0.55);
-  --muted-low: rgba(237, 233, 227, 0.35);
-  --hairline: rgba(201, 168, 76, 0.18);
-  --hairline-low: rgba(237, 233, 227, 0.08);
+  /* ── LEGACY aliases (preserve all existing var(--gold)/--pearl/--obsidian refs)
+       Re-pointing these keeps 168 references functioning while the visual
+       system inverts from dark-gold to light-indigo. New code should use
+       --color-* names directly. ─────────────────────────────────────────── */
+  --obsidian-0: var(--color-base);
+  --obsidian-1: var(--color-surface);
+  --obsidian-2: #EEF1F5;
+  --obsidian-3: var(--color-line-subtle);
+
+  --gold: var(--color-accent);
+  /* On dark theme `--gold-warm` was BRIGHTER than `--gold` (a luminous
+     accent that popped on obsidian). On a snow base the contrast axis
+     inverts: "stronger emphasis" becomes "darker", not "brighter". So
+     `--gold-warm` aliases to accent-deep — italic H1 words, stat numbers,
+     prices, and other text-emphasis stays legible (8.6:1 vs. snow). The
+     decorative periwinkle stays available as `--color-glow`. */
+  --gold-warm: var(--color-accent-deep);
+  --gold-deep: #2D2D8A;
+
+  --pearl: var(--color-ink);
+  --pearl-rare: var(--color-glow-soft);
+
+  --muted: rgba(74, 79, 90, 0.75);
+  --muted-low: rgba(74, 79, 90, 0.45);
+  --hairline: rgba(91, 91, 214, 0.22);
+  --hairline-low: rgba(14, 17, 22, 0.10);
 
   /* ── Typography ──────────────────────────────────────────── */
   --font-display: "Cormorant Garamond", "Times New Roman", Georgia, serif;
@@ -85,6 +99,15 @@ html.easter-egg-active {
   --z-nav: 80;
   --z-cursor: 100;
   --z-loader: 200;
+}
+
+/* Konami easter egg — indigo tones invert to cyan for 5s. */
+html.easter-egg-active {
+  --color-accent: #22d3ee !important;
+  --color-glow: #67e8f9 !important;
+  --color-accent-deep: #0e7490 !important;
+  --color-glow-soft: #cffafe !important;
+  --hairline: rgba(34, 211, 238, 0.32) !important;
 }
 
 @media (prefers-reduced-motion: reduce) {

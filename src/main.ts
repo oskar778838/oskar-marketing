@@ -5,7 +5,9 @@ import "./styles/nav.css";
 import "./styles/hero.css";
 import "./styles/sections.css";
 import "./styles/booking.css";
+import "./styles/journal.css";
 
+import { getBuildDay } from "./config";
 import { initCursor } from "./lib/cursor";
 import { initMagnetic } from "./lib/magnetic";
 import { initSmoothScroll } from "./lib/smoothScroll";
@@ -14,6 +16,9 @@ import { initScrollProgress } from "./lib/scrollProgress";
 import { initBooking } from "./lib/booking";
 import { initPlaybookForm } from "./lib/playbookForm";
 import { initCounters } from "./lib/counters";
+import { initProofStrip } from "./lib/proofStrip";
+import { initJournal } from "./lib/journal";
+import { initBookingGate } from "./lib/bookingGate";
 import { initEasterEgg, updateDayCounter } from "./lib/easter-egg";
 import { initEditorialHero } from "./lib/editorialHero";
 import { initSectionIndicator } from "./lib/sectionIndicator";
@@ -31,10 +36,14 @@ function boot(): void {
   initMagnetic();
   initScrollProgress();
   initBooking();
+  initBookingGate();
   initPlaybookForm();
   initCounters();
+  initProofStrip();
+  initJournal();
   initEasterEgg();
   updateDayCounter();
+  writePivotDayCopy();
   initEditorialHero(lenisInstance);
   initSectionIndicator();
   initNavMenu(lenisInstance);
@@ -60,6 +69,16 @@ if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", boot, { once: true });
 } else {
   boot();
+}
+
+// Pivot eyebrow + any other [data-pivot-day] consumer gets the live Tag-N
+// value derived from PROJECT_START_DATE. Single source of truth — never
+// hard-code a Tag value in markup.
+function writePivotDayCopy(): void {
+  const tag = getBuildDay();
+  document.querySelectorAll<HTMLElement>("[data-pivot-day]").forEach((el) => {
+    el.textContent = `— TAG ${tag} / BRAND PIVOTED —`;
+  });
 }
 
 function registerServiceWorker(): void {

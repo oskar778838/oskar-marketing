@@ -63,25 +63,7 @@
 .top-nav__trigger:hover,
 .top-nav__trigger[aria-expanded="true"] {
   border-color: var(--hairline);
-  background: rgba(10, 9, 8, 0.5);
-}
-
-.top-nav__brand-mark {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-}
-
-.top-nav__brand-mark img {
-  width: 32px;
-  height: 32px;
-  transition: transform 380ms var(--ease-default);
-}
-
-.top-nav__trigger:hover .top-nav__brand-mark img {
-  transform: rotate(180deg);
+  background: rgba(14, 17, 22, 0.04);
 }
 
 .top-nav__wordmark {
@@ -130,14 +112,14 @@
   z-index: calc(var(--z-nav) + 1);
   min-width: 280px;
   padding: var(--s-5);
-  background: rgba(8, 7, 7, 0.72);
-  backdrop-filter: blur(12px) saturate(140%);
-  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
   border: 1px solid var(--hairline);
-  /* faint gold border glow */
+  /* faint indigo border glow */
   box-shadow:
-    0 24px 64px -16px rgba(0, 0, 0, 0.65),
-    0 0 0 1px rgba(201, 168, 76, 0.06);
+    0 24px 64px -16px rgba(14, 17, 22, 0.12),
+    0 0 0 1px rgba(91, 91, 214, 0.06);
   opacity: 0;
   transform: translateY(-12px) scale(0.98);
   transform-origin: top left;

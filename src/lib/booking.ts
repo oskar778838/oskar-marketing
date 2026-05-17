@@ -78,7 +78,7 @@ function markPlaceholderState(root: HTMLElement): void {
   const banner = document.createElement("div")
   banner.className = "booking__placeholder-note t-mono"
   banner.setAttribute("role", "status")
-  banner.style.cssText = "margin: 0 0 12px; padding: 10px 14px; border:1px solid rgba(201,168,76,.35); border-radius: 8px; background: rgba(201,168,76,.06); font-size: 12px; color: var(--gold-warm); letter-spacing: .08em;"
+  banner.style.cssText = "margin: 0 0 12px; padding: 10px 14px; border:1px solid rgba(91,91,214,.35); border-radius: 8px; background: rgba(91,91,214,.06); font-size: 12px; color: var(--color-accent); letter-spacing: .08em;"
   banner.textContent = "Booking-API noch nicht aktiviert. Submit funktioniert nicht — bitte direkt opheck@gmx.de schreiben."
   root.prepend(banner)
 }

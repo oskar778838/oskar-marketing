@@ -53,17 +53,168 @@
   color: var(--gold-warm);
 }
 
+/* ── Booking stage (gate + calendar) ───────────────────── */
+.booking-stage {
+  grid-column: 1 / span 12;
+  margin-top: var(--s-6);
+}
+
+.booking-gate {
+  max-width: 640px;
+  margin-inline: auto;
+  padding: var(--s-7) var(--s-6);
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-5);
+}
+
+.booking-gate__intro {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(18px, 1.6vw, 22px);
+  color: var(--color-ink);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.booking-gate__field {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+
+.booking-gate__field legend {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--t-mono-xs);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+  margin-bottom: var(--s-3);
+  padding: 0;
+}
+
+.booking-gate__radio {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--color-line);
+  background: var(--color-base);
+  font-family: var(--font-body);
+  font-size: var(--t-body-sm);
+  color: var(--color-ink);
+  cursor: pointer;
+  transition:
+    border-color var(--d-base) var(--ease-default),
+    background var(--d-base) var(--ease-default);
+}
+
+.booking-gate__radio:hover {
+  border-color: var(--color-accent);
+}
+
+.booking-gate__radio input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid var(--color-line);
+  border-radius: 50%;
+  flex-shrink: 0;
+  position: relative;
+  cursor: pointer;
+  margin: 0;
+  background: var(--color-surface);
+  transition:
+    border-color var(--d-fast) var(--ease-default),
+    background var(--d-fast) var(--ease-default);
+}
+
+.booking-gate__radio input[type="radio"]:checked {
+  border-color: var(--color-accent);
+}
+
+.booking-gate__radio input[type="radio"]:checked::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  transform: translate(-50%, -50%);
+}
+
+.booking-gate__radio:has(input[type="radio"]:checked) {
+  border-color: var(--color-accent);
+  background: rgba(91, 91, 214, 0.04);
+}
+
+.booking-gate__textarea {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.booking-gate__textarea-label {
+  font-family: var(--font-mono);
+  font-size: var(--t-mono-xs);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+
+.booking-gate__textarea textarea {
+  width: 100%;
+  padding: var(--s-4);
+  background: var(--color-base);
+  border: 1px solid var(--color-line);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-size: var(--t-body);
+  line-height: 1.5;
+  resize: vertical;
+  min-height: 96px;
+  transition: border-color var(--d-base) var(--ease-default);
+}
+
+.booking-gate__textarea textarea::placeholder {
+  color: var(--color-ink-muted);
+  opacity: 0.6;
+}
+
+.booking-gate__textarea textarea:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}
+
+.booking-gate__honest {
+  font-family: var(--font-mono);
+  font-size: var(--t-mono-xs);
+  letter-spacing: 0.04em;
+  color: var(--color-ink-muted);
+  text-align: center;
+  font-style: italic;
+  margin: 0;
+}
+
 /* ── Cal.eu inline embed ──────────────────────────────────
    Mount container for the Cal.com iframe. Min-height defaults match the
    month_view layout so the skeleton + iframe don't reflow when Cal
    swaps them. */
 .cal-inline {
-  grid-column: 1 / span 12;
   position: relative;
   width: 100%;
   min-height: 720px;
-  margin-top: var(--s-6);
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(14, 17, 22, 0.02);
   border: 1px solid var(--hairline);
   border-radius: 4px;
   overflow: hidden;
@@ -97,7 +248,7 @@
 .cal-skeleton__spinner {
   width: 32px;
   height: 32px;
-  border: 2px solid rgba(201, 168, 76, 0.18);
+  border: 2px solid rgba(91, 91, 214, 0.18);
   border-top-color: var(--gold);
   border-radius: 50%;
   animation: cal-spin 0.9s linear infinite;
@@ -125,7 +276,7 @@
 .termin__fallback a {
   color: var(--gold-warm);
   text-decoration: none;
-  border-bottom: 1px solid rgba(201, 168, 76, 0.3);
+  border-bottom: 1px solid rgba(91, 91, 214, 0.3);
   transition: border-color 200ms var(--ease-default);
 }
 
@@ -423,7 +574,7 @@
   padding: var(--s-3) var(--s-4);
   border-left: 2px solid rgba(245, 87, 87, 0.7);
   background: rgba(245, 87, 87, 0.06);
-  color: rgba(245, 230, 184, 0.85);
+  color: rgba(14, 17, 22, 0.85);
   font-size: var(--t-body-sm);
 }
 
@@ -544,5 +695,28 @@
 
   .termin__h {
     font-size: var(--t-display-4xl);
+  }
+}
+
+@media (max-width: 480px) {
+  /* Reclaim horizontal room for the qualifying form on small phones —
+     48/32px paddings squeezed the radio rows + textarea on a 390px wide
+     viewport. */
+  .booking-gate {
+    padding: var(--s-5) var(--s-5);
+    gap: var(--s-4);
+  }
+  .booking-gate__radio {
+    padding: var(--s-3) var(--s-4);
+    /* Tap target ≥ 44px once line-height is included. */
+    min-height: 44px;
+  }
+  .booking-gate__textarea textarea {
+    min-height: 88px;
+  }
+  .cal-inline {
+    /* Phone-portrait Cal embed needs a tall mount but 720px crowded the
+       page. 640px holds the month-grid without internal scroll on iOS. */
+    min-height: 640px;
   }
 }

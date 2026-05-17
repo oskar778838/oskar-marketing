@@ -1,39 +1,24 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none" aria-hidden="true">
-  <!-- Editorial OM monogram in gold, transparent bg.
-       Adapted from oskarmarketing original (logo-original.png) to match
-       refined editorial palette. Cormorant-inspired serif letterforms. -->
+  <!-- Editorial OM monogram. Uses real text glyphs (Cormorant Garamond
+       with a generic serif fallback) so the letters remain unambiguous
+       at the small sizes the hero avatar and top-nav cluster render.
+       Earlier geometric M-from-lines version read as "V" at 40-56px. -->
   <defs>
-    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#E8C96A"/>
-      <stop offset="100%" stop-color="#C9A84C"/>
+    <linearGradient id="omGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#A8A8FF"/>
+      <stop offset="100%" stop-color="#5B5BD6"/>
     </linearGradient>
   </defs>
 
-  <!-- O letter (left): elliptical with serif terminals -->
-  <g transform="translate(48, 100)">
-    <ellipse cx="0" cy="0" rx="26" ry="34" stroke="url(#goldGrad)" stroke-width="3" fill="none"/>
-    <ellipse cx="0" cy="0" rx="14" ry="22" stroke="url(#goldGrad)" stroke-width="0.8" fill="none" opacity="0.4"/>
-    <!-- top serif -->
-    <line x1="-8" y1="-34" x2="8" y2="-34" stroke="url(#goldGrad)" stroke-width="1.2"/>
-    <!-- bottom serif -->
-    <line x1="-8" y1="34" x2="8" y2="34" stroke="url(#goldGrad)" stroke-width="1.2"/>
-  </g>
-
-  <!-- M letter (right): geometric with serif feet -->
-  <g transform="translate(120, 100)" stroke="url(#goldGrad)" stroke-width="3" fill="none" stroke-linecap="square">
-    <!-- left vertical -->
-    <line x1="-22" y1="-32" x2="-22" y2="32"/>
-    <!-- left diagonal -->
-    <line x1="-22" y1="-32" x2="0" y2="14"/>
-    <!-- right diagonal -->
-    <line x1="22" y1="-32" x2="0" y2="14"/>
-    <!-- right vertical -->
-    <line x1="22" y1="-32" x2="22" y2="32"/>
-    <!-- serif feet -->
-    <line x1="-30" y1="32" x2="-14" y2="32" stroke-width="1.2"/>
-    <line x1="14" y1="32" x2="30" y2="32" stroke-width="1.2"/>
-  </g>
-
-  <!-- Subtle center connector dot -->
-  <circle cx="100" cy="100" r="1.5" fill="url(#goldGrad)" opacity="0.5"/>
+  <text
+    x="100"
+    y="100"
+    text-anchor="middle"
+    dominant-baseline="central"
+    font-family="'Cormorant Garamond', 'Cormorant', 'Garamond', 'Times New Roman', serif"
+    font-size="120"
+    font-weight="500"
+    letter-spacing="-2"
+    fill="url(#omGrad)"
+  >OM</text>
 </svg>

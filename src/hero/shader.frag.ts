@@ -10,6 +10,7 @@ uniform float uScrollPulse;    // 0..1 short pulse on scroll events
 uniform float uSectionMix;     // 0..1 per-section visibility multiplier
 uniform vec2 uHotspot1;        // 0..1 normalised, slowly drifts
 uniform vec2 uHotspot2;        // 0..1 normalised, slowly drifts
+uniform float uJournalHue;     // 0..1, driven by Tag-N journal scroll position
 
 vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
 vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
@@ -93,38 +94,52 @@ void main() {
   float hot2 = smoothstep(0.50, 0.0, length(stAspect - h2));
   float hotMask = hot1 * 0.55 + hot2 * 0.40;
 
-  // Color stops - obsidian + 3 gold tones.
-  vec3 base = vec3(0.020, 0.020, 0.020);
-  vec3 goldDark  = vec3(0.788, 0.659, 0.298);  // #C9A84C
-  vec3 goldLight = vec3(0.910, 0.788, 0.416);  // #E8C96A
-  vec3 goldPale  = vec3(0.961, 0.902, 0.722);  // #F5E6B8
+  // Color stops — off-white snow base + 3-stop indigo ramp.
+  // Inverted from the prior obsidian-on-dark scheme: the base is now
+  // luminous and we *darken toward* the accent stops, preserving the
+  // aurora silhouette while the page reads as a light editorial canvas.
+  vec3 base       = vec3(0.961, 0.969, 0.973);   // #F5F7F8 Off-White Snow
+  vec3 twilight   = vec3(0.357, 0.357, 0.839);   // #5B5BD6 Electric Twilight
+  vec3 periwinkle = vec3(0.659, 0.659, 1.000);   // #A8A8FF Periwinkle Halo
+  vec3 lavender   = vec3(0.780, 0.780, 1.000);   // #C7C7FF Soft Lavender
 
-  // Reduced base multipliers — quieter aurora, text stays readable.
+  // Journal-driven hue ramp: 0.60 base → 1.0 when scrolled to last entry.
+  // Subtle cool-shift as the user drags through the Tag-N timeline.
+  float journalRamp = 0.6 + 0.4 * clamp(uJournalHue, 0.0, 1.0);
+
   vec3 color = base;
-  color = mix(color, goldDark,  aurora * 0.35);
-  color = mix(color, goldLight, pow(aurora, 2.5) * 0.22);
-  color = mix(color, goldPale,  pow(aurora, 6.0) * 0.12);
+  color = mix(color, twilight,   aurora * 0.18);
+  color = mix(color, periwinkle, pow(aurora, 2.0) * 0.22 * journalRamp);
+  color = mix(color, lavender,   pow(aurora, 4.0) * 0.16 * journalRamp);
 
-  // Hot-spot tint: amplifies the gold-light + gold-pale stops where masks hit.
-  color = mix(color, goldLight, hotMask * pow(aurora, 1.5) * 0.30);
-  color = mix(color, goldPale,  hotMask * pow(aurora, 4.0) * 0.18);
+  // Hot-spot tint: amplifies the periwinkle + twilight stops where masks hit.
+  color = mix(color, periwinkle, hotMask * pow(aurora, 1.5) * 0.20);
+  color = mix(color, twilight,   hotMask * pow(aurora, 4.0) * 0.14);
 
-  // Subtle vignette.
+  // ── Visibility gates ────────────────────────────────────────────────
+  // On the snow-base palette, multiplying color toward zero produces ugly
+  // mid-gray (lerping a light value into shadow). Instead, every gate
+  // mix()-es the computed color back toward 'base', so "less aurora" reads
+  // as "more snow showing through" — the correct light-theme intuition.
+
+  // Vignette: corners drift back toward base, center stays saturated.
   vec2 vigUV = st - 0.5;
-  float vignette = 1.0 - dot(vigUV, vigUV) * 0.8;
-  color *= vignette;
+  float vignette = clamp(1.0 - dot(vigUV, vigUV) * 0.8, 0.0, 1.0);
+  color = mix(base, color, vignette);
 
-  // Below 50vh of page-scroll, fade aurora out so it doesn't compete with
-  // section content. uScrollT goes 0..1 over the document.
+  // Scroll fade: as the document scrolls past the hero, the aurora
+  // recedes into the snow so it doesn't compete with section content.
   float scrollFade = 1.0 - smoothstep(0.05, 0.45, uScrollT) * 0.40;
-  color *= scrollFade;
+  color = mix(base, color, scrollFade);
 
-  // Per-section intensity multiplier. Base range 0.3..1.0 (per-section).
-  // Hero pin pushes this beyond 1.0 (up to ~1.55) for an intensified mid-pin
-  // burst — clamped here so it stays cinematic, not blown-out.
-  float mixScale = mix(0.4, 1.0, clamp(uSectionMix, 0.0, 1.0));
+  // Per-section intensity: 0.4..1.0 base range. Hero pin pushes uSectionMix
+  // beyond 1.0 (up to ~1.55) for an intensified mid-pin burst — the over-one
+  // portion lands as extra twilight saturation rather than a brightness
+  // multiplier, keeping the snow base intact at peak.
+  float mixScale = clamp(mix(0.4, 1.0, clamp(uSectionMix, 0.0, 1.0)), 0.0, 1.0);
+  color = mix(base, color, mixScale);
   float boost = max(0.0, uSectionMix - 1.0);              // 0..0.55
-  color *= mixScale + boost * 0.75;
+  color = mix(color, twilight, boost * 0.22);
 
   gl_FragColor = vec4(color, 1.0);
 }

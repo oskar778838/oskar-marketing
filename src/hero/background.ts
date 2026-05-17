@@ -40,6 +40,7 @@ export function initHeroBackground(canvas: HTMLCanvasElement) {
     uSectionMix: { value: 1.0 },
     uHotspot1: { value: new THREE.Vector2(0.3, 0.4) },
     uHotspot2: { value: new THREE.Vector2(0.7, 0.65) },
+    uJournalHue: { value: 0.0 },
   };
 
   const material = new THREE.ShaderMaterial({
@@ -47,6 +48,11 @@ export function initHeroBackground(canvas: HTMLCanvasElement) {
     vertexShader: VERTEX_SHADER,
     fragmentShader: AURORA_FRAGMENT_SHADER,
   });
+
+  // Expose uniforms on window so the journal centerpiece can write to
+  // uJournalHue without a circular import (journal.ts initializes before
+  // background.ts is lazy-loaded). Read-only contract from journal's side.
+  (window as unknown as { __auroraUniforms?: typeof uniforms }).__auroraUniforms = uniforms;
 
   const geometry = new THREE.PlaneGeometry(2, 2);
   const mesh = new THREE.Mesh(geometry, material);
@@ -92,9 +98,15 @@ export function initHeroBackground(canvas: HTMLCanvasElement) {
       hero: 1.0,
       status: 0.4,
       proof: 0.6,
+      // Journal cools the aurora — it owns the visual focus via the
+      // scrub-driven uJournalHue uniform, so the base plasma steps back.
+      journal: 0.5,
       academy: 0.35,
       termin: 0.6,
+      playbook: 0.45,
       social: 0.6,
+      // FAQ is dense reading — keep plasma quiet so summaries are scannable.
+      faq: 0.35,
       end: 0.85,
     };
     const visible = new Map<string, number>();

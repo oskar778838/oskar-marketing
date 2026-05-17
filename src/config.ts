@@ -1,3 +1,18 @@
+// ── Build-in-Public day counter ──────────────────────────────────────
+//
+// Single source of truth for the project start date — anchors every
+// "Tag N" reference in the site (hero eyebrow, journal LIVE marker,
+// shipped-days metric in the proof strip, easter-egg meta tag).
+//
+// Today's value: Math.floor((Date.now() - PROJECT_START_DATE)/86400000)+1.
+// Never hard-code a Tag-N number in copy — derive from getBuildDay().
+export const PROJECT_START_DATE = "2026-04-29";
+
+export function getBuildDay(): number {
+  const start = new Date(PROJECT_START_DATE + "T00:00:00Z").getTime();
+  return Math.max(1, Math.floor((Date.now() - start) / 86_400_000) + 1);
+}
+
 // Booking-API configuration.
 //
 // PATH C PIVOT: Wir nutzen Web3Forms statt eigenem Cloudflare-Worker.
