@@ -695,22 +695,21 @@
     width: 90vw;
   }
 
-  /* Mobile CTA wrap takes full viewport width and centers via flex.
-     No left/right anchoring — the wrap is a centering container,
-     the CTA itself stays at content width. max-width: 85vw on the
-     button prevents the label + arrow combo from clipping at 375px. */
+  /* Mobile CTA wrap: drop out of absolute positioning so the buttons live
+     in document flow BELOW .hero__pivot-text (which itself becomes static
+     with margin-top:60vh above). Prevents the previous overlap where the
+     bottom-anchored CTAs crossed the centered subhead/body-note at the
+     iPhone-14/SE width ranges. */
   .hero--editorial .hero__cta-wrap {
-    left: 0;
-    right: 0;
+    position: static;
+    left: auto;
+    right: auto;
+    bottom: auto;
     transform: none;
-    /* Clamp keeps the stack ≥96px from the viewport edge on short screens
-       (iPhone SE: 14vh = 93px → too tight) without pushing it up on tall ones. */
-    bottom: clamp(96px, 14vh, 140px);
+    margin: var(--s-7) auto 0;
     width: 100%;
     padding-inline: 1.5rem;
-    /* Extra room from the viewport edge so the ghost CTA never kisses the
-       scroll indicator beneath it. */
-    padding-bottom: 24px;
+    padding-bottom: clamp(72px, 12vh, 120px);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -721,6 +720,30 @@
   .hero--editorial .hero__cta-wrap .cta {
     max-width: 85vw;
     margin: 0 auto;
+    min-height: 44px; /* WCAG 2.1 AA tap-target */
+  }
+
+  /* Hide the scroll indicator on mobile editorial. With the CTA stack now
+     in flow, the hero is taller than the viewport and a bottom-anchored
+     scroll cue would land far below the fold — defeats its purpose. */
+  .hero--editorial .hero__scroll {
+    display: none;
+  }
+}
+
+/* iPhone-SE-and-friends (≤480px) — lift the H1 word-stack so pivot-text
+   and CTAs fit comfortably above the fold on 667px-tall screens. */
+@media (max-width: 480px) {
+  .hero--editorial .hero__word--oskar {
+    top: 22vh;
+  }
+
+  .hero--editorial .hero__word--marketing {
+    top: 36vh;
+  }
+
+  .hero--editorial .hero__pivot-text {
+    margin-top: 52vh;
   }
 }
 
