@@ -1,0 +1,38 @@
+{
+  "updated": "2026-05-17",
+  "metrics": [
+    {
+      "key": "views",
+      "label": "Views / Woche",
+      "value": 7634,
+      "delta": 12,
+      "deltaUnit": "%",
+      "format": "comma"
+    },
+    {
+      "key": "list",
+      "label": "Email-Liste",
+      "value": 142,
+      "delta": 23,
+      "deltaUnit": "neu / Wo",
+      "format": "comma"
+    },
+    {
+      "key": "shipped",
+      "label": "Tage gebaut",
+      "value": 0,
+      "delta": null,
+      "deltaUnit": null,
+      "computed": "buildDay",
+      "format": "plain"
+    },
+    {
+      "key": "honesty",
+      "label": "Hardcoded Lügen",
+      "value": 0,
+      "delta": 0,
+      "deltaUnit": null,
+      "format": "plain"
+    }
+  ]
+}

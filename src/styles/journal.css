@@ -1,0 +1,295 @@
+/* ══════════════════════════════════════════════════════════ */
+/* JOURNAL — Tag-N horizontal scroll-snap timeline.            */
+/* Awwwards centerpiece. Drags shift the aurora plasma hue via */
+/* uJournalHue uniform (see src/lib/journal.ts).               */
+/* ══════════════════════════════════════════════════════════ */
+.journal {
+  padding-block: var(--s-10) var(--s-9);
+  position: relative;
+  overflow: hidden;
+}
+
+.journal__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+  margin-bottom: var(--s-7);
+}
+
+.journal__title {
+  font-size: var(--t-display-4xl);
+  line-height: 0.95;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+  max-width: 14ch;
+}
+
+.journal__sub {
+  font-family: var(--font-mono);
+  font-size: var(--t-mono-xs);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+
+/* ── Rail: full-bleed scroll-snap, hidden scrollbar ─────── */
+.journal__rail {
+  position: relative;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  cursor: grab;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.journal__rail::-webkit-scrollbar {
+  display: none;
+}
+
+.journal__rail.is-dragging {
+  cursor: grabbing;
+  scroll-behavior: auto; /* don't smooth-scroll while dragging */
+}
+
+.journal__rail:focus {
+  outline: none;
+}
+
+.journal__rail:focus-visible {
+  outline: 2px dashed var(--color-accent);
+  outline-offset: 4px;
+}
+
+.journal__track {
+  display: flex;
+  gap: var(--s-6);
+  padding-inline: clamp(24px, 8vw, 120px);
+  padding-block: var(--s-4);
+  list-style: none;
+  margin: 0;
+}
+
+.journal-card {
+  flex: 0 0 auto;
+  width: clamp(280px, 32vw, 420px);
+  min-height: 460px;
+  scroll-snap-align: center;
+  padding: var(--s-6) var(--s-5) var(--s-5);
+  background: var(--color-surface);
+  border: 1px solid var(--color-line-subtle);
+  border-radius: 2px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+  position: relative;
+  transition:
+    border-color var(--d-base) var(--ease-default),
+    box-shadow var(--d-base) var(--ease-default),
+    transform var(--d-base) var(--ease-default);
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+.journal-card.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.journal-card:hover {
+  border-color: var(--color-accent);
+  box-shadow: 0 12px 40px -12px rgba(91, 91, 214, 0.25);
+  transform: translateY(-2px);
+}
+
+.journal-card__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-3);
+  padding-bottom: var(--s-3);
+  border-bottom: 1px solid var(--color-line-subtle);
+}
+
+.journal-card__day {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: clamp(40px, 5vw, 72px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--color-accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.journal-card__date {
+  font-family: var(--font-mono);
+  font-size: var(--t-mono-xs);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+  white-space: nowrap;
+}
+
+.journal-card__title {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(18px, 1.6vw, 24px);
+  line-height: 1.3;
+  color: var(--color-ink);
+  max-width: 32ch;
+}
+
+.journal-card__metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  gap: var(--s-3);
+  margin-top: auto;
+  padding: var(--s-4) 0 0;
+  border-top: 1px solid var(--color-line-subtle);
+  list-style: none;
+}
+
+.journal-card__metric {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.journal-card__metric-value {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(16px, 1.4vw, 20px);
+  color: var(--color-ink);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+.journal-card__metric-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+
+.journal-card__lesson {
+  font-family: var(--font-body);
+  font-size: var(--t-body-sm);
+  line-height: 1.55;
+  color: var(--color-ink-muted);
+  max-width: 36ch;
+}
+
+/* ── LIVE dot — pulses on the card matching today's build day ─── */
+.journal-card--live::after {
+  content: "LIVE";
+  position: absolute;
+  top: var(--s-4);
+  right: var(--s-4);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px 4px 16px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  color: var(--color-accent);
+  background: rgba(91, 91, 214, 0.10);
+  border: 1px solid rgba(91, 91, 214, 0.32);
+  border-radius: 99px;
+}
+
+.journal-card--live::before {
+  content: "";
+  position: absolute;
+  top: calc(var(--s-4) + 9px);
+  right: calc(var(--s-4) + 48px);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 0 0 rgba(91, 91, 214, 0.55);
+  animation: journal-live-pulse 2s var(--ease-default) infinite;
+  z-index: 1;
+}
+
+@keyframes journal-live-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(91, 91, 214, 0.55); }
+  70% { box-shadow: 0 0 0 8px rgba(91, 91, 214, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(91, 91, 214, 0); }
+}
+
+/* ── Trailing "in-Arbeit" placeholder card ─────────────────── */
+.journal-card--ghost {
+  background: transparent;
+  border: 1px dashed var(--color-line);
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.journal-card--ghost:hover {
+  border-color: var(--color-accent);
+  transform: none;
+  box-shadow: none;
+}
+
+.journal-card--ghost .journal-card__placeholder {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(18px, 1.6vw, 22px);
+  color: var(--color-ink-muted);
+  line-height: 1.4;
+  max-width: 18ch;
+}
+
+/* ── Progress bar — animates as the rail scrolls ─────────── */
+.journal__progress {
+  margin-top: var(--s-6);
+}
+
+.journal__progress-track {
+  position: relative;
+  height: 1px;
+  background: var(--color-line);
+  overflow: hidden;
+}
+
+.journal__progress-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0%;
+  background: var(--color-accent);
+  transform-origin: left center;
+  transition: width 200ms var(--ease-default);
+}
+
+/* ── Mobile: tighter padding, smaller cards ────────────── */
+@media (max-width: 768px) {
+  .journal {
+    padding-block: var(--s-9) var(--s-8);
+  }
+  .journal__title {
+    font-size: var(--t-display-3xl);
+  }
+  .journal-card {
+    width: 82vw;
+    min-height: 400px;
+  }
+  .journal__track {
+    gap: var(--s-4);
+    padding-inline: var(--s-5);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .journal-card {
+    opacity: 1;
+    transform: none;
+  }
+  .journal-card--live::before { animation: none; }
+}

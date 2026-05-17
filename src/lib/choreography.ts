@@ -223,7 +223,40 @@ export function runChoreography(): void {
     duration: 0.7,
   });
 
-  // ── Section 03 — Termin (Booking) ──────────────────────────
+  // ── Section 03 — Journal (Build in Public) ────────────────
+  splitToChars(".journal__title [data-split]");
+
+  gsap.from(".journal__title .char", {
+    scrollTrigger: {
+      trigger: ".journal__title",
+      start: "top 80%",
+      toggleActions: "play none none none",
+    },
+    y: 60,
+    opacity: 0,
+    filter: "blur(6px)",
+    duration: REVEAL_DURATION,
+    ease: EASE_REVEAL,
+    stagger: CHAR_STAGGER,
+  });
+
+  gsap.from(".journal__sub", {
+    scrollTrigger: {
+      trigger: ".journal__sub",
+      start: "top 85%",
+      toggleActions: "play none none none",
+    },
+    opacity: 0,
+    y: 12,
+    duration: 0.7,
+    delay: 0.3,
+  });
+
+  // Per-card reveal handled by IntersectionObserver in src/lib/journal.ts —
+  // ScrollTrigger would need to be re-refreshed every drag-snap which is
+  // not worth the complexity for a horizontal rail.
+
+  // ── Section 05 — Termin (Booking) ──────────────────────────
   splitToChars(".termin__h [data-split]");
 
   gsap.from(".termin__h .char", {
@@ -292,7 +325,37 @@ export function runChoreography(): void {
     stagger: REVEAL_STAGGER,
   });
 
-  // ── Section 04 — End / Manifest ────────────────────────────
+  // ── Section 08 — FAQ ───────────────────────────────────────
+  splitToChars(".faq__title [data-split]");
+
+  gsap.from(".faq__title .char", {
+    scrollTrigger: {
+      trigger: ".faq__title",
+      start: "top 80%",
+      toggleActions: "play none none none",
+    },
+    y: 60,
+    opacity: 0,
+    filter: "blur(6px)",
+    duration: REVEAL_DURATION,
+    ease: EASE_REVEAL,
+    stagger: CHAR_STAGGER,
+  });
+
+  gsap.from(".faq__item", {
+    scrollTrigger: {
+      trigger: ".faq__list",
+      start: "top 80%",
+      toggleActions: "play none none none",
+    },
+    opacity: 0,
+    y: 24,
+    duration: REVEAL_DURATION,
+    ease: EASE_REVEAL,
+    stagger: REVEAL_STAGGER,
+  });
+
+  // ── Section 09 — End / Manifest ────────────────────────────
   // Per-word direction reveal: each word enters from a different side
   // (left, right, up, down — cycled). data-dir set during splitToWords.
   gsap.set(".end__quote .word", {
