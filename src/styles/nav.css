@@ -66,24 +66,6 @@
   background: rgba(14, 17, 22, 0.04);
 }
 
-.top-nav__brand-mark {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-}
-
-.top-nav__brand-mark img {
-  width: 32px;
-  height: 32px;
-  transition: transform 380ms var(--ease-default);
-}
-
-.top-nav__trigger:hover .top-nav__brand-mark img {
-  transform: rotate(180deg);
-}
-
 .top-nav__wordmark {
   font-family: var(--font-mono);
   font-size: clamp(10px, 0.75vw, 11px);
