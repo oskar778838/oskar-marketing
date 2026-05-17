@@ -40,6 +40,7 @@ export function initHeroBackground(canvas: HTMLCanvasElement) {
     uSectionMix: { value: 1.0 },
     uHotspot1: { value: new THREE.Vector2(0.3, 0.4) },
     uHotspot2: { value: new THREE.Vector2(0.7, 0.65) },
+    uJournalHue: { value: 0.0 },
   };
 
   const material = new THREE.ShaderMaterial({
