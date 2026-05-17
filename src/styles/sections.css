@@ -1222,7 +1222,11 @@
    while staying subordinate to the primary Academy CTA. */
 .cta--ghost {
   border: 1px solid rgba(91, 91, 214, 0.3);
-  padding: 12px 24px;
+  padding: 14px 24px;
+  /* Apple/Android tap-target floor. The ghost CTA appears in the hero
+     stack on mobile next to the primary CTA — 34px-ish was uncomfortable
+     to hit on touch. */
+  min-height: 44px;
   background: transparent;
   font-size: 10px;
   letter-spacing: 0.22em;

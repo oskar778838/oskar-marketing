@@ -697,3 +697,26 @@
     font-size: var(--t-display-4xl);
   }
 }
+
+@media (max-width: 480px) {
+  /* Reclaim horizontal room for the qualifying form on small phones —
+     48/32px paddings squeezed the radio rows + textarea on a 390px wide
+     viewport. */
+  .booking-gate {
+    padding: var(--s-5) var(--s-5);
+    gap: var(--s-4);
+  }
+  .booking-gate__radio {
+    padding: var(--s-3) var(--s-4);
+    /* Tap target ≥ 44px once line-height is included. */
+    min-height: 44px;
+  }
+  .booking-gate__textarea textarea {
+    min-height: 88px;
+  }
+  .cal-inline {
+    /* Phone-portrait Cal embed needs a tall mount but 720px crowded the
+       page. 640px holds the month-grid without internal scroll on iOS. */
+    min-height: 640px;
+  }
+}
