@@ -122,17 +122,6 @@
   pointer-events: none;
 }
 
-.hero__avatar-logo {
-  position: absolute;
-  inset: 18%;
-  width: 64%;
-  height: 64%;
-  object-fit: contain;
-  filter: drop-shadow(0 0 8px rgba(91, 91, 214, 0.35));
-  pointer-events: none;
-  z-index: 2;
-}
-
 @keyframes ring-rotate-cw {
   from { transform: rotate(0deg); }
   to   { transform: rotate(360deg); }
@@ -523,11 +512,6 @@
   align-self: auto;
   opacity: 1;
   transform: none;
-}
-
-.hero--editorial .hero__meta--tl .hero__avatar-logo {
-  width: 60%;
-  height: 60%;
 }
 
 /* Center-mass: independent absolutely-positioned word-blocks */
