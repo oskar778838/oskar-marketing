@@ -108,13 +108,13 @@ void main() {
   float journalRamp = 0.6 + 0.4 * clamp(uJournalHue, 0.0, 1.0);
 
   vec3 color = base;
-  color = mix(color, twilight,   aurora * 0.18);
-  color = mix(color, periwinkle, pow(aurora, 2.0) * 0.22 * journalRamp);
-  color = mix(color, lavender,   pow(aurora, 4.0) * 0.16 * journalRamp);
+  color = mix(color, twilight,   aurora * 0.28);
+  color = mix(color, periwinkle, pow(aurora, 2.0) * 0.34 * journalRamp);
+  color = mix(color, lavender,   pow(aurora, 4.0) * 0.25 * journalRamp);
 
   // Hot-spot tint: amplifies the periwinkle + twilight stops where masks hit.
-  color = mix(color, periwinkle, hotMask * pow(aurora, 1.5) * 0.20);
-  color = mix(color, twilight,   hotMask * pow(aurora, 4.0) * 0.14);
+  color = mix(color, periwinkle, hotMask * pow(aurora, 1.5) * 0.31);
+  color = mix(color, twilight,   hotMask * pow(aurora, 4.0) * 0.22);
 
   // ── Visibility gates ────────────────────────────────────────────────
   // On the snow-base palette, multiplying color toward zero produces ugly
