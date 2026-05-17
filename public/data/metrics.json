@@ -3,31 +3,31 @@
   "metrics": [
     {
       "key": "views",
-      "label": "Views / Woche",
-      "value": 7634,
-      "delta": 12,
-      "deltaUnit": "%",
+      "label": "TikTok Views (60 Tage)",
+      "value": 28000,
+      "delta": null,
+      "deltaUnit": null,
       "format": "comma"
     },
     {
-      "key": "list",
-      "label": "Email-Liste",
-      "value": 142,
-      "delta": 23,
-      "deltaUnit": "neu / Wo",
+      "key": "profile",
+      "label": "Profile Views (60 Tage)",
+      "value": 185,
+      "delta": null,
+      "deltaUnit": null,
       "format": "comma"
     },
     {
       "key": "shipped",
       "label": "Tage gebaut",
-      "value": 0,
+      "value": 19,
       "delta": null,
       "deltaUnit": null,
       "computed": "buildDay",
       "format": "plain"
     },
     {
-      "key": "honesty",
+      "key": "transparency",
       "label": "Hardcoded Lügen",
       "value": 0,
       "delta": 0,

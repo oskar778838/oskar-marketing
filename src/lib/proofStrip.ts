@@ -91,6 +91,10 @@ function render(
 
 function renderDelta(m: Metric): string {
   if (m.delta === null) return "";
+  // Empty-delta guard: a chip with no unit and no movement ("±0") is
+  // pure visual noise — used by the "Hardcoded Lügen" brand-wink
+  // metric where value is 0 and stays 0. Suppress the chip.
+  if (m.delta === 0 && !m.deltaUnit) return "";
   const sign = m.delta > 0 ? "+" : m.delta < 0 ? "−" : "±";
   const tone =
     m.delta > 0 ? "is-up" : m.delta < 0 ? "is-down" : "is-flat";
