@@ -11,10 +11,13 @@ tree or `package.json` belongs there, not here.
 - GitHub Pages deploy (push to `main` → Action builds with `VITE_BASE=/<repo>/`)
 
 ## Brand
-- Background: `#050505` (obsidian)
-- Gold: `#C9A84C` / `#E8C96A`
+- Background: `#F5F7F8` (Off-White Snow)
+- Accent: `#5B5BD6` Electric Twilight · `#A8A8FF` Periwinkle Halo (decorative only)
+- Text: `#0E1116` Twilight Black
+- Canonical tokens: `--color-base` / `--color-accent` / `--color-ink` etc. in `src/styles/tokens.css`.
+  Legacy `--gold` / `--pearl` / `--obsidian-*` names still resolve via aliases — keep working but new code uses `--color-*`.
 - Fonts: Cormorant Garamond + JetBrains Mono
-- Tonality: Build-in-Public, anti-Hype, ehrlich
+- Tonality: Build-in-Public, anti-Hype, ehrlich · pivot from Tate/Gadzhi-coded gold-cluster to premium-tech indigo (Tag 19, see brand-pivot commits)
 
 ## Architecture
 - `index.html` — bio page with sections
@@ -33,4 +36,4 @@ tree or `package.json` belongs there, not here.
 ## Operating Notes
 - Setup walkthrough for the Brevo + Worker pipeline: [`docs/BREVO-SETUP.md`](docs/BREVO-SETUP.md).
 - DOI email template: [`docs/brevo-doi-template.html`](docs/brevo-doi-template.html).
-- Status copy ("Tag 14") reflects real Build-in-Public metrics — **never** invent numbers.
+- Status copy ("Tag N") is derived from `getBuildDay()` in `src/config.ts` (anchored to `PROJECT_START_DATE = "2026-04-29"`). The hero pivot eyebrow, journal LIVE marker, and proof-strip "Tage gebaut" all read the same number. **Never** invent numbers and **never** hard-code a Tag value in copy, markup, or this document — derive from the helper instead.
