@@ -557,9 +557,11 @@
 }
 
 .hero--editorial .hero__word--marketing {
-  top: 48vh;
+  top: 46vh;
   right: clamp(20px, 6vw, 96px);
-  font-size: clamp(72px, 14vw, 220px);
+  /* Capped at 188px (was 220px, ~15% reduction) so the italic g/i
+     descenders never clip the CTA cluster on 1440×900 or 1920×1080. */
+  font-size: clamp(64px, 12vw, 188px);
   letter-spacing: 0.01em;
   color: var(--gold-warm);
   /* Negative top-margin so it visually crosses Oskar's baseline */
