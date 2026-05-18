@@ -7,6 +7,28 @@
   Brevo substitutes it with the signed confirmation URL automatically
   when the template is rendered via the /v3/contacts/doubleOptinConfirmation
   endpoint. The hyphen-underscore mix is Brevo's documented spelling.
+
+  ── DELIVERABILITY NOTES (funnel-fix sprint, see git log) ────────
+  Yesterday's lead reported the DOI mail landed in spam. Causes:
+    1. Sender (opheck@gmx.de) has no DKIM/SPF/DMARC for the *Brevo*
+       sending domain yet — see outputs/EMAIL-DELIVERABILITY-CHECKLIST.md.
+    2. Default Brevo "Code your own" templates don't ship a strong
+       preheader. Updated below.
+    3. No inline base64 images — confirmed clean (no img tags
+       present). Keep it that way; ESP filters punish base64 weight.
+    4. Brevo auto-generates a plain-text alternative from the HTML
+       body. The HTML below is intentionally readable as plain text
+       (no decorative-only chrome that breaks the text version).
+-->
+<!--
+  Brevo template settings (manual, in Brevo UI):
+    From name      : Oskar
+    From email     : opheck@oskarmarketing.de   ← must match SPF/DKIM
+    Reply-to       : opheck@gmx.de
+    Subject        : Bitte bestätige deine Anmeldung · Playbook
+    Preheader      : (defined inline below — leave the Brevo field empty)
+    After confirm  : https://oskarmarketing.de/playbook.html
+    List-Unsubscribe: enabled (Brevo handles this automatically)
 -->
 <html lang="de">
   <head>
@@ -25,7 +47,11 @@
       -webkit-font-smoothing: antialiased;
     "
   >
-    <!-- Preheader (hidden, shows as preview snippet in inbox) -->
+    <!--
+      Preheader (hidden, shows as preview snippet in inbox).
+      Length 85-110 chars is the inbox sweet spot — too short and the
+      client pads with body text, too long and it gets cut off mid-word.
+    -->
     <div
       style="
         display: none;
@@ -37,8 +63,22 @@
         opacity: 0;
       "
     >
-      Ein Klick und das Playbook ist unterwegs. Ohne Bestätigung schicken
-      wir nichts.
+      Ein Klick auf den Button und das Affiliate Playbook 2026 ist
+      unterwegs — kein Spam, kein Verkauf, einfach das Dokument.
+    </div>
+    <!-- Spacer chars so the inbox client doesn't pull random body text into the preview line. -->
+    <div
+      style="
+        display: none;
+        max-height: 0;
+        overflow: hidden;
+        font-size: 1px;
+        line-height: 1px;
+        color: #f4f1ec;
+        opacity: 0;
+      "
+    >
+      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;
     </div>
 
     <table
@@ -220,9 +260,15 @@
                 <p style="margin: 0 0 6px 0">
                   Oskar Marketing · opheck@gmx.de
                 </p>
-                <p style="margin: 0">
+                <p style="margin: 0 0 10px 0">
                   DSGVO: Du kannst dich jederzeit mit einem Klick wieder
                   austragen.
+                </p>
+                <p style="margin: 0; color: #aaa; font-size: 10px; line-height: 1.55;">
+                  Build in Public · Sender-Authentifizierung
+                  (SPF/DKIM/DMARC) ist gerade in Setup. Falls die Mail
+                  im Spam landet — einmal als &bdquo;Nicht Spam&ldquo;
+                  markieren hilft mir bei der Zustellbarkeit.
                 </p>
               </td>
             </tr>
