@@ -30,10 +30,10 @@ jobs:
 
       - name: Build
         env:
-          # Sets Vite's `base` so asset URLs resolve when the site is served
-          # from a GitHub Pages user-subpath (e.g. /<repo>/). For a custom
-          # domain you can override this in Settings → Variables to "/".
-          VITE_BASE: /${{ github.event.repository.name }}/
+          # Site serves from custom domain (oskarmarketing.de) at root.
+          # If you ever revert to the GitHub Pages user-subpath, set this
+          # back to `/${{ github.event.repository.name }}/`.
+          VITE_BASE: /
         run: npm run build
 
       - name: Ensure .nojekyll

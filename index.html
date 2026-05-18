@@ -11,11 +11,11 @@
       name="description"
       content="Build in Public, neu gedacht. Off-White, Electric Indigo, echte Zahlen. Affiliate-Marketing das nicht aussieht wie Affiliate-Marketing."
     />
-    <link rel="canonical" href="https://oskar778838.github.io/oskar-marketing/" />
+    <link rel="canonical" href="https://oskarmarketing.de/" />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://oskar778838.github.io/oskar-marketing/" />
+    <meta property="og:url" content="https://oskarmarketing.de/" />
     <meta property="og:title" content="Oskar Marketing — Affiliate-Marketing, neu gedacht." />
     <meta
       property="og:description"
@@ -76,6 +76,46 @@
   </head>
 
   <body>
+    <!--
+      TikTok in-app browser escape banner.
+      ─────────────────────────────────────
+      TikTok's in-app webview blocks parts of WebGL / Three.js, crashes
+      audio contexts and (most importantly yesterday) silently drops the
+      Brevo subscribe POST — lead lost. Detect the in-app UA and surface
+      a one-line instruction so the visitor can pop into the system
+      browser. Same logic applies to Instagram (FBAN/FBAV/Instagram UA).
+    -->
+    <script>
+      (function () {
+        var ua = (navigator.userAgent || "") + " " + (navigator.vendor || "");
+        var inApp =
+          /TikTok/i.test(ua) ||
+          /musical_ly|musically/i.test(ua) ||
+          /Instagram/i.test(ua) ||
+          /\bFBAN\b|\bFBAV\b/.test(ua);
+        if (!inApp) return;
+        var bar = document.createElement("div");
+        bar.setAttribute("role", "status");
+        bar.style.cssText = [
+          "position:relative",
+          "z-index:9999",
+          "background:#0E1116",
+          "color:#F5F7F8",
+          "padding:12px 16px",
+          "text-align:center",
+          "font-family:'JetBrains Mono',ui-monospace,monospace",
+          "font-size:13px",
+          "letter-spacing:0.02em",
+          "line-height:1.45",
+          "border-bottom:1px solid rgba(91,91,214,0.5)"
+        ].join(";");
+        bar.innerHTML =
+          'Tipp: oben rechts <strong style="color:#A8A8FF">⋯</strong> &rarr; ' +
+          '<strong style="color:#A8A8FF">"In Browser öffnen"</strong> — sonst funktionieren Animationen und Formular nicht.';
+        document.body.insertBefore(bar, document.body.firstChild);
+      })();
+    </script>
+
     <!-- Loader overlay — fades out via JS once boot() completes. -->
     <div id="loader" class="loader" data-loader>
       <span class="loader__mark" aria-hidden="true">

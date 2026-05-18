@@ -115,7 +115,7 @@ function sendVisitorEmail(env: Env, args: NotifyArgs): Promise<void> {
     ``,
     `--`,
     `oskarmarketing`,
-    `https://oskar778838.github.io/oskar-marketing/`,
+    `https://oskarmarketing.de/`,
   ].join("\n");
   const html = `
     <div style="font-family:Helvetica,Arial,sans-serif;max-width:560px;margin:0 auto;padding:24px;color:#111;">
@@ -126,7 +126,7 @@ function sendVisitorEmail(env: Env, args: NotifyArgs): Promise<void> {
          Wenn etwas dazwischen kommt, antworte einfach auf diese Mail.</p>
       <p>Bis dann,<br>Oskar</p>
       <hr style="margin:24px 0;border:0;border-top:1px solid #eee;">
-      <p style="font-size:12px;color:#888;">oskarmarketing · <a href="https://oskar778838.github.io/oskar-marketing/" style="color:#888;">Bio</a></p>
+      <p style="font-size:12px;color:#888;">oskarmarketing · <a href="https://oskarmarketing.de/" style="color:#888;">Bio</a></p>
     </div>
   `;
   return resendSend(env, {

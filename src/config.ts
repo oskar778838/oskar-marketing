@@ -1,3 +1,25 @@
+// ── Site base URL (custom-domain ready) ──────────────────────────────
+//
+// Single source of truth for the public origin of the site. Read this
+// instead of hard-coding "oskar778838.github.io/oskar-marketing" or
+// "oskarmarketing.de" — the value flips automatically once the custom
+// domain DNS propagates and the browser starts loading the site from
+// the apex domain.
+//
+// Dev (vite dev server)        → "" (relative paths)
+// Prod, github.io fallback     → "https://oskar778838.github.io/oskar-marketing"
+// Prod, custom domain live     → "https://oskarmarketing.de"
+//
+// Detection runs at runtime so the same built bundle works on both
+// hosts during the DNS-propagation window.
+export const SITE_BASE: string = (() => {
+  if (!import.meta.env.PROD) return "";
+  if (typeof window === "undefined") return "https://oskarmarketing.de";
+  return window.location.hostname === "oskarmarketing.de"
+    ? "https://oskarmarketing.de"
+    : "https://oskar778838.github.io/oskar-marketing";
+})();
+
 // ── Build-in-Public day counter ──────────────────────────────────────
 //
 // Single source of truth for the project start date — anchors every
