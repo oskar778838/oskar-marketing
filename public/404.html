@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#F5F7F8" />
+    <meta name="color-scheme" content="light" />
+    <meta name="robots" content="noindex,follow" />
+
+    <title>Seite nicht gefunden · oskarmarketing</title>
+    <meta name="description" content="Die gesuchte Seite existiert nicht. Wir leiten dich zur Startseite weiter." />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,400&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@300;400&display=swap"
+    />
+
+    <style>
+      :root {
+        --color-base: #F5F7F8;
+        --color-base-1: #FAFBFC;
+        --color-accent: #5B5BD6;
+        --color-accent-warm: #4444B8;
+        --color-ink: #0E1116;
+        --color-muted: rgba(74, 79, 90, 0.75);
+        --color-hairline: rgba(91, 91, 214, 0.22);
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html,
+      body {
+        background: var(--color-base);
+        color: var(--color-ink);
+        font-family: "DM Sans", system-ui, sans-serif;
+        font-size: 16px;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        min-height: 100vh;
+      }
+
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(24px, 5vw, 64px);
+      }
+
+      .wrap {
+        max-width: 560px;
+        text-align: center;
+      }
+
+      .eyebrow {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 11px;
+        letter-spacing: 0.25em;
+        text-transform: uppercase;
+        color: var(--color-accent);
+        margin-bottom: 32px;
+      }
+
+      h1 {
+        font-family: "Cormorant Garamond", serif;
+        font-weight: 300;
+        font-size: clamp(56px, 14vw, 128px);
+        line-height: 0.95;
+        letter-spacing: -0.02em;
+        margin-bottom: 8px;
+        color: var(--color-ink);
+      }
+
+      h1 em {
+        font-style: italic;
+        color: var(--color-accent);
+        font-weight: 300;
+      }
+
+      .lede {
+        font-family: "Cormorant Garamond", serif;
+        font-weight: 400;
+        font-size: clamp(20px, 3vw, 26px);
+        line-height: 1.35;
+        margin-top: 24px;
+        margin-bottom: 12px;
+        color: var(--color-ink);
+      }
+
+      .redirect-note {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 12px;
+        letter-spacing: 0.05em;
+        color: var(--color-muted);
+        margin-top: 32px;
+        margin-bottom: 32px;
+        min-height: 1.6em;
+      }
+
+      .redirect-note[data-state="redirecting"] {
+        color: var(--color-accent-warm);
+      }
+
+      .actions {
+        display: flex;
+        gap: 16px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 40px;
+      }
+
+      a.btn {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 12px;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-ink);
+        background: transparent;
+        border: 1px solid var(--color-hairline);
+        padding: 14px 24px;
+        text-decoration: none;
+        transition: border-color 0.2s, color 0.2s;
+      }
+
+      a.btn:hover {
+        border-color: var(--color-accent);
+        color: var(--color-accent-warm);
+      }
+
+      a.btn--primary {
+        background: var(--color-accent);
+        color: var(--color-base);
+        border-color: var(--color-accent);
+      }
+
+      a.btn--primary:hover {
+        background: var(--color-accent-warm);
+        border-color: var(--color-accent-warm);
+        color: var(--color-base);
+      }
+
+      footer {
+        position: fixed;
+        bottom: 24px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--color-muted);
+      }
+    </style>
+  </head>
+
+  <body>
+    <main class="wrap">
+      <p class="eyebrow">Error · 404</p>
+      <h1>Seite <em>nicht</em><br />gefunden.</h1>
+      <p class="lede">
+        Die URL existiert nicht — vielleicht ein Tippfehler oder
+        ein alter Link.
+      </p>
+      <p class="redirect-note" id="redirect-note" aria-live="polite">
+        &nbsp;
+      </p>
+      <div class="actions">
+        <a class="btn btn--primary" href="/" id="home-link">Zur Startseite</a>
+        <a class="btn" href="/playbook.html">Playbook</a>
+      </div>
+    </main>
+
+    <footer>oskarmarketing · Build in Public</footer>
+
+    <script>
+      // Path-canonicalisation: catch common typos and redirect to the
+      // correct page. Only runs after GitHub Pages has already served
+      // this file (i.e. the requested URL was a true 404).
+      (function () {
+        var path = window.location.pathname.replace(/\/+$/, "").toLowerCase();
+        var note = document.getElementById("redirect-note");
+
+        var redirects = {
+          "/playbook": "/playbook.html",
+          "/playbook/": "/playbook.html",
+          "/home": "/",
+          "/index": "/",
+          "/start": "/",
+          "/pro": "/pro/",
+          "/impressum": "/impressum.html",
+          "/datenschutz": "/datenschutz.html",
+          "/privacy": "/datenschutz.html",
+          "/legal": "/impressum.html",
+          // GitHub Pages subpath leftovers (in case a TikTok/IG link
+          // still points at the old /oskar-marketing/* paths after the
+          // custom domain goes live).
+          "/oskar-marketing": "/",
+          "/oskar-marketing/playbook": "/playbook.html",
+          "/oskar-marketing/playbook.html": "/playbook.html",
+          "/oskar-marketing/pro": "/pro/",
+          "/oskar-marketing/impressum.html": "/impressum.html",
+          "/oskar-marketing/datenschutz.html": "/datenschutz.html"
+        };
+
+        var target = redirects[path];
+        if (target && target !== window.location.pathname) {
+          note.textContent = "Weiterleitung → " + target;
+          note.setAttribute("data-state", "redirecting");
+          setTimeout(function () {
+            window.location.replace(target);
+          }, 800);
+          return;
+        }
+
+        // No matching redirect — leave the user on the 404 page with the
+        // explicit CTAs above. Add a small console note for debugging.
+        if (window.console && console.info) {
+          console.info("[404] no redirect for path: " + path);
+        }
+      })();
+    </script>
+  </body>
+</html>
