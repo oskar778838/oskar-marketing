@@ -8,7 +8,7 @@ tree or `package.json` belongs there, not here.
 - Vite + TypeScript + Three.js + GSAP + Lenis
 - Cloudflare Worker for backend calls (`worker/`)
 - Brevo for email + DOI flow
-- GitHub Pages deploy (push to `main` → Action builds with `VITE_BASE=/<repo>/`)
+- GitHub Pages deploy (push to `main` → Action builds with `VITE_BASE=/`, serves at `oskarmarketing.de` — custom domain pinned via `public/CNAME`)
 
 ## Brand
 - Background: `#F5F7F8` (Off-White Snow)
