@@ -9,6 +9,7 @@ import "./styles/nav.css";
 import "./styles/hero.css";
 import "./styles/sections.css";
 import "./styles/booking.css";
+import "./styles/pro-glass.css";
 
 import { initCursor } from "./lib/cursor";
 import { initMagnetic } from "./lib/magnetic";

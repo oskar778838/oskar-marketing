@@ -1,0 +1,113 @@
+/* ──────────────────────────────────────────────────────────────
+   Pro-page frosted glass (visionOS-style).
+   Three variants, applied as additive utility classes so we don't
+   touch the shared .booking / .track / .proof__item rules used by
+   the bio page.
+
+   Performance: cap of 5 glass elements per page. .proof__item gets
+   glass ONLY in #warum (3 cards). The 7 items in #fit stay editorial.
+   ────────────────────────────────────────────────────────────── */
+
+.glass-heavy {
+  background: rgba(245, 247, 248, 0.6);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(91, 91, 214, 0.18);
+  border-radius: 16px;
+  box-shadow:
+    0 8px 32px rgba(14, 17, 22, 0.06),
+    0 1px 0 rgba(255, 255, 255, 0.8) inset;
+  padding: 32px;
+}
+
+.glass-subtle {
+  background: rgba(250, 251, 252, 0.5);
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+  border: 1px solid rgba(214, 219, 226, 0.6);
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(14, 17, 22, 0.04);
+  padding: 24px;
+}
+
+.glass-highlight {
+  background: linear-gradient(
+    135deg,
+    rgba(91, 91, 214, 0.08) 0%,
+    rgba(168, 168, 255, 0.04) 100%
+  );
+  backdrop-filter: blur(20px) saturate(200%);
+  -webkit-backdrop-filter: blur(20px) saturate(200%);
+  border: 1px solid rgba(91, 91, 214, 0.28);
+  border-radius: 14px;
+  box-shadow:
+    0 12px 40px rgba(91, 91, 214, 0.12),
+    0 1px 0 rgba(255, 255, 255, 0.9) inset;
+  padding: 36px;
+  position: relative;
+}
+
+.glass-highlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at top left,
+    rgba(199, 199, 255, 0.4) 0%,
+    transparent 60%
+  );
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+/* The .proof__item rules in sections.css set border-top + remove side
+   padding, which fights the glass card look. Override only inside the
+   #warum scope so #fit stays untouched. */
+#warum .proof__item.glass-subtle {
+  border-top: none;
+  padding-top: 24px;
+}
+
+/* The .track--accent card already has its own ::before radial glow
+   that uses z-index:-1. Keep glass-highlight's ::before above the
+   track background so the lavender corner-light is visible. */
+.track--accent.glass-highlight::before {
+  z-index: 0;
+}
+.track--accent.glass-highlight > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Mobile: lighter blur to keep GPU happy on phones. */
+@media (max-width: 768px) {
+  .glass-heavy {
+    backdrop-filter: blur(14px) saturate(160%);
+    -webkit-backdrop-filter: blur(14px) saturate(160%);
+    border-radius: 12px;
+    padding: 20px;
+  }
+  .glass-subtle {
+    backdrop-filter: blur(10px) saturate(140%);
+    -webkit-backdrop-filter: blur(10px) saturate(140%);
+    border-radius: 8px;
+    padding: 18px;
+  }
+  .glass-highlight {
+    backdrop-filter: blur(14px) saturate(170%);
+    -webkit-backdrop-filter: blur(14px) saturate(170%);
+    border-radius: 12px;
+    padding: 24px;
+  }
+}
+
+/* Opaque fallback for browsers without backdrop-filter (older Firefox,
+   some embedded webviews). */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass-heavy,
+  .glass-subtle,
+  .glass-highlight {
+    background: rgba(250, 251, 252, 0.92);
+  }
+}
