@@ -81,6 +81,47 @@
   pointer-events: none;
 }
 
+/* ── Typography on glass: prevent sub-pixel rendering artifacts ──
+   `transform: translateZ(0)` promotes each glass card to its own
+   compositor layer so the browser doesn't repaint text into the
+   blurred surface during scroll. `will-change: backdrop-filter`
+   gives the same hint declaratively. Font-smoothing + optimizeLegibility
+   sharpen serif edges (Cormorant Garamond).
+   The `font-variation-settings` axis writes are no-ops on the
+   currently-loaded static Cormorant/JetBrains/DM Sans, but harden
+   the rendering if a variable serif is ever swapped in. */
+.glass-heavy,
+.glass-subtle,
+.glass-highlight {
+  transform: translateZ(0);
+  will-change: backdrop-filter;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+.glass-heavy *,
+.glass-subtle *,
+.glass-highlight * {
+  font-variation-settings: "wght" 450;
+}
+
+.glass-highlight h1,
+.glass-highlight h2,
+.glass-highlight .pro-card__title,
+.glass-heavy h1,
+.glass-heavy h2 {
+  font-variation-settings: "wght" 500;
+  letter-spacing: -0.01em;
+}
+
+.glass-highlight em,
+.glass-highlight .t-display-italic,
+.glass-heavy em,
+.glass-heavy .t-display-italic {
+  font-variation-settings: "wght" 480, "ital" 1;
+}
+
 /* The .proof__item rules in sections.css set border-top + remove side
    padding, which fights the glass card look. Override only inside the
    #warum scope so #fit stays untouched. */
