@@ -747,3 +747,156 @@
   }
 }
 
+/* ────────────────────────────────────────────────────────────
+   HERO CTAs — Apple Liquid Glass treatment
+   Scoped to .hero__cta-wrap so Academy/booking/playbook CTAs
+   (.cta--track, .cta--mega) keep their existing styling.
+   Override order: base .cta is gold-bordered transparent; here
+   we re-skin to frosted glass + slight rounding, then variants
+   (.cta--primary indigo fill, .cta--ghost translucent) layer on.
+   ──────────────────────────────────────────────────────────── */
+.hero__cta-wrap .cta {
+  background: rgba(245, 247, 248, 0.5);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-radius: 10px;
+  border: 1px solid rgba(91, 91, 214, 0.22);
+  box-shadow:
+    0 4px 16px -4px rgba(14, 17, 22, 0.06),
+    0 1px 0 rgba(255, 255, 255, 0.85) inset,
+    0 -1px 0 rgba(91, 91, 214, 0.06) inset;
+  padding: 14px 28px;
+  font-family: var(--font-mono);
+  font-size: var(--t-mono-xs);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+  transition:
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    background 0.3s ease,
+    border-color 0.3s ease;
+  transform: translateZ(0);
+  will-change: transform, backdrop-filter;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+/* Neutralize the inherited gold-fill ::before (translateY hover slide)
+   and replace with a visionOS-style top specular highlight. */
+.hero__cta-wrap .cta::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 50%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, transparent 100%);
+  border-radius: inherit;
+  transform: none;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Keep label + arrow above the highlight layer. */
+.hero__cta-wrap .cta__label,
+.hero__cta-wrap .cta__arrow,
+.hero__cta-wrap .cta__shimmer {
+  position: relative;
+  z-index: 1;
+}
+
+.hero__cta-wrap .cta:hover {
+  transform: translateY(-1px) translateZ(0);
+  background: rgba(245, 247, 248, 0.6);
+  border-color: rgba(91, 91, 214, 0.35);
+  color: var(--color-ink);
+  box-shadow:
+    0 8px 24px -6px rgba(91, 91, 214, 0.15),
+    0 2px 8px -2px rgba(14, 17, 22, 0.08),
+    0 1px 0 rgba(255, 255, 255, 0.95) inset,
+    0 -1px 0 rgba(91, 91, 214, 0.10) inset;
+}
+
+/* Suppress the base .cta:hover::before slide-up (would cover the glass). */
+.hero__cta-wrap .cta:hover::before {
+  transform: none;
+}
+
+.hero__cta-wrap .cta:active {
+  transform: translateY(0) translateZ(0) scale(0.98);
+  box-shadow:
+    0 2px 8px -2px rgba(14, 17, 22, 0.08),
+    0 1px 0 rgba(255, 255, 255, 0.75) inset;
+}
+
+/* Primary variant — Playbook lesen — indigo fill */
+.hero__cta-wrap .cta--primary {
+  background: rgba(91, 91, 214, 0.85);
+  color: var(--color-base);
+  border-color: rgba(91, 91, 214, 0.95);
+  box-shadow:
+    0 6px 20px -4px rgba(91, 91, 214, 0.30),
+    0 1px 0 rgba(255, 255, 255, 0.30) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.10) inset;
+}
+
+.hero__cta-wrap .cta--primary::before {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.25) 0%, transparent 100%);
+}
+
+.hero__cta-wrap .cta--primary:hover {
+  background: rgba(91, 91, 214, 0.95);
+  color: var(--color-base);
+  border-color: rgba(91, 91, 214, 1);
+  box-shadow:
+    0 10px 28px -6px rgba(91, 91, 214, 0.45),
+    0 1px 0 rgba(255, 255, 255, 0.35) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.12) inset;
+}
+
+/* Ghost variant — Pro-Beratung — translucent. Re-enable the ::before
+   highlight (the global .cta--ghost rule hides it). */
+.hero__cta-wrap .cta--ghost {
+  background: rgba(245, 247, 248, 0.5);
+  border: 1px solid rgba(91, 91, 214, 0.22);
+  color: var(--color-ink);
+  padding: 14px 28px;
+  font-size: var(--t-mono-xs);
+  letter-spacing: 0.2em;
+}
+
+.hero__cta-wrap .cta--ghost::before {
+  display: block;
+}
+
+.hero__cta-wrap .cta--ghost:hover {
+  transform: translateY(-1px) translateZ(0);
+  background: rgba(245, 247, 248, 0.6);
+  border-color: rgba(91, 91, 214, 0.35);
+  color: var(--color-ink);
+}
+
+/* Mobile — lighter blur, smaller padding, solid indigo for guaranteed
+   contrast on phones where backdrop-filter is GPU-expensive. */
+@media (max-width: 768px) {
+  .hero__cta-wrap .cta {
+    backdrop-filter: blur(12px) saturate(150%);
+    -webkit-backdrop-filter: blur(12px) saturate(150%);
+    padding: 14px 24px;
+    min-height: 44px;
+  }
+  .hero__cta-wrap .cta--primary {
+    background: rgba(91, 91, 214, 1);
+  }
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .hero__cta-wrap .cta {
+    background: rgba(250, 251, 252, 0.95);
+  }
+  .hero__cta-wrap .cta--primary {
+    background: rgba(91, 91, 214, 1);
+  }
+}
+
