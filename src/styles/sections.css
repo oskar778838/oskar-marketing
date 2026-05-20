@@ -1250,3 +1250,206 @@
   font-style: italic;
   font-size: 14px;
 }
+
+/* ════════════════════════════════════════════════════════════
+   GLASS EXTENSION — bio-site
+   Adds the Apple Liquid Glass aesthetic to 3 element groups
+   beyond the hero CTAs (which live in hero.css):
+   A) Playbook email form  (submit button + input)
+   B) Social card grid     (TikTok / IG / YT / Threads tiles)
+   C) Academy "Mark Janzen" card
+
+   Each rule reuses the same pro-glass.css value system
+   (rgba alpha + backdrop-filter + indigo border + visionOS
+   top-edge specular highlight). All scoped to the bio sections
+   so the pro page (which uses .glass-highlight / .glass-subtle
+   utility classes directly) is untouched.
+   ════════════════════════════════════════════════════════════ */
+
+/* ── A) Playbook email form ──────────────────────────────────
+   Submit button .playbook__form .cta--track — indigo-filled
+   glass, same value system as the hero primary CTA.
+   Input .playbook__form .field input — subtle off-white glass. */
+.playbook__form .cta--track {
+  background: rgba(91, 91, 214, 0.85);
+  color: #FAFBFC;
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  border: 1px solid rgba(91, 91, 214, 0.95);
+  border-radius: 10px;
+  box-shadow:
+    0 6px 20px -4px rgba(91, 91, 214, 0.30),
+    0 1px 0 rgba(255, 255, 255, 0.30) inset;
+  transition:
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    background 0.3s ease,
+    border-color 0.3s ease;
+}
+
+/* Re-skin the inherited gold-fill ::before slide to a static
+   top-edge specular highlight. */
+.playbook__form .cta--track::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 50%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.25) 0%, transparent 100%);
+  border-radius: inherit;
+  transform: none;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.playbook__form .cta--track .cta__label,
+.playbook__form .cta--track .cta__arrow,
+.playbook__form .cta--track .cta__shimmer {
+  position: relative;
+  z-index: 1;
+}
+
+.playbook__form .cta--track:hover {
+  transform: translateY(-1px) translateZ(0);
+  background: rgba(91, 91, 214, 0.95);
+  color: #FAFBFC;
+  border-color: rgba(91, 91, 214, 1);
+  box-shadow:
+    0 10px 28px -6px rgba(91, 91, 214, 0.45),
+    0 1px 0 rgba(255, 255, 255, 0.35) inset;
+}
+
+.playbook__form .cta--track:hover::before {
+  transform: none;
+}
+
+.playbook__form .cta--track:active {
+  transform: translateY(0) translateZ(0) scale(0.98);
+}
+
+/* Email input — subtle glass surface, matches the pro-glass
+   .glass-subtle aesthetic. Overrides the dark-form defaults from
+   .field input (booking.css). */
+.playbook__form .field input {
+  background: rgba(250, 251, 252, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(214, 219, 226, 0.8);
+  border-radius: 10px;
+  color: var(--color-ink);
+  transition:
+    border-color 200ms var(--ease-default),
+    background 200ms var(--ease-default);
+}
+
+.playbook__form .field input:focus {
+  background: rgba(250, 251, 252, 0.85);
+  border-color: rgba(91, 91, 214, 0.45);
+  outline: none;
+}
+
+.playbook__form .field input::placeholder {
+  color: var(--muted-low);
+}
+
+/* ── B) Social card grid ─────────────────────────────────────
+   Each .social-card link becomes a frosted glass tile. The
+   existing radial-glow ::before stays (now layered over glass),
+   and the conic-gradient .social-card__ring ring stays. Only
+   the base surface, border, and hover-lift change. */
+.social__grid .social-card {
+  background: rgba(250, 251, 252, 0.5);
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  border: 1px solid rgba(214, 219, 226, 0.6);
+  border-radius: 10px;
+  transition:
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.3s ease,
+    border-color 0.3s ease,
+    background 0.3s ease;
+}
+
+.social__grid .social-card:hover {
+  transform: translateY(-2px);
+  background: rgba(250, 251, 252, 0.6);
+  border-color: rgba(91, 91, 214, 0.35);
+  box-shadow:
+    0 8px 24px -6px rgba(91, 91, 214, 0.12),
+    0 2px 8px -2px rgba(14, 17, 22, 0.06);
+}
+
+.social__grid .social-card:active {
+  transform: translateY(0) scale(0.995);
+}
+
+/* ── C) Academy "Mark Janzen" card ───────────────────────────
+   Scoped via #academy so the pro page's .track.track--accent.glass-highlight
+   inside #angebot stays untouched. The existing conic-gradient
+   hover ring (::after) and the .track--accent radial glow (::before)
+   are not active on the bio card (no .track--accent), so adding
+   a top-edge highlight ::before here is collision-free. */
+#academy .track {
+  background: rgba(250, 251, 252, 0.5);
+  backdrop-filter: blur(16px) saturate(170%);
+  -webkit-backdrop-filter: blur(16px) saturate(170%);
+  border: 1px solid rgba(214, 219, 226, 0.6);
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(14, 17, 22, 0.05);
+}
+
+#academy .track::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 50%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, transparent 100%);
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: -1;
+}
+
+#academy .track:hover {
+  transform: translateY(-4px);
+  background: rgba(250, 251, 252, 0.6);
+  border-color: rgba(91, 91, 214, 0.32);
+  box-shadow:
+    0 12px 32px -8px rgba(91, 91, 214, 0.14),
+    0 4px 12px -4px rgba(14, 17, 22, 0.06);
+}
+
+/* ── Mobile — reduce blur ~40% for GPU savings on phones ───── */
+@media (max-width: 768px) {
+  .playbook__form .cta--track {
+    backdrop-filter: blur(11px) saturate(150%);
+    -webkit-backdrop-filter: blur(11px) saturate(150%);
+    background: rgba(91, 91, 214, 1);
+  }
+  .playbook__form .field input {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .social__grid .social-card {
+    backdrop-filter: blur(9px) saturate(140%);
+    -webkit-backdrop-filter: blur(9px) saturate(140%);
+  }
+  #academy .track {
+    backdrop-filter: blur(10px) saturate(150%);
+    -webkit-backdrop-filter: blur(10px) saturate(150%);
+  }
+}
+
+/* ── Fallback for browsers without backdrop-filter ─────────── */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .playbook__form .cta--track {
+    background: rgba(91, 91, 214, 1);
+  }
+  .playbook__form .field input {
+    background: rgba(250, 251, 252, 0.95);
+  }
+  .social__grid .social-card {
+    background: rgba(250, 251, 252, 0.92);
+  }
+  #academy .track {
+    background: rgba(250, 251, 252, 0.92);
+  }
+}
