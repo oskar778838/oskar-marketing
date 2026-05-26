@@ -16,7 +16,6 @@ import { initMagnetic } from "./lib/magnetic";
 import { initSmoothScroll } from "./lib/smoothScroll";
 import { runChoreography } from "./lib/choreography";
 import { initScrollProgress } from "./lib/scrollProgress";
-import { initBooking } from "./lib/booking";
 import { initEasterEgg } from "./lib/easter-egg";
 import { initEditorialHero } from "./lib/editorialHero";
 import { initSectionIndicator } from "./lib/sectionIndicator";
@@ -29,7 +28,6 @@ function boot(): void {
   lenisInstance = initSmoothScroll();
   initMagnetic();
   initScrollProgress();
-  initBooking();
   initEasterEgg();
   initEditorialHero(lenisInstance);
   initSectionIndicator();
