@@ -130,6 +130,16 @@
   padding-top: 24px;
 }
 
+/* Safety net: Fit-Check items always visible, even if the .proof__item
+   reveal tween (choreography.ts) never fires. The reveal works in headless
+   but proved fragile in real-browser/Lenis scroll for the #fit section, so
+   we trade the fade-in here for guaranteed visibility. Scoped to #fit so the
+   main bio proof reveal and the #warum reveal keep their animation. */
+#fit .proof__item {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
 /* The .track--accent card already has its own ::before radial glow
    that uses z-index:-1. Keep glass-highlight's ::before above the
    track background so the lavender corner-light is visible. */
