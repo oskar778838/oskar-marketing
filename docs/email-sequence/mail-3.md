@@ -35,7 +35,7 @@ Zwei Pakete:
   Step-by-Step Plan, private Community, 1× wöchentlich Group-Coaching,
   2 Monate Coaching-Phase.
 
-— Pro, 830 €
+— Pro, 997 €
   Alles vom Plus plus intensiveres Mentoring-Setup.
 
 Was ich konkret rausziehe: Struktur. Die ersten zwei Wochen alleine
@@ -74,6 +74,6 @@ mich nur, wenn ich etwas Wichtiges habe.
   Signal und reduziert Refunds nachträglich.
 - "Du bleibst auf der Liste" ist explizit — gibt Abonnenten die Wahl
   ohne harte Re-Confirm-Mechanik.
-- Preise (397 / 830 €) sind keine "altern schlecht"-Claims — das sind
+- Preise (397 / 997 €) sind keine "altern schlecht"-Claims — das sind
   Produkt-Preise, die der Anbieter setzt. Sollten sich die Preise
   ändern, ist diese Mail in <5 Min in Brevo updatebar.

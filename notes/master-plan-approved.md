@@ -419,7 +419,7 @@ Zwei Pakete:
   Step-by-Step Plan, private Community, 1× wöchentlich Group-Coaching,
   2 Monate Coaching-Phase.
 
-— Pro, 830 €
+— Pro, 997 €
   Alles vom Plus plus intensiveres Mentoring-Setup.
 
 Was ich konkret rausziehe: Struktur. Die ersten zwei Wochen alleine

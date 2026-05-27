@@ -40,7 +40,7 @@ BRAND_FONT_MONO = "[z.B. JetBrains Mono]"
 
 AFFILIATE_PROGRAM = "[z.B. Mark Janzen Affiliate Academy]"
 AFFILIATE_TIER_LOW = "[z.B. Plus 397€]"
-AFFILIATE_TIER_HIGH = "[z.B. Pro 830€]"
+AFFILIATE_TIER_HIGH = "[z.B. Pro 997€]"
 AFFILIATE_LINK = "[z.B. https://www.checkout-ds24.com/product/xxx?aff=xxx]"
 
 NICHE = "[z.B. Affiliate Marketing für 18-25 Build-in-Public]"
