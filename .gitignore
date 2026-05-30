@@ -16,3 +16,8 @@ public/hdri/
 # Patch files (used as transient handoffs, never committed)
 *.patch
 outputs/
+
+# Ultra-review generated audit output (Lighthouse/axe JSON, screenshots).
+# The human-readable summary lives in REVIEW-REPORT.md, which IS committed.
+.review-artifacts/
+scripts/diagnose-output.json
