@@ -2,25 +2,8 @@ name = "oskarmarketing-booking"
 main = "src/worker.ts"
 compatibility_date = "2025-01-01"
 
-# ── KV namespace for slot reservations ───────────────────
-# Create with: wrangler kv:namespace create BOOKINGS
-# Then paste the returned ID here, replacing the placeholder below.
-[[kv_namespaces]]
-binding = "BOOKINGS"
-id = "c509b600173e4fadaa227d1cb4e77c8b"
-
 # ── Public, non-secret config ────────────────────────────
 [vars]
-NOTIFY_EMAIL = "opheck@gmx.de"
-NOTIFY_PHONE = "+491797035662"
-# Sender identity for outgoing email — Resend's onboarding sandbox works
-# without domain verification; switch to noreply@oskarmarketing.de once
-# the domain is verified at resend.com.
-RESEND_FROM = "Oskar Marketing <onboarding@resend.dev>"
-# Twilio "From" — set to a number you've purchased / verified.
-TWILIO_FROM = "+15005550006"
-# Toggle SMS off here if Twilio trial limits get in the way.
-SMS_ENABLED = "true"
 # Allowed Origins for CORS (comma-separated). Add custom domain later.
 ALLOWED_ORIGINS = "https://oskar778838.github.io,https://oskarmarketing.de,http://localhost:5173,http://127.0.0.1:5173"
 
@@ -35,13 +18,9 @@ BREVO_DOI_TEMPLATE_ID = "1"
 # them here. NOTE: this Worker var alone is not sufficient — the Brevo
 # template (Campaigns → Templates → ID 1 → Settings → "After confirmation")
 # also has its own redirect-URL field that MUST be set to the same URL.
-# If they diverge, the template UI wins. Manual step documented in
-# outputs/FUNNEL-FIX-REPORT.md.
+# If they diverge, the template UI wins.
 BREVO_REDIRECT_URL = "https://oskarmarketing.de/playbook.html"
 
 # ── Secrets (NEVER commit values) ────────────────────────
 # Set with:
-#   wrangler secret put RESEND_API_KEY
-#   wrangler secret put TWILIO_ACCOUNT_SID
-#   wrangler secret put TWILIO_AUTH_TOKEN
 #   wrangler secret put BREVO_API_KEY     # from Brevo → SMTP & API → API keys

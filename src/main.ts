@@ -13,7 +13,6 @@ import { initMagnetic } from "./lib/magnetic";
 import { initSmoothScroll } from "./lib/smoothScroll";
 import { runChoreography } from "./lib/choreography";
 import { initScrollProgress } from "./lib/scrollProgress";
-import { initBooking } from "./lib/booking";
 import { initPlaybookForm } from "./lib/playbookForm";
 import { initCounters } from "./lib/counters";
 import { initProofStrip } from "./lib/proofStrip";
@@ -35,7 +34,6 @@ function boot(): void {
   lenisInstance = initSmoothScroll();
   initMagnetic();
   initScrollProgress();
-  initBooking();
   initBookingGate();
   initPlaybookForm();
   initCounters();
