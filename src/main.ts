@@ -18,6 +18,7 @@ import { initCounters } from "./lib/counters";
 import { initProofStrip } from "./lib/proofStrip";
 import { initJournal } from "./lib/journal";
 import { initBookingGate } from "./lib/bookingGate";
+import { initCalLoaders } from "./lib/calEmbed";
 import { initEasterEgg, updateDayCounter } from "./lib/easter-egg";
 import { initEditorialHero } from "./lib/editorialHero";
 import { initSectionIndicator } from "./lib/sectionIndicator";
@@ -35,6 +36,7 @@ function boot(): void {
   initMagnetic();
   initScrollProgress();
   initBookingGate();
+  initCalLoaders();
   initPlaybookForm();
   initCounters();
   initProofStrip();

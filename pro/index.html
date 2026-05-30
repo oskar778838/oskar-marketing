@@ -332,63 +332,34 @@
           </header>
 
           <div class="booking glass-heavy" id="booking-app">
-            <!-- Cal Inline Embed — Pro-Beratung (Cal.eu) -->
+            <!-- Cal Inline Embed — Pro-Beratung (Cal.eu), click-to-load.
+                 Loaded on demand by src/lib/calEmbed.ts when the visitor clicks
+                 "Termin laden" — keeps ~1.6 MB of US-origin Cal assets + cookies
+                 off the initial load (perf + DSGVO consent gate). -->
+            <button
+              type="button"
+              class="cal-loader"
+              data-cal-loader
+              data-cal-target="#cal-inline-pro-beratung"
+              data-cal-namespace="pro-beratung"
+              data-cal-link="opheck-gmx.de/pro-beratung"
+              data-cal-origin="https://cal.eu"
+              data-cursor-hover
+            >
+              <span class="cal-loader__icon" aria-hidden="true">📅</span>
+              <span class="cal-loader__title">Termin laden</span>
+              <small class="cal-loader__hint">Cal-Buchungssystem · lädt erst nach Klick (DSGVO-konform)</small>
+            </button>
             <div
               id="cal-inline-pro-beratung"
               style="width:100%;min-height:640px;overflow:auto;border-radius:12px"
+              hidden
             ></div>
             <style>
               @media (max-width: 720px) {
                 #cal-inline-pro-beratung { min-height: 720px; }
               }
             </style>
-            <script type="text/javascript">
-              (function (C, A, L) {
-                let p = function (a, ar) { a.q.push(ar); };
-                let d = C.document;
-                C.Cal = C.Cal || function () {
-                  let cal = C.Cal;
-                  let ar = arguments;
-                  if (!cal.loaded) {
-                    cal.ns = {};
-                    cal.q = cal.q || [];
-                    d.head.appendChild(d.createElement("script")).src = A;
-                    cal.loaded = true;
-                  }
-                  if (ar[0] === L) {
-                    const api = function () { p(api, arguments); };
-                    const namespace = ar[1];
-                    api.q = api.q || [];
-                    if (typeof namespace === "string") {
-                      cal.ns[namespace] = cal.ns[namespace] || api;
-                      p(cal.ns[namespace], ar);
-                      p(cal, ["initNamespace", namespace]);
-                    } else {
-                      p(cal, ar);
-                    }
-                    return;
-                  }
-                  p(cal, ar);
-                };
-              })(window, "https://app.cal.com/embed/embed.js", "init");
-
-              Cal("init", "pro-beratung", { origin: "https://cal.eu" });
-
-              Cal.ns["pro-beratung"]("inline", {
-                elementOrSelector: "#cal-inline-pro-beratung",
-                calLink: "opheck-gmx.de/pro-beratung",
-                config: { layout: "month_view" }
-              });
-
-              Cal.ns["pro-beratung"]("ui", {
-                theme: "light",
-                cssVarsPerTheme: {
-                  light: { "cal-brand": "#5B5BD6" }
-                },
-                hideEventTypeDetails: false,
-                layout: "month_view"
-              });
-            </script>
           </div>
         </div>
       </section>
