@@ -1185,7 +1185,7 @@
 
 .playbook__privacy {
   font-size: var(--t-mono-xs);
-  color: var(--muted-low);
+  color: var(--color-ink-muted); /* legal/DSGVO fine print — 7.64:1, max readability */
   letter-spacing: 0.04em;
   line-height: 1.6;
 }

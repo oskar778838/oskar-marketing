@@ -35,8 +35,8 @@
   --pearl: var(--color-ink);
   --pearl-rare: var(--color-glow-soft);
 
-  --muted: rgba(74, 79, 90, 0.75);
-  --muted-low: rgba(74, 79, 90, 0.45);
+  --muted: #5b606a;      /* secondary text — 5.8:1 on snow base (was rgba .75 ≈ 4.06:1, sub-AA) */
+  --muted-low: #6a6f78;  /* low-emphasis text — 4.65:1 on snow base (was rgba .45 ≈ 2.14:1, sub-AA) */
   --hairline: rgba(91, 91, 214, 0.22);
   --hairline-low: rgba(14, 17, 22, 0.10);
 
