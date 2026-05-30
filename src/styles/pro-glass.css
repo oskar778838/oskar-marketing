@@ -21,12 +21,15 @@
 }
 
 .glass-subtle {
-  background: rgba(250, 251, 252, 0.5);
+  /* Brighter-than-base surface + faint indigo hairline so the card reads as
+     a distinct tier on the snow base (was rgba gray @0.6 on #F5F7F8 — too
+     faint, collapsed the 3-tier glass system to two). */
+  background: rgba(255, 255, 255, 0.55);
   backdrop-filter: blur(12px) saturate(150%);
   -webkit-backdrop-filter: blur(12px) saturate(150%);
-  border: 1px solid rgba(214, 219, 226, 0.6);
+  border: 1px solid rgba(91, 91, 214, 0.15);
   border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(14, 17, 22, 0.04);
+  box-shadow: 0 2px 10px rgba(14, 17, 22, 0.06);
   padding: 24px;
 }
 
