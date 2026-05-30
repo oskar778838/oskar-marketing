@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#F5F7F8">
 <meta name="color-scheme" content="light">
+<script>document.documentElement.classList.add('js')</script>
 
 <title>Affiliate Marketing Playbook 2026 · oskarmarketing</title>
 <meta name="description" content="Affiliate Marketing Playbook 2026. 4 Schritte für deinen Start. Kostenlos.">
@@ -230,8 +231,12 @@ from{opacity:0;transform:translateY(30px)}
 to{opacity:1;transform:translateY(0)}
 }
 
-.reveal{opacity:0;transform:translateY(40px);transition:opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1)}
-.reveal.visible{opacity:1;transform:translateY(0)}
+/* Progressive enhancement: content is visible by default; only hidden for
+   the reveal animation when JS is active (html.js set by an early inline
+   script). Guarantees the lead-magnet body renders even if the in-app
+   browser (TikTok/IG) never runs the IntersectionObserver. */
+html.js .reveal{opacity:0;transform:translateY(40px);transition:opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1)}
+html.js .reveal.visible{opacity:1;transform:translateY(0)}
 
 section{padding:60px 24px;position:relative;border-top:1px solid var(--border)}
 
@@ -1060,7 +1065,7 @@ section{padding:80px 40px}
 <div class="benefit reveal">
 <div class="benefit-icon">M</div>
 <div class="benefit-content">
-<div class="benefit-title">Mark's persönlicher WhatsApp-Support</div>
+<div class="benefit-title">Marks persönlicher WhatsApp-Support</div>
 <div class="benefit-text">Direkter 1:1 Zugang zu Mark — keine Assistenten.</div>
 </div>
 </div>
@@ -1083,7 +1088,7 @@ section{padding:80px 40px}
 <div class="price-box reveal">
 <div class="price-box-label">▸ Der Einstieg</div>
 <div class="price-box-main">Ab <em>5€</em></div>
-<div class="price-box-sub">Günstiger als ein Mittagessen — und du entscheidest selbst ob du dabei bleibst.</div>
+<div class="price-box-sub">Du startest mit Modul 01 — und entscheidest danach selbst, ob du dabei bleibst.</div>
 </div>
 
 <div class="cta-btn-wrap reveal">
